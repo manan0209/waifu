@@ -1,0 +1,75 @@
+/* System Boot Styles */
+
+.system-boot {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.boot-screen {
+  font-family: 'MS Sans Serif', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #ff6b9d;
+  text-shadow: 0 0 5px rgba(255, 107, 157, 0.3);
+  height: 100%;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+.boot-line {
+  margin: 2px 0;
+  min-height: 1.4em;
+  word-wrap: break-word;
+}
+
+.boot-line.current {
+  position: relative;
+}
+
+.cursor {
+  background: #ff6b9d;
+  color: #1a1a2e;
+  animation: cursor-blink 1s infinite;
+  font-weight: bold;
+  box-shadow: 0 0 8px rgba(255, 107, 157, 0.5);
+}
+
+@keyframes cursor-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+
+.progress-bar, .progress-bar-complete {
+  font-family: 'MS Sans Serif', Arial, sans-serif;
+  margin-top: 2px;
+  color: #ff6b9d;
+  text-shadow: 0 0 5px rgba(255, 107, 157, 0.3);
+}
+
+.progress-bar-complete {
+  color: #ffffff;
+}
+
+.boot-screen::before {
+  display: none;
+}
+
+
+@media (max-width: 600px) {
+  .boot-screen {
+    font-size: 12px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .boot-screen {
+    font-size: 10px;
+    padding: 8px;
+  }
+}
