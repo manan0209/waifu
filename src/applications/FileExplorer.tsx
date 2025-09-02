@@ -13,7 +13,7 @@ export default function FileExplorer({
   onClose, 
   onMinimize, 
   onMaximize, 
-  initialPath = 'C:\\' 
+  initialPath = 'My Computer' 
 }: FileExplorerProps) {
   const {
     currentPath,
@@ -38,16 +38,21 @@ export default function FileExplorer({
     nodeId?: string;
   } | null>(null);
 
-  
+  // Initialize with correct path
   useEffect(() => {
+    if (initialPath === 'My Computer') {
+      // For My Computer view, we'll handle this specially
+      return;
+    }
     if (initialPath !== currentPath) {
       navigateTo(initialPath);
     }
   }, [initialPath, currentPath, navigateTo]);
 
-  const currentChildren = getCurrentChildren();
+  // Get current content - either drives for My Computer or folder children
+  const currentChildren = currentPath === 'My Computer' ? [] : getCurrentChildren();
   const drives = getDrives();
-  const pathParts = currentPath.split('\\').filter(part => part.length > 0);
+  const pathParts = currentPath === 'My Computer' ? [] : currentPath.split('\\').filter(part => part.length > 0);
 
   const handleNavigate = useCallback((path: string) => {
     navigateTo(path);
@@ -153,6 +158,24 @@ export default function FileExplorer({
     }
   };
 
+  const getDriveIcon = (drive: any) => {
+    switch (drive.type) {
+      case 'hard_disk': return '💽';
+      case 'floppy': return '💾';
+      case 'cdrom': return '💿';
+      default: return '💽';
+    }
+  };
+
+  const getDriveType = (type: string) => {
+    switch (type) {
+      case 'hard_disk': return 'Local Disk';
+      case 'floppy': return 'Floppy Disk';
+      case 'cdrom': return 'CD-ROM Drive';
+      default: return 'Unknown';
+    }
+  };
+
   const formatFileSize = (size?: number) => {
     if (!size) return '';
     if (size < 1024) return `${size} bytes`;
@@ -215,15 +238,27 @@ export default function FileExplorer({
       
       <div className="address-bar">
         <div className="breadcrumbs">
-          {drives.map(drive => (
-            <button
-              key={drive.letter}
-              className={`breadcrumb ${currentPath.startsWith(drive.letter + ':') ? 'active' : ''}`}
-              onClick={() => handleNavigate(drive.letter + ':\\')}
-            >
-              {drive.letter}:
-            </button>
-          ))}
+          <button
+            className={`breadcrumb ${currentPath === 'My Computer' ? 'active' : ''}`}
+            onClick={() => handleNavigate('My Computer')}
+          >
+            My Computer
+          </button>
+          
+          {currentPath !== 'My Computer' && (
+            <>
+              <span className="separator">\\</span>
+              {drives.map(drive => (
+                <button
+                  key={drive.letter}
+                  className={`breadcrumb ${currentPath.startsWith(drive.letter + ':') ? 'active' : ''}`}
+                  onClick={() => handleNavigate(drive.letter + ':\\')}
+                >
+                  {drive.letter}:
+                </button>
+              ))}
+            </>
+          )}
           {pathParts.length > 1 && (
             <>
               <span className="separator">\\</span>
@@ -257,7 +292,32 @@ export default function FileExplorer({
               <div className="column-modified">Date Modified</div>
             </div>
             <div className="list-body">
-              {currentChildren.map(node => (
+              {/* Show drives in My Computer view */}
+              {currentPath === 'My Computer' && drives.map(drive => (
+                <div
+                  key={drive.letter}
+                  className={`list-item`}
+                  onClick={() => {}}
+                  onDoubleClick={() => handleNavigate(drive.letter + ':\\')}
+                >
+                  <div className="column-name">
+                    <span className="file-icon">{getDriveIcon(drive)}</span>
+                    <span className="file-name">{drive.label}</span>
+                  </div>
+                  <div className="column-size">
+                    {formatFileSize(drive.freeSpace)} free of {formatFileSize(drive.totalSpace)}
+                  </div>
+                  <div className="column-type">
+                    {getDriveType(drive.type)}
+                  </div>
+                  <div className="column-modified">
+                    {new Date().toLocaleDateString()}
+                  </div>
+                </div>
+              ))}
+              
+              {/* Show regular files/folders */}
+              {currentPath !== 'My Computer' && currentChildren.map(node => (
                 <div
                   key={node.id}
                   className={`list-item ${selectedNodes.includes(node.id) ? 'selected' : ''}`}
@@ -287,7 +347,21 @@ export default function FileExplorer({
           </div>
         ) : (
           <div className="icon-view">
-            {currentChildren.map(node => (
+            {/* Show drives in My Computer view */}
+            {currentPath === 'My Computer' && drives.map(drive => (
+              <div
+                key={drive.letter}
+                className="icon-item"
+                onClick={() => {}}
+                onDoubleClick={() => handleNavigate(drive.letter + ':\\')}
+              >
+                <div className="icon-large">{getDriveIcon(drive)}</div>
+                <div className="icon-label">{drive.label}</div>
+              </div>
+            ))}
+            
+            {/* Show regular files/folders */}
+            {currentPath !== 'My Computer' && currentChildren.map(node => (
               <div
                 key={node.id}
                 className={`icon-item ${selectedNodes.includes(node.id) ? 'selected' : ''}`}

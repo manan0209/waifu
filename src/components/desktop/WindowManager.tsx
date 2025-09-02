@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDraggable } from '../../hooks/useDraggable';
+import { useResizable } from '../../hooks/useResizable';
 
 interface Window {
   id: string;
@@ -22,6 +23,7 @@ interface WindowManagerProps {
   onMaximize: (windowId: string) => void;
   onFocus: (windowId: string) => void;
   onUpdatePosition: (windowId: string, x: number, y: number) => void;
+  onUpdateSize?: (windowId: string, width: number, height: number) => void;
 }
 
 function WindowComponent({ 
@@ -30,7 +32,8 @@ function WindowComponent({
   onMinimize, 
   onMaximize, 
   onFocus,
-  onUpdatePosition 
+  onUpdatePosition,
+  onUpdateSize 
 }: {
   window: Window;
   onClose: (windowId: string) => void;
@@ -38,11 +41,21 @@ function WindowComponent({
   onMaximize: (windowId: string) => void;
   onFocus: (windowId: string) => void;
   onUpdatePosition: (windowId: string, x: number, y: number) => void;
+  onUpdateSize?: (windowId: string, width: number, height: number) => void;
 }) {
   const { position, handleMouseDown, dragProps } = useDraggable({ 
     x: window.x, 
     y: window.y 
   });
+
+  const { size, handleResizeStart, resizeProps } = useResizable(
+    { width: window.width, height: window.height },
+    {
+      minWidth: 300,
+      minHeight: 200,
+      onResize: onUpdateSize ? (newSize) => onUpdateSize(window.id, newSize.width, newSize.height) : undefined
+    }
+  );
 
   // Update parent when position changes
   useEffect(() => {
@@ -64,8 +77,8 @@ function WindowComponent({
         ...dragProps.style,
         left: window.isMaximized ? 0 : position.x,
         top: window.isMaximized ? 0 : position.y,
-        width: window.isMaximized ? '100%' : window.width,
-        height: window.isMaximized ? 'calc(100% - 40px)' : window.height,
+        width: window.isMaximized ? '100%' : size.width,
+        height: window.isMaximized ? 'calc(100% - 40px)' : size.height,
         zIndex: window.zIndex
       }}
       onClick={() => onFocus(window.id)}
@@ -119,14 +132,38 @@ function WindowComponent({
       {/* Resize Handles */}
       {!window.isMaximized && (
         <>
-          <div className="resize-handle resize-n"></div>
-          <div className="resize-handle resize-s"></div>
-          <div className="resize-handle resize-e"></div>
-          <div className="resize-handle resize-w"></div>
-          <div className="resize-handle resize-ne"></div>
-          <div className="resize-handle resize-nw"></div>
-          <div className="resize-handle resize-se"></div>
-          <div className="resize-handle resize-sw"></div>
+          <div 
+            className="resize-handle resize-n"
+            onMouseDown={(e) => handleResizeStart(e, 'resize-n', position)}
+          ></div>
+          <div 
+            className="resize-handle resize-s"
+            onMouseDown={(e) => handleResizeStart(e, 'resize-s', position)}
+          ></div>
+          <div 
+            className="resize-handle resize-e"
+            onMouseDown={(e) => handleResizeStart(e, 'resize-e', position)}
+          ></div>
+          <div 
+            className="resize-handle resize-w"
+            onMouseDown={(e) => handleResizeStart(e, 'resize-w', position)}
+          ></div>
+          <div 
+            className="resize-handle resize-ne"
+            onMouseDown={(e) => handleResizeStart(e, 'resize-ne', position)}
+          ></div>
+          <div 
+            className="resize-handle resize-nw"
+            onMouseDown={(e) => handleResizeStart(e, 'resize-nw', position)}
+          ></div>
+          <div 
+            className="resize-handle resize-se"
+            onMouseDown={(e) => handleResizeStart(e, 'resize-se', position)}
+          ></div>
+          <div 
+            className="resize-handle resize-sw"
+            onMouseDown={(e) => handleResizeStart(e, 'resize-sw', position)}
+          ></div>
         </>
       )}
     </div>
@@ -139,7 +176,8 @@ export default function WindowManager({
   onMinimize,
   onMaximize,
   onFocus,
-  onUpdatePosition
+  onUpdatePosition,
+  onUpdateSize
 }: WindowManagerProps) {
   return (
     <div className="window-manager">
@@ -152,6 +190,7 @@ export default function WindowManager({
           onMaximize={onMaximize}
           onFocus={onFocus}
           onUpdatePosition={onUpdatePosition}
+          onUpdateSize={onUpdateSize}
         />
       ))}
     </div>

@@ -129,6 +129,12 @@ export default function Desktop({ onShutdown }: DesktopProps) {
     ));
   };
 
+  const updateWindowSize = (windowId: string, width: number, height: number) => {
+    setWindows(prev => prev.map(w => 
+      w.id === windowId ? { ...w, width, height } : w
+    ));
+  };
+
   return (
     <div className="desktop">
       
@@ -149,6 +155,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
         onMaximize={maximizeWindow}
         onFocus={focusWindow}
         onUpdatePosition={updateWindowPosition}
+        onUpdateSize={updateWindowSize}
       />
 
       
