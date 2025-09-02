@@ -207,7 +207,7 @@ export default function FileExplorer({
           >
             ⬆️
           </button>
-          <button onClick={() => handleNavigate('C:\\')} title="Home">
+          <button onClick={() => handleNavigate('C:')} title="Home">
             🏠
           </button>
         </div>
@@ -258,7 +258,7 @@ export default function FileExplorer({
                 <button
                   key={drive.letter}
                   className={`breadcrumb ${currentPath.startsWith(drive.letter + ':') ? 'active' : ''}`}
-                  onClick={() => handleNavigate(drive.letter + ':\\')}
+                  onClick={() => handleNavigate(drive.letter + ':')}
                 >
                   {drive.letter}:
                 </button>
@@ -304,7 +304,7 @@ export default function FileExplorer({
                   key={drive.letter}
                   className={`list-item`}
                   onClick={() => {}}
-                  onDoubleClick={() => handleNavigate(drive.letter + ':\\')}
+                  onDoubleClick={() => handleNavigate(drive.letter + ':')}
                 >
                   <div className="column-name">
                     <span className="file-icon">{getDriveIcon(drive)}</span>
@@ -359,7 +359,7 @@ export default function FileExplorer({
                 key={drive.letter}
                 className="icon-item"
                 onClick={() => {}}
-                onDoubleClick={() => handleNavigate(drive.letter + ':\\')}
+                onDoubleClick={() => handleNavigate(drive.letter + ':')}
               >
                 <div className="icon-large">{getDriveIcon(drive)}</div>
                 <div className="icon-label">{drive.label}</div>

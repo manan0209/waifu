@@ -4,6 +4,7 @@
 
 /* Import Professional Windows 98/XP Theme */
 @import url('../src/styles/professional-theme.css');
+@import url('../src/styles/system-boot.css');
 
 /* Professional CRT Monitor Effects */
 .crt-effect {
