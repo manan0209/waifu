@@ -22,7 +22,7 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
   const [flagCount, setFlagCount] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
-  const [difficulty, setDifficulty] = useState<'beginner' | 'intermediate' | 'expert' | 'kawaii'>('beginner');
+  const [difficulty, setDifficulty] = useState<'beginner' | 'intermediate' | 'expert' | 'kawaii'>('kawaii');
   const [showSettings, setShowSettings] = useState(false);
 
   const difficulties = {
@@ -32,14 +32,12 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
     kawaii: { rows: 12, cols: 12, mines: 20 }
   };
 
-  const currentDifficulty = difficulties[difficulty];
-
   // Initialize board
   const initializeBoard = useCallback(() => {
-    const { rows, cols, mines } = currentDifficulty;
+    const { rows, cols, mines } = difficulties[difficulty];
     const newBoard: Cell[][] = [];
 
-    // Create empty board
+   
     for (let row = 0; row < rows; row++) {
       newBoard[row] = [];
       for (let col = 0; col < cols; col++) {
@@ -52,7 +50,7 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
       }
     }
 
-    // Place mines randomly
+    
     let minesPlaced = 0;
     while (minesPlaced < mines) {
       const row = Math.floor(Math.random() * rows);
@@ -88,17 +86,18 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
     }
 
     setBoard(newBoard);
+    console.log('Board initialized:', newBoard.length, 'x', newBoard[0]?.length, 'with', mines, 'mines');
     setGameState('playing');
     setFlagCount(0);
     setTimeElapsed(0);
     setGameStarted(false);
     setMineCount(mines);
-  }, [currentDifficulty]);
+  }, [difficulty]);
 
   // Initialize on mount and difficulty change
   useEffect(() => {
     initializeBoard();
-  }, [initializeBoard]);
+  }, [difficulty]);
 
   // Timer
   useEffect(() => {
@@ -112,7 +111,17 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
   }, [gameStarted, gameState]);
 
   const revealCell = (row: number, col: number) => {
-    if (gameState !== 'playing' || board[row][col].isRevealed || board[row][col].isFlagged) {
+    console.log('RevealCell called:', row, col, 'Board length:', board.length, 'GameState:', gameState);
+    console.log('Board state:', board);
+    console.log('Current cell:', board[row]?.[col]);
+    
+    if (board.length === 0 || !board[row] || !board[row][col]) {
+      console.log('Board not properly initialized!');
+      return;
+    }
+    
+    if (gameState !== 'playing' || board[row][col]?.isRevealed || board[row][col]?.isFlagged) {
+      console.log('Early return - gameState:', gameState, 'isRevealed:', board[row][col]?.isRevealed, 'isFlagged:', board[row][col]?.isFlagged);
       return;
     }
 
@@ -120,24 +129,25 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
       setGameStarted(true);
     }
 
-    const newBoard = board.map(row => row.map(cell => ({ ...cell })));
+    const newBoard = [...board];
     
     if (newBoard[row][col].isMine) {
-      // Game over - reveal all mines
+      
       setGameState('lost');
-      newBoard.forEach(boardRow => {
-        boardRow.forEach(cell => {
+     
+      newBoard.forEach(row => {
+        row.forEach(cell => {
           if (cell.isMine) {
             cell.isRevealed = true;
           }
         });
       });
     } else {
-      // Reveal cells using flood fill algorithm
+     
       const reveal = (r: number, c: number) => {
         if (
-          r < 0 || r >= currentDifficulty.rows ||
-          c < 0 || c >= currentDifficulty.cols ||
+          r < 0 || r >= difficulties[difficulty].rows ||
+          c < 0 || c >= difficulties[difficulty].cols ||
           newBoard[r][c].isRevealed ||
           newBoard[r][c].isFlagged ||
           newBoard[r][c].isMine
@@ -147,13 +157,11 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
 
         newBoard[r][c].isRevealed = true;
 
-        // If no neighboring mines, reveal all neighbors
+       
         if (newBoard[r][c].neighborCount === 0) {
           for (let dr = -1; dr <= 1; dr++) {
             for (let dc = -1; dc <= 1; dc++) {
-              if (dr !== 0 || dc !== 0) { // Don't reveal the same cell
-                reveal(r + dr, c + dc);
-              }
+              reveal(r + dr, c + dc);
             }
           }
         }
@@ -161,10 +169,10 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
 
       reveal(row, col);
 
-      // Check for win condition - all non-mine cells revealed
+     
       let unrevealedNonMines = 0;
-      newBoard.forEach(boardRow => {
-        boardRow.forEach(cell => {
+      newBoard.forEach(row => {
+        row.forEach(cell => {
           if (!cell.isMine && !cell.isRevealed) {
             unrevealedNonMines++;
           }
@@ -173,15 +181,6 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
 
       if (unrevealedNonMines === 0) {
         setGameState('won');
-        // Auto-flag remaining mines
-        newBoard.forEach(boardRow => {
-          boardRow.forEach(cell => {
-            if (cell.isMine && !cell.isFlagged) {
-              cell.isFlagged = true;
-            }
-          });
-        });
-        setFlagCount(mineCount);
       }
     }
 
@@ -199,17 +198,15 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
       setGameStarted(true);
     }
 
-    const newBoard = board.map(row => row.map(cell => ({ ...cell })));
+    const newBoard = [...board];
     const cell = newBoard[row][col];
     
     if (cell.isFlagged) {
       cell.isFlagged = false;
       setFlagCount(prev => prev - 1);
     } else {
-      if (flagCount < mineCount) { // Prevent over-flagging
-        cell.isFlagged = true;
-        setFlagCount(prev => prev + 1);
-      }
+      cell.isFlagged = true;
+      setFlagCount(prev => prev + 1);
     }
 
     setBoard(newBoard);
@@ -346,6 +343,9 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
       {/* Game Status */}
       <div className="game-status">
         {getGameStateMessage()}
+        <button onClick={() => console.log('Test button clicked!', board.length)} style={{marginLeft: '10px'}}>
+          Debug ({board.length} rows)
+        </button>
       </div>
 
       {/* Game Board */}
@@ -353,8 +353,8 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
         <div 
           className="minesweeper-board"
           style={{
-            gridTemplateColumns: `repeat(${currentDifficulty.cols}, 1fr)`,
-            gridTemplateRows: `repeat(${currentDifficulty.rows}, 1fr)`
+            gridTemplateColumns: `repeat(${difficulties[difficulty].cols}, 1fr)`,
+            gridTemplateRows: `repeat(${difficulties[difficulty].rows}, 1fr)`
           }}
         >
           {board.map((row, rowIndex) =>
