@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import WaifuChat from '../apps/WaifuChat';
-import Notepad from '../apps/Notepad';
-import Calculator from '../apps/Calculator';
-import FileExplorer from '../apps/FileExplorer';
+import Notepad from '../../applications/Notepad';
+import Calculator from '../../applications/Calculator';
+import FileExplorer from '../../applications/FileExplorer';
+import Minesweeper from '../../applications/Minesweeper';
 import Settings from '../apps/Settings';
 
 interface StartMenuProps {
@@ -52,6 +53,13 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
       category: 'system'
     },
     {
+      id: 'minesweeper',
+      title: 'Minesweeper',
+      icon: '💣',
+      appId: 'minesweeper',
+      category: 'programs'
+    },
+    {
       id: 'settings',
       title: 'Control Panel',
       icon: '⚙️',
@@ -75,6 +83,9 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
         break;
       case 'file-explorer':
         component = <FileExplorer />;
+        break;
+      case 'minesweeper':
+        component = <Minesweeper />;
         break;
       case 'settings':
         component = <Settings />;

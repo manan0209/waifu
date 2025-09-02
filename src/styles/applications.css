@@ -1,5 +1,17 @@
 /* Application Styles */
 
+/* Import File Explorer Styles */
+@import './file-explorer.css';
+
+/* Import Notepad Styles */
+@import './notepad.css';
+
+/* Import Calculator Styles */
+@import './calculator.css';
+
+/* Import Minesweeper Styles */
+@import './minesweeper.css';
+
 /* Waifu Chat App */
 .waifu-chat-app {
   display: flex;

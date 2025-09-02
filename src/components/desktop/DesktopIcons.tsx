@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import WaifuChat from '../apps/WaifuChat';
-import Notepad from '../apps/Notepad';
-import Calculator from '../apps/Calculator';
-import FileExplorer from '../apps/FileExplorer';
+import Notepad from '../../applications/Notepad';
+import Calculator from '../../applications/Calculator';
+import FileExplorer from '../../applications/FileExplorer';
+import Minesweeper from '../../applications/Minesweeper';
 
 interface DesktopIconsProps {
   onOpenWindow: (appId: string, title: string, component: React.ReactNode) => void;
@@ -54,6 +55,14 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
       appId: 'file-explorer'
     },
     {
+      id: 'minesweeper',
+      title: 'Minesweeper',
+      icon: '💣',
+      x: 150,
+      y: 50,
+      appId: 'minesweeper'
+    },
+    {
       id: 'recycle-bin',
       title: 'Recycle Bin',
       icon: '🗑️',
@@ -82,6 +91,9 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
         break;
       case 'file-explorer':
         component = <FileExplorer />;
+        break;
+      case 'minesweeper':
+        component = <Minesweeper />;
         break;
       default:
         return;

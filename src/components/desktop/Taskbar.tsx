@@ -49,19 +49,19 @@ export default function Taskbar({
           onOpenWindow(appId, title, <WaifuChat />);
         }
       });
-      import('../apps/Notepad').then(module => {
+      import('../../applications/Notepad').then(module => {
         const Notepad = module.default;
         if (appId === 'notepad') {
           onOpenWindow(appId, title, <Notepad />);
         }
       });
-      import('../apps/Calculator').then(module => {
+      import('../../applications/Calculator').then(module => {
         const Calculator = module.default;
         if (appId === 'calculator') {
           onOpenWindow(appId, title, <Calculator />);
         }
       });
-      import('../apps/FileExplorer').then(module => {
+      import('../../applications/FileExplorer').then(module => {
         const FileExplorer = module.default;
         if (appId === 'file-explorer') {
           onOpenWindow(appId, title, <FileExplorer />);
