@@ -25,6 +25,15 @@ export default function Calculator({ onClose, onMinimize, onMaximize }: Calculat
   };
 
   const handleNumberClick = (num: string) => {
+    // Play button click sound
+    try {
+      const audio = new Audio('/sounds/system/beep.mp3');
+      audio.volume = 0.2;
+      audio.play();
+    } catch (e) {
+      console.log('Sound playback failed:', e);
+    }
+    
     if (waitingForNewValue) {
       setDisplay(num);
       setWaitingForNewValue(false);
@@ -293,6 +302,15 @@ export default function Calculator({ onClose, onMinimize, onMaximize }: Calculat
           </button>
           {isKawaiiMode && (
             <button className="btn-kawaii" onClick={() => {
+              // Play love sound
+              try {
+                const audio = new Audio('/senpai.mp3');
+                audio.volume = 0.4;
+                audio.play();
+              } catch (e) {
+                console.log('Sound playback failed:', e);
+              }
+              
               setDisplay('143');
               setHistory(prev => [...prev.slice(-9), 'Love calculation: I ♥ U']);
             }}>

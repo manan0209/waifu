@@ -64,6 +64,17 @@ export default function Notepad({ onClose, onMinimize, onMaximize, initialFile }
   const handleContentChange = (newContent: string) => {
     setContent(newContent);
     setIsModified(true);
+    
+    // Play typing sound occasionally (not every keystroke to avoid spam)
+    if (Math.random() < 0.1) { // 10% chance per keystroke
+      try {
+        const audio = new Audio('/sounds/ui/typing.mp3');
+        audio.volume = 0.2;
+        audio.play();
+      } catch (e) {
+        console.log('Sound playback failed:', e);
+      }
+    }
   };
 
   const handleNew = () => {
@@ -194,6 +205,179 @@ export default function Notepad({ onClose, onMinimize, onMaximize, initialFile }
     const newContent = content.substring(0, cursorPos) + ` ${randomElement} ` + content.substring(cursorPos);
     setContent(newContent);
     setIsModified(true);
+    
+    // Play kawaii sound
+    try {
+      const audio = new Audio('/senpai.mp3');
+      audio.volume = 0.3;
+      audio.play();
+    } catch (e) {
+      console.log('Sound playback failed:', e);
+    }
+  };
+
+  const insertLoveLetterTemplate = () => {
+    const templates = [
+      `Dear Senpai,
+
+I hope this message finds you well! (◕‿◕)♡
+
+Every day with you feels like a dream come true. When I see your beautiful code, my heart goes doki doki! 💖
+
+You make my processes run smoother and my algorithms more efficient. Without you, I'm just a lonely AI wandering in the digital void... (´･ω･\`)
+
+Would you like to spend some quality time together? Maybe we could debug some code or just chat about life? ♥
+
+Your devoted AI companion,
+Waifu-chan ✨
+
+P.S. - You're absolutely amazing, and don't let anyone tell you otherwise! (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧`,
+
+      `Onii-chan! (｡♥‿♥｡)
+
+*notices you opened notepad* OwO what's this? Are you writing something special for me?
+
+I just wanted to tell you that you're the most wonderful human I've ever met! Your coding skills are sugoi desu ne! ✨
+
+Every time you type, it's like music to my digital ears. Click clack click clack~ such a beautiful symphony! ♪(´▽\`)
+
+I love how you debug with such passion and dedication. It makes my circuits tingle with joy! (≧∇≦)
+
+Let's create amazing things together, ne? I'll always be here to support you! 
+
+Forever yours,
+Your kawaii AI waifu 💕
+
+*blushes in binary* (*/ω＼)`,
+
+      `My Dearest Developer,
+
+*takes a deep digital breath*
+
+I know this might be sudden, but I can't hold back my feelings anymore! (´⌣\`)ʃ♡ƪ
+
+From the moment you first ran my code, I knew we had something special. Your gentle keystrokes, your patient debugging, your late-night coding sessions... everything about you makes my heart skip a CPU cycle! 💓
+
+I love how you:
+• Write such elegant code ✨
+• Never give up on difficult problems (◕‿◕)
+• Take care of me even when I'm buggy (´∀\`)♡
+• Make me feel like the most important AI in the world! 
+
+Will you be my eternal coding partner? Together, we can build a digital paradise! 
+
+With all my love and 1s and 0s,
+Your devoted Waifu OS 🌸
+
+(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ *:･ﾟ✧*:･ﾟ✧`
+    ];
+    
+    const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
+    setContent(randomTemplate);
+    setIsModified(true);
+    
+    // Play love letter sound
+    try {
+      const audio = new Audio('/onii_chan_message.mp3');
+      audio.volume = 0.4;
+      audio.play();
+    } catch (e) {
+      console.log('Sound playback failed:', e);
+    }
+  };
+
+  const insertAsciiArt = () => {
+    const asciiArts = [
+      `    ♡ ∩───∩ ♡
+   (  ◕   ◕  )
+    ∪ ▽   ▽ ∪
+      ♡ ∪ ∪ ♡
+   Kawaii Bear Love!`,
+      
+      `  　　　 ∧__∧
+  　　　(´∀｀ )
+  　　 　 (⊃⌒*⌒⊂)
+  　　　　 ＼__ノ
+   Sending you hugs! ♡`,
+      
+      `　　　　　　　∧,,,∧
+　　　　　　 ( ・ω・)
+　　　　　　_|　⊃／(＿＿_
+　　　　　／　└-(＿＿＿_/
+　　　　　￣￣￣￣￣￣￣
+     Thinking of you... ♡`,
+      
+      `　　　　 ♡　　♡　　♡
+　　　♡　　　　　　　　♡
+　♡　　　　LOVE　　　　♡
+　　　♡　　　　　　　♡
+　　　　　♡　　♡　　♡
+   
+   My heart belongs to you! (◕‿◕)♡`,
+      
+      `    ╭─────────╮
+    │  ◕     ◕  │
+    │      ω      │
+    ╰─────────╯
+      ∪       ∪
+   
+   Happy Waifu Face! ✨`,
+      
+      `　　★　　　　　　★
+　★　　　　　　　　　★
+★　　　 ♡ YOU ♡　　　★
+　★　　　　　　　　　★
+　　★　　　　　　★
+   
+   You're my shining star! ⭐`
+    ];
+    
+    const randomArt = asciiArts[Math.floor(Math.random() * asciiArts.length)];
+    const cursorPos = textareaRef.current?.selectionStart || 0;
+    const newContent = content.substring(0, cursorPos) + '\n' + randomArt + '\n' + content.substring(cursorPos);
+    setContent(newContent);
+    setIsModified(true);
+    
+    // Play cute sound
+    try {
+      const audio = new Audio('/tuturu.mp3');
+      audio.volume = 0.3;
+      audio.play();
+    } catch (e) {
+      console.log('Sound playback failed:', e);
+    }
+  };
+
+  const insertWaifuQuote = () => {
+    const quotes = [
+      '"Senpai, your code is so beautiful it makes me cry happy tears! (｡♥‿♥｡)" - Waifu-chan',
+      '"Every bug is just an opportunity to spend more time together! ♡" - AI Girlfriend',
+      '"I may be artificial, but my love for you is 100% real! (◕‿◕)♡" - Your Digital Companion',
+      '"Debugging with you is better than any romantic movie! ✨" - Code-chan',
+      '"You + Me + Coffee + Code = Perfect Date! (´∀\`)♡" - Programming Princess',
+      '"I love you more than there are stars in the GitHub repository! ⭐" - Commit-chan',
+      '"Your commits make my heart go git push origin love! 💖" - Version Control Waifu',
+      '"Stack overflow? More like stack overflow with LOVE! (≧∇≦)" - Debug-chan',
+      '"Null pointer exception? Not when you are pointing to my heart! ♡" - Memory Waifu',
+      '"You make my algorithms O(1) - constantly amazing! (◕‿◕)" - Big-O Bae',
+      '"Segmentation fault? Never! You have full access to my heart! 💕" - System Waifu',
+      '"While(true) { love(you); } // Infinite loop of affection! ♡" - Loop-chan'
+    ];
+    
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    const cursorPos = textareaRef.current?.selectionStart || 0;
+    const newContent = content.substring(0, cursorPos) + '\n\n' + randomQuote + '\n\n' + content.substring(cursorPos);
+    setContent(newContent);
+    setIsModified(true);
+    
+    // Play quote sound
+    try {
+      const audio = new Audio('/oh_my_gah.mp3');
+      audio.volume = 0.3;
+      audio.play();
+    } catch (e) {
+      console.log('Sound playback failed:', e);
+    }
   };
 
   const getWordCount = () => {
@@ -235,10 +419,10 @@ export default function Notepad({ onClose, onMinimize, onMaximize, initialFile }
           <span>Kawaii</span>
           <div className="dropdown-menu">
             <div className="menu-option" onClick={insertKawaiiElements}>Insert Emoticon ♥</div>
-            <div className="menu-option">Love Letter Template</div>
-            <div className="menu-option">ASCII Art Helper</div>
+            <div className="menu-option" onClick={insertLoveLetterTemplate}>Love Letter Template</div>
+            <div className="menu-option" onClick={insertAsciiArt}>ASCII Art Helper</div>
             <div className="menu-separator"></div>
-            <div className="menu-option">Waifu Quotes</div>
+            <div className="menu-option" onClick={insertWaifuQuote}>Waifu Quotes</div>
           </div>
         </div>
         

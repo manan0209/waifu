@@ -134,6 +134,16 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
     if (newBoard[row][col].isMine) {
       
       setGameState('lost');
+      
+      // Play explosion sound
+      try {
+        const audio = new Audio(difficulty === 'kawaii' ? '/oh_my_gah.mp3' : '/fart.mp3');
+        audio.volume = 0.4;
+        audio.play();
+      } catch (e) {
+        console.log('Sound playback failed:', e);
+      }
+      
      
       newBoard.forEach(row => {
         row.forEach(cell => {
@@ -181,6 +191,15 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
 
       if (unrevealedNonMines === 0) {
         setGameState('won');
+        
+        // Play victory sound
+        try {
+          const audio = new Audio(difficulty === 'kawaii' ? '/tuturu.mp3' : '/senpai.mp3');
+          audio.volume = 0.5;
+          audio.play();
+        } catch (e) {
+          console.log('Sound playback failed:', e);
+        }
       }
     }
 
@@ -200,6 +219,15 @@ export default function Minesweeper({ onClose, onMinimize, onMaximize }: Mineswe
 
     const newBoard = [...board];
     const cell = newBoard[row][col];
+    
+    // Play flag sound
+    try {
+      const audio = new Audio('/sounds/system/beep.mp3');
+      audio.volume = 0.3;
+      audio.play();
+    } catch (e) {
+      console.log('Sound playback failed:', e);
+    }
     
     if (cell.isFlagged) {
       cell.isFlagged = false;
