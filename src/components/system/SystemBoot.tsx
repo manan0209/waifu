@@ -10,32 +10,32 @@ interface BootMessage {
 }
 
 const biosMessages: BootMessage[] = [
-  { text: '', delay: 500 }, // Initial pause
-  { text: 'WaifuSystems BIOS v2.4.1', delay: 300 },
-  { text: 'Copyright (C) 1999-2003 WaifuSystems Inc.', delay: 200 },
-  { text: '', delay: 300 },
-  { text: 'CPU: Intel Pentium III 800MHz', delay: 150 },
-  { text: 'Memory Test: ', delay: 100, isProgress: true, progressMax: 512 },
-  { text: 'Memory: 512MB OK', delay: 300 },
-  { text: '', delay: 200 },
-  { text: 'Detecting IDE Drives...', delay: 400 },
-  { text: '  Primary Master  : WaifuOS System Drive', delay: 250 },
-  { text: '  Primary Slave   : CDROM Drive', delay: 200 },
-  { text: '  Secondary Master: Love Letters Archive', delay: 250 },
-  { text: '  Secondary Slave : None', delay: 200 },
-  { text: '', delay: 300 },
-  { text: 'Detecting USB Devices...', delay: 400 },
-  { text: '  USB Mouse Found', delay: 200 },
-  { text: '  USB Keyboard Found', delay: 200 },
-  { text: '  Heart Monitor Connected', delay: 300 },
-  { text: '', delay: 400 },
-  { text: 'Loading WaifuOS...', delay: 500 },
-  { text: 'Initializing Romance Drivers...', delay: 600 },
-  { text: 'Loading Personality Modules...', delay: 700 },
-  { text: 'Establishing Connection to Heart Server...', delay: 800 },
-  { text: '', delay: 300 },
-  { text: 'WaifuOS Ready.', delay: 400 },
-  { text: '', delay: 1000 },
+  { text: '', delay: 50 }, 
+  { text: 'WaifuSystems BIOS v2.4.1', delay: 50 }, 
+  { text: 'Copyright (C) 1999-2003 WaifuSystems Inc.', delay: 30 }, 
+  { text: '', delay: 40 }, 
+  { text: 'CPU: Intel Pentium III 800MHz', delay: 25 }, 
+  { text: 'Memory Test: ', delay: 20, isProgress: true, progressMax: 512 }, 
+  { text: 'Memory: 512MB OK', delay: 50 }, 
+  { text: '', delay: 30 }, 
+  { text: 'Detecting IDE Drives...', delay: 60 }, 
+  { text: '  Primary Master  : WaifuOS System Drive', delay: 40 }, 
+  { text: '  Primary Slave   : CDROM Drive', delay: 30 },
+  { text: '  Secondary Master: Love Letters Archive', delay: 40 }, 
+  { text: '  Secondary Slave : None', delay: 30 }, 
+  { text: '', delay: 40 }, 
+  { text: 'Detecting USB Devices...', delay: 60 }, 
+  { text: '  USB Mouse Found', delay: 30 }, 
+  { text: '  USB Keyboard Found', delay: 30 }, 
+  { text: '  Heart Monitor Connected', delay: 40 }, 
+  { text: '', delay: 50 }, 
+  { text: 'Loading WaifuOS...', delay: 80 },
+  { text: 'Initializing Romance Drivers...', delay: 100 }, 
+  { text: 'Loading Personality Modules...', delay: 120 },
+  { text: 'Establishing Connection to Heart Server...', delay: 150 }, 
+  { text: '', delay: 50 }, 
+  { text: 'WaifuOS Ready.', delay: 80 }, 
+  { text: '', delay: 100 }, 
 ];
 
 interface SystemBootProps {
@@ -66,7 +66,7 @@ export default function SystemBoot({ onBootComplete }: SystemBootProps) {
   
   useEffect(() => {
     if (currentMessageIndex >= biosMessages.length) {
-      setTimeout(() => onBootComplete(), 1000);
+      setTimeout(() => onBootComplete(), 100); // reduced from 300
       return;
     }
 
@@ -79,7 +79,7 @@ export default function SystemBoot({ onBootComplete }: SystemBootProps) {
       
       let currentProgress = 0;
       const progressInterval = setInterval(() => {
-        currentProgress += Math.random() * 20 + 5;
+        currentProgress += Math.random() * 40 + 20; // Increased speed from 20+5 to 40+20
         if (currentProgress >= (message.progressMax || 100)) {
           currentProgress = message.progressMax || 100;
           clearInterval(progressInterval);
@@ -87,10 +87,10 @@ export default function SystemBoot({ onBootComplete }: SystemBootProps) {
           setTimeout(() => {
             setIsTyping(false);
             setCurrentMessageIndex(prev => prev + 1);
-          }, 300);
+          }, 100); // Reduced from 300 to 100
         }
         setProgress(currentProgress);
-      }, 50);
+      }, 25); // Reduced from 50 to 25
       
       return () => clearInterval(progressInterval);
     } else {
@@ -111,10 +111,10 @@ export default function SystemBoot({ onBootComplete }: SystemBootProps) {
               setCurrentMessageIndex(prev => prev + 1);
             }, message.delay);
           }
-        }, 30 + Math.random() * 20);
+        }, 15 + Math.random() * 10); // Reduced from 30+20 to 15+10
         
         return () => clearInterval(typingInterval);
-      }, 100);
+      }, 50); // Reduced from 100 to 50
     }
   }, [currentMessageIndex, onBootComplete]);
 

@@ -20,11 +20,12 @@
 .wallpaper {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #ff6b9d 0%, #c44569 25%, #8e44ad 50%, #3742fa 75%, #2f3542 100%);
-  background-image: 
-    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(255, 107, 157, 0.2) 0%, transparent 50%),
-    radial-gradient(circle at 40% 60%, rgba(196, 69, 105, 0.1) 0%, transparent 30%);
+  background-image: url('/waifuwallpaper.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* Fallback gradient in case image fails to load */
+  background-color: #ff6b9d;
 }
 
 /* Desktop Icons */
@@ -145,6 +146,39 @@
   display: flex;
   gap: 2px;
   margin-left: 4px;
+}
+
+.quick-launch {
+  display: flex;
+  gap: 2px;
+  margin-left: 8px;
+  padding-left: 8px;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #808080;
+  padding-right: 8px;
+  margin-right: 8px;
+}
+
+.quick-launch-btn {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.1s;
+}
+
+.quick-launch-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px outset #c0c0c0;
+}
+
+.quick-launch-btn:active {
+  border: 1px inset #c0c0c0;
 }
 
 .task-button {
@@ -501,4 +535,180 @@
   bottom: 0;
   left: 0;
   cursor: sw-resize;
+}
+
+/* Alt+Tab Switcher */
+.alt-tab-switcher {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.alt-tab-container {
+  background: #c0c0c0;
+  border: 2px outset #c0c0c0;
+  border-radius: 4px;
+  padding: 16px;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+  min-width: 400px;
+  max-width: 600px;
+}
+
+.alt-tab-header {
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+  margin-bottom: 12px;
+  color: #000080;
+}
+
+.alt-tab-windows {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.alt-tab-window {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  min-width: 80px;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.alt-tab-window.selected {
+  background: #0078d4;
+  color: white;
+  border-color: #ffffff;
+}
+
+.alt-tab-icon {
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+
+.alt-tab-title {
+  font-size: 10px;
+  text-align: center;
+  word-wrap: break-word;
+  max-width: 80px;
+}
+
+.alt-tab-footer {
+  text-align: center;
+  font-size: 10px;
+  color: #666;
+}
+
+/* Notification System */
+.notification-manager {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.notification {
+  position: absolute;
+  width: 300px;
+  background: #ffffcc;
+  border: 2px outset #c0c0c0;
+  border-radius: 4px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  pointer-events: all;
+  animation: notification-slide-in 0.3s ease-out;
+}
+
+@keyframes notification-slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.notification-error {
+  background: #ffcccc;
+  border-color: #ff6666;
+}
+
+.notification-warning {
+  background: #fff3cd;
+  border-color: #ffc107;
+}
+
+.notification-success {
+  background: #d4edda;
+  border-color: #28a745;
+}
+
+.notification-info {
+  background: #d1ecf1;
+  border-color: #17a2b8;
+}
+
+.notification-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px 4px 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.notification-icon {
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.notification-title {
+  flex: 1;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.notification-close {
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+.notification-message {
+  padding: 4px 12px;
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.notification-time {
+  padding: 4px 12px 8px 12px;
+  font-size: 9px;
+  color: #666;
+  text-align: right;
 }

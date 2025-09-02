@@ -6,6 +6,7 @@ interface TaskbarProps {
   windows: any[];
   onWindowClick: (windowId: string) => void;
   startMenuOpen: boolean;
+  onOpenWindow?: (appId: string, title: string, component: React.ReactNode) => void;
 }
 
 export default function Taskbar({ 
@@ -13,7 +14,8 @@ export default function Taskbar({
   currentTime, 
   windows, 
   onWindowClick,
-  startMenuOpen 
+  startMenuOpen,
+  onOpenWindow 
 }: TaskbarProps) {
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('en-US', {
@@ -29,6 +31,43 @@ export default function Taskbar({
       day: 'numeric',
       year: 'numeric'
     });
+  };
+
+  const quickLaunchApps = [
+    { id: 'file-explorer', icon: '📁', title: 'My Computer' },
+    { id: 'waifu-chat', icon: '💬', title: 'Waifu Chat' },
+    { id: 'notepad', icon: '📝', title: 'Notepad' },
+    { id: 'calculator', icon: '🔢', title: 'Calculator' }
+  ];
+
+  const handleQuickLaunch = (appId: string, title: string) => {
+    if (onOpenWindow) {
+      // Import components dynamically to avoid circular imports
+      import('../apps/WaifuChat').then(module => {
+        const WaifuChat = module.default;
+        if (appId === 'waifu-chat') {
+          onOpenWindow(appId, title, <WaifuChat />);
+        }
+      });
+      import('../apps/Notepad').then(module => {
+        const Notepad = module.default;
+        if (appId === 'notepad') {
+          onOpenWindow(appId, title, <Notepad />);
+        }
+      });
+      import('../apps/Calculator').then(module => {
+        const Calculator = module.default;
+        if (appId === 'calculator') {
+          onOpenWindow(appId, title, <Calculator />);
+        }
+      });
+      import('../apps/FileExplorer').then(module => {
+        const FileExplorer = module.default;
+        if (appId === 'file-explorer') {
+          onOpenWindow(appId, title, <FileExplorer />);
+        }
+      });
+    }
   };
 
   return (
@@ -61,6 +100,20 @@ export default function Taskbar({
               {window.appId === 'settings' && '⚙️'}
             </div>
             <span className="task-title">{window.title}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Quick Launch */}
+      <div className="quick-launch">
+        {quickLaunchApps.map(app => (
+          <button
+            key={app.id}
+            className="quick-launch-btn"
+            onClick={() => handleQuickLaunch(app.id, app.title)}
+            title={app.title}
+          >
+            {app.icon}
           </button>
         ))}
       </div>

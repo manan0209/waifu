@@ -3,6 +3,9 @@ import Taskbar from './Taskbar';
 import WindowManager from './WindowManager';
 import DesktopIcons from './DesktopIcons';
 import StartMenu from './StartMenu';
+import AltTabSwitcher from './AltTabSwitcher';
+import NotificationManager from '../system/NotificationManager';
+import { useSystemSounds } from '../../hooks/useSystemSounds';
 
 interface DesktopProps {
   onShutdown?: () => void;
@@ -12,6 +15,24 @@ export default function Desktop({ onShutdown }: DesktopProps) {
   const [showStartMenu, setShowStartMenu] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [windows, setWindows] = useState<any[]>([]);
+  const [showAltTab, setShowAltTab] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [hasPlayedStartup, setHasPlayedStartup] = useState(false);
+  
+  const { playButtonClick, playNotification, playStartup } = useSystemSounds();
+
+  // Play startup sound when desktop loads (only once)
+  useEffect(() => {
+    if (!hasPlayedStartup) {
+      const timer = setTimeout(() => {
+        playStartup();
+        addNotification('System', 'Welcome to WaifuOS!', 'success');
+        setHasPlayedStartup(true);
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, []); // Empty dependency array to run only once
 
   // Update clock every second
   useEffect(() => {
@@ -22,7 +43,41 @@ export default function Desktop({ onShutdown }: DesktopProps) {
     return () => clearInterval(timer);
   }, []);
 
+  // Global keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Tab' && e.altKey && !showAltTab) {
+        e.preventDefault();
+        if (windows.filter(w => !w.isMinimized).length > 1) {
+          setShowAltTab(true);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [showAltTab, windows]);
+
+  const addNotification = (title: string, message: string, type: 'info' | 'success' | 'warning' | 'error' = 'info', duration: number = 5000) => {
+    const notification = {
+      id: Date.now().toString(),
+      title,
+      message,
+      type,
+      duration,
+      timestamp: new Date()
+    };
+    
+    setNotifications(prev => [...prev, notification]);
+    playNotification();
+  };
+
+  const removeNotification = (id: string) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
+
   const handleStartClick = () => {
+    playButtonClick();
     setShowStartMenu(!showStartMenu);
   };
 
@@ -68,6 +123,12 @@ export default function Desktop({ onShutdown }: DesktopProps) {
     ));
   };
 
+  const updateWindowPosition = (windowId: string, x: number, y: number) => {
+    setWindows(prev => prev.map(w => 
+      w.id === windowId ? { ...w, x, y } : w
+    ));
+  };
+
   return (
     <div className="desktop">
       
@@ -80,12 +141,14 @@ export default function Desktop({ onShutdown }: DesktopProps) {
       </div>
 
       
+            {/* Window Manager */}
       <WindowManager
         windows={windows}
         onClose={closeWindow}
         onMinimize={minimizeWindow}
         onMaximize={maximizeWindow}
         onFocus={focusWindow}
+        onUpdatePosition={updateWindowPosition}
       />
 
       
@@ -98,12 +161,29 @@ export default function Desktop({ onShutdown }: DesktopProps) {
       )}
 
       
+            {/* Alt+Tab Switcher */}
+      {showAltTab && (
+        <AltTabSwitcher
+          windows={windows}
+          onSelectWindow={focusWindow}
+          onClose={() => setShowAltTab(false)}
+        />
+      )}
+
+      {/* Taskbar */}
       <Taskbar
         onStartClick={handleStartClick}
         currentTime={currentTime}
         windows={windows}
         onWindowClick={minimizeWindow}
         startMenuOpen={showStartMenu}
+        onOpenWindow={openWindow}
+      />
+
+      {/* Notification Manager */}
+      <NotificationManager
+        notifications={notifications}
+        onDismiss={removeNotification}
       />
     </div>
   );
