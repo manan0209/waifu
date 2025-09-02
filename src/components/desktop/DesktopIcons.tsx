@@ -4,6 +4,7 @@ import Notepad from '../../applications/Notepad';
 import Calculator from '../../applications/Calculator';
 import FileExplorer from '../../applications/FileExplorer';
 import Minesweeper from '../../applications/Minesweeper';
+import { Icons } from '../ui/Icons';
 
 interface DesktopIconsProps {
   onOpenWindow: (appId: string, title: string, component: React.ReactNode) => void;
@@ -12,7 +13,7 @@ interface DesktopIconsProps {
 interface DesktopIcon {
   id: string;
   title: string;
-  icon: string;
+  icon: React.ReactNode;
   x: number;
   y: number;
   appId: string;
@@ -25,7 +26,7 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
     {
       id: 'waifu-chat',
       title: 'Waifu Chat',
-      icon: '💬',
+      icon: <Icons.Notepad size={32} color="#FF69B4" />,
       x: 50,
       y: 50,
       appId: 'waifu-chat'
@@ -33,7 +34,7 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
     {
       id: 'notepad',
       title: 'Notepad',
-      icon: '📝',
+      icon: <Icons.Notepad size={32} />,
       x: 50,
       y: 150,
       appId: 'notepad'
@@ -41,7 +42,7 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
     {
       id: 'calculator',
       title: 'Calculator',
-      icon: '🔢',
+      icon: <Icons.Calculator size={32} />,
       x: 50,
       y: 250,
       appId: 'calculator'
@@ -49,7 +50,7 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
     {
       id: 'file-explorer',
       title: 'My Computer',
-      icon: '💻',
+      icon: <Icons.Computer size={32} />,
       x: 50,
       y: 350,
       appId: 'file-explorer'
@@ -57,7 +58,7 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
     {
       id: 'minesweeper',
       title: 'Minesweeper',
-      icon: '💣',
+      icon: <Icons.Settings size={32} color="#8B0000" />,
       x: 150,
       y: 50,
       appId: 'minesweeper'
@@ -65,7 +66,7 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
     {
       id: 'recycle-bin',
       title: 'Recycle Bin',
-      icon: '🗑️',
+      icon: <Icons.Folder size={32} color="#654321" />,
       x: 50,
       y: 450,
       appId: 'recycle-bin'

@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useFileSystem } from '../hooks/useFileSystem';
 import { FileSystemNode } from '../types/FileSystem';
+import { Icons } from '../components/ui/Icons';
+import { theme } from '../config/theme';
 
 interface FileExplorerProps {
   onClose?: () => void;
@@ -140,30 +142,30 @@ export default function FileExplorer({
 
   const getFileIcon = (node: FileSystemNode) => {
     if (node.type === 'folder') {
-      return '📁';
+      return <Icons.Folder size={16} />;
     }
     
     switch (node.extension) {
-      case 'txt': return '📄';
-      case 'exe': return '⚙️';
+      case 'txt': return <Icons.File size={16} />;
+      case 'exe': return <Icons.Executable size={16} />;
       case 'jpg':
       case 'jpeg':
       case 'png':
-      case 'gif': return '🖼️';
+      case 'gif': return <Icons.File size={16} color="#FFB6C1" />;
       case 'mp3':
-      case 'wav': return '🎵';
+      case 'wav': return <Icons.File size={16} color="#DDA0DD" />;
       case 'mp4':
-      case 'avi': return '🎬';
-      default: return '📄';
+      case 'avi': return <Icons.File size={16} color="#87CEEB" />;
+      default: return <Icons.File size={16} />;
     }
   };
 
   const getDriveIcon = (drive: any) => {
     switch (drive.type) {
-      case 'hard_disk': return '💽';
-      case 'floppy': return '💾';
-      case 'cdrom': return '💿';
-      default: return '💽';
+      case 'hard_disk': return <Icons.HardDrive size={16} />;
+      case 'floppy': return <Icons.FloppyDisk size={16} />;
+      case 'cdrom': return <Icons.CDROM size={16} />;
+      default: return <Icons.HardDrive size={16} />;
     }
   };
 
@@ -214,14 +216,18 @@ export default function FileExplorer({
           <button 
             onClick={() => handleCreateNew('folder')}
             title="New Folder"
+            className="toolbar-button"
           >
-            📁➕
+            <Icons.Folder size={16} />
+            <span className="toolbar-button-text">New Folder</span>
           </button>
           <button 
             onClick={() => handleCreateNew('file')}
             title="New File"
+            className="toolbar-button"
           >
-            📄➕
+            <Icons.File size={16} />
+            <span className="toolbar-button-text">New File</span>
           </button>
         </div>
         

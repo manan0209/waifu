@@ -5,6 +5,7 @@ import Calculator from '../../applications/Calculator';
 import FileExplorer from '../../applications/FileExplorer';
 import Minesweeper from '../../applications/Minesweeper';
 import Settings from '../apps/Settings';
+import { Icons } from '../ui/Icons';
 
 interface StartMenuProps {
   onClose: () => void;
@@ -15,7 +16,7 @@ interface StartMenuProps {
 interface MenuItem {
   id: string;
   title: string;
-  icon: string;
+  icon: React.ReactNode;
   appId: string;
   category: 'programs' | 'system';
 }
@@ -27,42 +28,42 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
     {
       id: 'waifu-chat',
       title: 'Waifu Chat',
-      icon: '💬',
+      icon: <Icons.Notepad size={16} color="#FF69B4" />,
       appId: 'waifu-chat',
       category: 'programs'
     },
     {
       id: 'notepad',
       title: 'Notepad',
-      icon: '📝',
+      icon: <Icons.Notepad size={16} />,
       appId: 'notepad',
       category: 'programs'
     },
     {
       id: 'calculator',
       title: 'Calculator',
-      icon: '🔢',
+      icon: <Icons.Calculator size={16} />,
       appId: 'calculator',
       category: 'programs'
     },
     {
       id: 'file-explorer',
       title: 'My Computer',
-      icon: '💻',
+      icon: <Icons.Computer size={16} />,
       appId: 'file-explorer',
       category: 'system'
     },
     {
       id: 'minesweeper',
       title: 'Minesweeper',
-      icon: '💣',
+      icon: <Icons.Settings size={16} color="#8B0000" />,
       appId: 'minesweeper',
       category: 'programs'
     },
     {
       id: 'settings',
       title: 'Control Panel',
-      icon: '⚙️',
+      icon: <Icons.Settings size={16} />,
       appId: 'settings',
       category: 'system'
     }

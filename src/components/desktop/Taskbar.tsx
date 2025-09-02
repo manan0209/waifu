@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Icons } from '../ui/Icons';
 
 interface TaskbarProps {
   onStartClick: () => void;
@@ -34,10 +35,10 @@ export default function Taskbar({
   };
 
   const quickLaunchApps = [
-    { id: 'file-explorer', icon: '📁', title: 'My Computer' },
-    { id: 'waifu-chat', icon: '💬', title: 'Waifu Chat' },
-    { id: 'notepad', icon: '📝', title: 'Notepad' },
-    { id: 'calculator', icon: '🔢', title: 'Calculator' }
+    { id: 'file-explorer', icon: <Icons.Computer size={16} />, title: 'My Computer' },
+    { id: 'waifu-chat', icon: <Icons.Notepad size={16} color="#FF69B4" />, title: 'Waifu Chat' },
+    { id: 'notepad', icon: <Icons.Notepad size={16} />, title: 'Notepad' },
+    { id: 'calculator', icon: <Icons.Calculator size={16} />, title: 'Calculator' }
   ];
 
   const handleQuickLaunch = (appId: string, title: string) => {
@@ -93,11 +94,11 @@ export default function Taskbar({
             title={window.title}
           >
             <div className="task-icon">
-              {window.appId === 'waifu-chat' && '💬'}
-              {window.appId === 'notepad' && '📝'}
-              {window.appId === 'calculator' && '🔢'}
-              {window.appId === 'file-explorer' && '📁'}
-              {window.appId === 'settings' && '⚙️'}
+              {window.appId === 'waifu-chat' && <Icons.Notepad size={16} color="#FF69B4" />}
+              {window.appId === 'notepad' && <Icons.Notepad size={16} />}
+              {window.appId === 'calculator' && <Icons.Calculator size={16} />}
+              {window.appId === 'file-explorer' && <Icons.Computer size={16} />}
+              {window.appId === 'settings' && <Icons.Settings size={16} />}
             </div>
             <span className="task-title">{window.title}</span>
           </button>

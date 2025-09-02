@@ -1,0 +1,597 @@
+/* Professional Windows 98/XP Theme for WaifuOS */
+
+:root {
+  /* Windows 98/XP Color Palette */
+  --color-window-chrome: #c0c0c0;
+  --color-window-title-active: #0078d4;
+  --color-window-title-inactive: #808080;
+  --color-desktop: #008080;
+  --color-selection: #316ac5;
+  --color-text-primary: #000000;
+  --color-text-secondary: #404040;
+  --color-text-inverse: #ffffff;
+  --color-button-face: #e1e1e1;
+  --color-button-shadow: #808080;
+  --color-button-highlight: #ffffff;
+  --color-border-dark: #404040;
+  --color-border-light: #dfdfdf;
+  
+  /* Professional Typography */
+  --font-family-primary: 'MS Sans Serif', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-size-sm: 11px;
+  --font-size-base: 12px;
+  --font-size-lg: 14px;
+  --font-size-xl: 16px;
+  
+  /* Professional Spacing */
+  --spacing-xs: 2px;
+  --spacing-sm: 4px;
+  --spacing-md: 8px;
+  --spacing-lg: 12px;
+  --spacing-xl: 16px;
+  --spacing-2xl: 24px;
+  
+  /* Window Properties */
+  --window-border-width: 2px;
+  --window-title-height: 20px;
+  --window-border-radius: 0px;
+}
+
+/* Reset and Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+}
+
+body {
+  background: var(--color-desktop);
+  color: var(--color-text-primary);
+  position: relative;
+}
+
+/* Desktop Styles */
+.desktop {
+  width: 100vw;
+  height: 100vh;
+  background: var(--color-desktop);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Desktop Icons */
+.desktop-icons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.desktop-icon {
+  position: absolute;
+  width: 75px;
+  height: 85px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  padding: var(--spacing-sm);
+  border-radius: var(--spacing-xs);
+  transition: background-color 0.1s ease;
+}
+
+.desktop-icon:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.desktop-icon.selected {
+  background-color: var(--color-selection);
+  color: var(--color-text-inverse);
+}
+
+.desktop-icon .icon-image {
+  margin-bottom: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.desktop-icon .icon-label {
+  font-size: var(--font-size-sm);
+  text-align: center;
+  line-height: 1.2;
+  word-wrap: break-word;
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+  color: var(--color-text-inverse);
+}
+
+/* Window Styles */
+.window {
+  position: absolute;
+  background: var(--color-window-chrome);
+  border: var(--window-border-width) outset var(--color-window-chrome);
+  border-radius: var(--window-border-radius);
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  min-height: 150px;
+  overflow: hidden;
+  font-family: var(--font-family-primary);
+}
+
+.window.minimized {
+  display: none;
+}
+
+.window-title-bar {
+  height: var(--window-title-height);
+  background: linear-gradient(90deg, var(--color-window-title-active) 0%, #4a9eff 100%);
+  color: var(--color-text-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-sm);
+  cursor: move;
+  user-select: none;
+  font-size: var(--font-size-sm);
+  font-weight: bold;
+}
+
+.window-title-bar.inactive {
+  background: linear-gradient(90deg, var(--color-window-title-inactive) 0%, #a0a0a0 100%);
+}
+
+.window-title {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.window-controls {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+}
+
+.control-btn {
+  width: 16px;
+  height: 14px;
+  background: var(--color-button-face);
+  border: 1px outset var(--color-button-face);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-family: var(--font-family-primary);
+  padding: 0;
+  transition: border 0.1s ease;
+}
+
+.control-btn:hover {
+  background: #f0f0f0;
+}
+
+.control-btn:active {
+  border: 1px inset var(--color-button-face);
+}
+
+.close-btn:hover {
+  background: #ff4444;
+  color: var(--color-text-inverse);
+}
+
+.window-content {
+  flex: 1;
+  background: var(--color-window-chrome);
+  overflow: auto;
+  position: relative;
+}
+
+/* Resize Handles */
+.resize-handle {
+  position: absolute;
+  background: transparent;
+  z-index: 10;
+}
+
+.resize-handle.n { top: -3px; left: 3px; right: 3px; height: 6px; cursor: n-resize; }
+.resize-handle.s { bottom: -3px; left: 3px; right: 3px; height: 6px; cursor: s-resize; }
+.resize-handle.e { top: 3px; right: -3px; bottom: 3px; width: 6px; cursor: e-resize; }
+.resize-handle.w { top: 3px; left: -3px; bottom: 3px; width: 6px; cursor: w-resize; }
+.resize-handle.ne { top: -3px; right: -3px; width: 6px; height: 6px; cursor: ne-resize; }
+.resize-handle.nw { top: -3px; left: -3px; width: 6px; height: 6px; cursor: nw-resize; }
+.resize-handle.se { bottom: -3px; right: -3px; width: 6px; height: 6px; cursor: se-resize; }
+.resize-handle.sw { bottom: -3px; left: -3px; width: 6px; height: 6px; cursor: sw-resize; }
+
+/* File Explorer Styles */
+.file-explorer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-window-chrome);
+}
+
+.file-explorer-toolbar {
+  background: var(--color-button-face);
+  border-bottom: 1px solid var(--color-border-dark);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+
+.toolbar-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.toolbar-button {
+  background: var(--color-button-face);
+  border: 1px outset var(--color-button-face);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  transition: border 0.1s ease;
+}
+
+.toolbar-button:hover {
+  background: #f0f0f0;
+}
+
+.toolbar-button:active {
+  border: 1px inset var(--color-button-face);
+}
+
+.toolbar-button-text {
+  font-size: var(--font-size-sm);
+}
+
+.address-bar {
+  flex: 1;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px inset var(--color-window-chrome);
+  background: white;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+}
+
+.file-explorer-content {
+  flex: 1;
+  background: white;
+  border: 1px inset var(--color-window-chrome);
+  margin: var(--spacing-sm);
+  overflow: auto;
+}
+
+.file-list {
+  padding: var(--spacing-sm);
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  cursor: pointer;
+  user-select: none;
+  border-radius: 0;
+  font-size: var(--font-size-sm);
+  transition: background-color 0.1s ease;
+}
+
+.file-item:hover {
+  background-color: #e6f3ff;
+}
+
+.file-item.selected {
+  background-color: var(--color-selection);
+  color: var(--color-text-inverse);
+}
+
+.file-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 16px;
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.file-name {
+  font-weight: normal;
+  line-height: 1.2;
+}
+
+.file-details {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.1;
+}
+
+/* Icon View Styles */
+.icon-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+}
+
+.icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-sm);
+  cursor: pointer;
+  user-select: none;
+  border-radius: var(--spacing-xs);
+  text-align: center;
+  transition: background-color 0.1s ease;
+}
+
+.icon-item:hover {
+  background-color: #e6f3ff;
+}
+
+.icon-item.selected {
+  background-color: var(--color-selection);
+  color: var(--color-text-inverse);
+}
+
+.icon-large {
+  margin-bottom: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-name {
+  font-size: var(--font-size-sm);
+  line-height: 1.2;
+  word-wrap: break-word;
+  max-width: 100%;
+}
+
+/* Taskbar */
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: var(--color-button-face);
+  border-top: 1px solid var(--color-border-light);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-sm);
+  z-index: 1000;
+  font-size: var(--font-size-sm);
+}
+
+.start-button {
+  background: var(--color-button-face);
+  border: 1px outset var(--color-button-face);
+  padding: var(--spacing-xs) var(--spacing-md);
+  cursor: pointer;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+  font-weight: bold;
+  transition: border 0.1s ease;
+}
+
+.start-button:hover {
+  background: #f0f0f0;
+}
+
+.start-button:active {
+  border: 1px inset var(--color-button-face);
+}
+
+.taskbar-buttons {
+  flex: 1;
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-left: var(--spacing-md);
+}
+
+.taskbar-button {
+  background: var(--color-button-face);
+  border: 1px outset var(--color-button-face);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  cursor: pointer;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: border 0.1s ease;
+}
+
+.taskbar-button:hover {
+  background: #f0f0f0;
+}
+
+.taskbar-button.active {
+  border: 1px inset var(--color-button-face);
+  background: #d0d0d0;
+}
+
+.system-tray {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding-left: var(--spacing-md);
+  border-left: 1px solid var(--color-border-dark);
+  font-size: var(--font-size-sm);
+}
+
+/* Application-specific styles */
+.notepad, .calculator {
+  background: var(--color-window-chrome);
+  padding: var(--spacing-md);
+  font-family: var(--font-family-primary);
+}
+
+.calculator {
+  width: 250px;
+  height: 300px;
+}
+
+.calculator-display {
+  width: 100%;
+  height: 40px;
+  background: #000;
+  color: #0f0;
+  font-family: 'Courier New', monospace;
+  font-size: var(--font-size-lg);
+  text-align: right;
+  padding: 0 var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  border: 1px inset var(--color-window-chrome);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.calculator-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-xs);
+}
+
+.calc-button {
+  height: 35px;
+  background: var(--color-button-face);
+  border: 1px outset var(--color-button-face);
+  cursor: pointer;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  transition: border 0.1s ease;
+}
+
+.calc-button:hover {
+  background: #f0f0f0;
+}
+
+.calc-button:active {
+  border: 1px inset var(--color-button-face);
+}
+
+/* Form Controls */
+input, textarea, select {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px inset var(--color-window-chrome);
+  background: white;
+  color: var(--color-text-primary);
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: 1px dotted var(--color-selection);
+  outline-offset: -1px;
+}
+
+/* Button styles */
+button {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  background: var(--color-button-face);
+  border: 1px outset var(--color-button-face);
+  padding: var(--spacing-xs) var(--spacing-md);
+  cursor: pointer;
+  transition: border 0.1s ease;
+}
+
+button:hover {
+  background: #f0f0f0;
+}
+
+button:active {
+  border: 1px inset var(--color-button-face);
+}
+
+button:disabled {
+  background: var(--color-button-face);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+  border: 1px outset var(--color-button-face);
+}
+
+/* Utility Classes */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.font-bold { font-weight: bold; }
+.font-normal { font-weight: normal; }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+
+.m-sm { margin: var(--spacing-sm); }
+.m-md { margin: var(--spacing-md); }
+.m-lg { margin: var(--spacing-lg); }
+
+.gap-sm { gap: var(--spacing-sm); }
+.gap-md { gap: var(--spacing-md); }
+.gap-lg { gap: var(--spacing-lg); }
+
+/* Animation and transition utilities */
+.transition-fast { transition: all 0.1s ease; }
+.transition-normal { transition: all 0.2s ease; }
+
+/* Responsive utilities for different screen sizes */
+@media (max-width: 768px) {
+  .desktop-icon {
+    width: 60px;
+    height: 70px;
+  }
+  
+  .desktop-icon .icon-label {
+    font-size: 10px;
+  }
+  
+  .window {
+    min-width: 150px;
+    min-height: 100px;
+  }
+  
+  .taskbar {
+    height: 35px;
+  }
+}

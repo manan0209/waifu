@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDraggable } from '../../hooks/useDraggable';
 import { useResizable } from '../../hooks/useResizable';
+import { Icons } from '../ui/Icons';
 
 interface Window {
   id: string;
@@ -90,11 +91,11 @@ function WindowComponent({
       >
         <div className="title-text">
           <div className="window-icon">
-            {window.appId === 'waifu-chat' && '💬'}
-            {window.appId === 'notepad' && '📝'}
-            {window.appId === 'calculator' && '🔢'}
-            {window.appId === 'file-explorer' && '📁'}
-            {window.appId === 'settings' && '⚙️'}
+            {window.appId === 'waifu-chat' && <Icons.Notepad size={16} color="#FF69B4" />}
+            {window.appId === 'notepad' && <Icons.Notepad size={16} />}
+            {window.appId === 'calculator' && <Icons.Calculator size={16} />}
+            {window.appId === 'file-explorer' && <Icons.Computer size={16} />}
+            {window.appId === 'settings' && <Icons.Settings size={16} />}
           </div>
           <span>{window.title}</span>
         </div>
@@ -105,21 +106,21 @@ function WindowComponent({
             onClick={() => onMinimize(window.id)}
             title="Minimize"
           >
-            ─
+            <Icons.Minimize size={12} />
           </button>
           <button 
             className="control-btn maximize-btn"
             onClick={() => onMaximize(window.id)}
             title={window.isMaximized ? "Restore" : "Maximize"}
           >
-            {window.isMaximized ? '❐' : '□'}
+            {window.isMaximized ? <Icons.Restore size={12} /> : <Icons.Maximize size={12} />}
           </button>
           <button 
             className="control-btn close-btn"
             onClick={() => onClose(window.id)}
             title="Close"
           >
-            ✕
+            <Icons.Close size={12} />
           </button>
         </div>
       </div>
