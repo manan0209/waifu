@@ -3,9 +3,14 @@ import '../src/styles/system-boot.css';
 import '../src/styles/desktop.css';
 import '../src/styles/applications.css';
 import type { AppProps } from 'next/app';
+import { SystemSettingsProvider } from '../src/contexts/SystemSettingsContext';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+  return (
+    <SystemSettingsProvider>
+      <Component {...pageProps} />
+    </SystemSettingsProvider>
+  );
 }
 
 export default MyApp;
