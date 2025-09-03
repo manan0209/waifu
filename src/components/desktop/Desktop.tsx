@@ -5,7 +5,9 @@ import DesktopIcons from './DesktopIcons';
 import StartMenu from './StartMenu';
 import AltTabSwitcher from './AltTabSwitcher';
 import NotificationManager from '../system/NotificationManager';
+import DesktopMascot from '../mascot/DesktopMascot';
 import { useSystemSounds } from '../../hooks/useSystemSounds';
+import { useBackgroundMusic } from '../../hooks/useBackgroundMusic';
 
 interface DesktopProps {
   onShutdown?: () => void;
@@ -20,6 +22,13 @@ export default function Desktop({ onShutdown }: DesktopProps) {
   const [hasPlayedStartup, setHasPlayedStartup] = useState(false);
   
   const { playButtonClick, playNotification, playStartup } = useSystemSounds();
+  
+  // Background music
+  const bgMusic = useBackgroundMusic('/bgmusic.mp3', {
+    volume: 0.2,
+    loop: true,
+    autoPlay: false // We'll start it after user interaction
+  });
 
   // Play startup sound when desktop loads (only once)
   useEffect(() => {
@@ -79,6 +88,11 @@ export default function Desktop({ onShutdown }: DesktopProps) {
   const handleStartClick = () => {
     playButtonClick();
     setShowStartMenu(!showStartMenu);
+    
+    // Start background music on first user interaction
+    if (!bgMusic.isPlaying) {
+      bgMusic.play();
+    }
   };
 
   const openWindow = (appId: string, title: string, component: React.ReactNode) => {
@@ -144,6 +158,13 @@ export default function Desktop({ onShutdown }: DesktopProps) {
         
         
         <DesktopIcons onOpenWindow={openWindow} />
+        
+        {/* Desktop Mascot */}
+        <DesktopMascot
+          isVisible={true}
+          currentApp={windows.find(w => !w.isMinimized)?.title || ''}
+          onMascotClick={() => addNotification('Mascot', 'Hello! I\'m your desktop companion!', 'info')}
+        />
       </div>
 
       

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Icons } from '../ui/Icons';
+import MusicControl from '../audio/MusicControl';
 
 interface TaskbarProps {
   onStartClick: () => void;
@@ -121,10 +122,10 @@ export default function Taskbar({
 
       {/* System Tray */}
       <div className="system-tray">
-        {/* Volume Icon */}
-        <div className="tray-icon volume-icon" title="Volume">
-          🔊
-        </div>
+        {/* Music Control */}
+        <MusicControl className="tray-music-control" />
+
+        
 
         {/* Network Icon */}
         <div className="tray-icon network-icon" title="Network">
