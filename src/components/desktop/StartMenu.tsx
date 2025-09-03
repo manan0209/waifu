@@ -5,6 +5,9 @@ import Calculator from '../../applications/Calculator';
 import FileExplorer from '../../applications/FileExplorer';
 import Minesweeper from '../../applications/Minesweeper';
 import Settings from '../apps/Settings';
+import TetrisGame from '../games/TetrisGame';
+import WaifuTube from '../apps/WaifuTube';
+import WaifuBrowser from '../apps/WaifuBrowser';
 import { Icons } from '../ui/Icons';
 
 interface StartMenuProps {
@@ -33,6 +36,27 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
       category: 'programs'
     },
     {
+      id: 'tetris',
+      title: 'Tetris Game',
+      icon: <span style={{fontSize: '16px'}}>🎮</span>,
+      appId: 'tetris',
+      category: 'programs'
+    },
+    {
+      id: 'waifutube',
+      title: 'WaifuTube',
+      icon: <span style={{fontSize: '16px'}}>📺</span>,
+      appId: 'waifutube',
+      category: 'programs'
+    },
+    {
+      id: 'waifu-browser',
+      title: 'Waifu Browser',
+      icon: <span style={{fontSize: '16px'}}>🌐</span>,
+      appId: 'waifu-browser',
+      category: 'programs'
+    },
+    {
       id: 'notepad',
       title: 'Notepad',
       icon: <Icons.Notepad size={16} />,
@@ -44,6 +68,13 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
       title: 'Calculator',
       icon: <Icons.Calculator size={16} />,
       appId: 'calculator',
+      category: 'programs'
+    },
+    {
+      id: 'minesweeper',
+      title: 'Minesweeper',
+      icon: <Icons.Settings size={16} color="#8B0000" />,
+      appId: 'minesweeper',
       category: 'programs'
     },
     {
@@ -75,6 +106,15 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
     switch (item.appId) {
       case 'waifu-chat':
         component = <WaifuChat />;
+        break;
+      case 'tetris':
+        component = <TetrisGame />;
+        break;
+      case 'waifutube':
+        component = <WaifuTube />;
+        break;
+      case 'waifu-browser':
+        component = <WaifuBrowser />;
         break;
       case 'notepad':
         component = <Notepad />;

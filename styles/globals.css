@@ -6,6 +6,9 @@
 @import url('../src/styles/professional-theme.css');
 @import url('../src/styles/system-boot.css');
 @import url('../src/styles/mascot.css');
+@import url('../src/styles/tetris.css');
+@import url('../src/styles/waifutube.css');
+@import url('../src/styles/browser.css');
 
 /* Professional CRT Monitor Effects */
 .crt-effect {

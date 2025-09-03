@@ -4,6 +4,9 @@ import Notepad from '../../applications/Notepad';
 import Calculator from '../../applications/Calculator';
 import FileExplorer from '../../applications/FileExplorer';
 import Minesweeper from '../../applications/Minesweeper';
+import TetrisGame from '../games/TetrisGame';
+import WaifuTube from '../apps/WaifuTube';
+import WaifuBrowser from '../apps/WaifuBrowser';
 import { Icons } from '../ui/Icons';
 
 interface DesktopIconsProps {
@@ -32,6 +35,30 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
       appId: 'waifu-chat'
     },
     {
+      id: 'tetris',
+      title: 'Tetris',
+      icon: <span style={{fontSize: '32px'}}>🎮</span>,
+      x: 150,
+      y: 50,
+      appId: 'tetris'
+    },
+    {
+      id: 'waifutube',
+      title: 'WaifuTube',
+      icon: <span style={{fontSize: '32px'}}>📺</span>,
+      x: 250,
+      y: 50,
+      appId: 'waifutube'
+    },
+    {
+      id: 'waifu-browser',
+      title: 'Waifu Browser',
+      icon: <span style={{fontSize: '32px'}}>🌐</span>,
+      x: 350,
+      y: 50,
+      appId: 'waifu-browser'
+    },
+    {
       id: 'notepad',
       title: 'Notepad',
       icon: <Icons.Notepad size={32} />,
@@ -43,8 +70,8 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
       id: 'calculator',
       title: 'Calculator',
       icon: <Icons.Calculator size={32} />,
-      x: 50,
-      y: 250,
+      x: 150,
+      y: 150,
       appId: 'calculator'
     },
     {
@@ -52,7 +79,7 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
       title: 'My Computer',
       icon: <Icons.Computer size={32} />,
       x: 50,
-      y: 350,
+      y: 250,
       appId: 'file-explorer'
     },
     {
@@ -60,7 +87,7 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
       title: 'Minesweeper',
       icon: <Icons.Settings size={32} color="#8B0000" />,
       x: 150,
-      y: 50,
+      y: 250,
       appId: 'minesweeper'
     },
     {
@@ -68,7 +95,7 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
       title: 'Recycle Bin',
       icon: <Icons.Folder size={32} color="#654321" />,
       x: 50,
-      y: 450,
+      y: 350,
       appId: 'recycle-bin'
     }
   ];
@@ -83,6 +110,15 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
     switch (icon.appId) {
       case 'waifu-chat':
         component = <WaifuChat />;
+        break;
+      case 'tetris':
+        component = <TetrisGame />;
+        break;
+      case 'waifutube':
+        component = <WaifuTube />;
+        break;
+      case 'waifu-browser':
+        component = <WaifuBrowser />;
         break;
       case 'notepad':
         component = <Notepad />;
