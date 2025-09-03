@@ -18,62 +18,62 @@ interface Video {
 const WAIFU_VIDEOS: Video[] = [
   {
     id: '1',
-    title: '🎌 Lofi Hip Hop - Anime Study Beats',
+    title: 'Lofi Study Beats',
     thumbnail: 'https://i.ytimg.com/vi/5qap5aO4i9A/maxresdefault.jpg',
-    url: 'https://www.youtube.com/embed/5qap5aO4i9A',
+    url: 'https://www.youtube.com/embed/5qap5aO4i9A?autoplay=0&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0&fs=1',
     duration: '1:00:00',
     views: '5.2M',
-    description: 'Perfect background music for coding and studying with anime aesthetics.',
+    description: 'Perfect background music for coding and studying.',
     category: 'music'
   },
   {
     id: '2',
-    title: '💻 Building a Retro Computer Interface',
+    title: 'Retro Computer Vibes',
     thumbnail: 'https://i.ytimg.com/vi/AaZ_RSt0KP8/maxresdefault.jpg',
-    url: 'https://www.youtube.com/embed/AaZ_RSt0KP8',
+    url: 'https://www.youtube.com/embed/AaZ_RSt0KP8?autoplay=0&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0&fs=1',
     duration: '15:23',
     views: '850K',
-    description: 'Learn how to create nostalgic Windows 98 style interfaces.',
+    description: 'Nostalgic computer interface tutorials.',
     category: 'tech'
   },
   {
     id: '3',
-    title: '🎮 Retro Gaming Music Mix',
+    title: 'Gaming Music Mix',
     thumbnail: 'https://i.ytimg.com/vi/q76bMs-NwRk/maxresdefault.jpg',
-    url: 'https://www.youtube.com/embed/q76bMs-NwRk',
+    url: 'https://www.youtube.com/embed/q76bMs-NwRk?autoplay=0&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0&fs=1',
     duration: '45:30',
     views: '2.1M',
-    description: 'Classic 8-bit and 16-bit game soundtracks compilation.',
+    description: 'Classic game soundtracks compilation.',
     category: 'gaming'
   },
   {
     id: '4',
-    title: '✨ Anime Opening Compilation',
+    title: 'Anime Aesthetic',
     thumbnail: 'https://i.ytimg.com/vi/63UcOrvNjLs/maxresdefault.jpg',
-    url: 'https://www.youtube.com/embed/63UcOrvNjLs',
+    url: 'https://www.youtube.com/embed/63UcOrvNjLs?autoplay=0&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0&fs=1',
     duration: '30:45',
     views: '3.8M',
-    description: 'Best anime openings from classic and modern series.',
+    description: 'Beautiful anime opening compilation.',
     category: 'anime'
   },
   {
     id: '5',
-    title: '🌸 Sakura Season in Japan 4K',
+    title: 'Cherry Blossom Dreams',
     thumbnail: 'https://i.ytimg.com/vi/9bE0W8bP3to/maxresdefault.jpg',
-    url: 'https://www.youtube.com/embed/9bE0W8bP3to',
+    url: 'https://www.youtube.com/embed/9bE0W8bP3to?autoplay=0&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0&fs=1',
     duration: '12:34',
     views: '1.5M',
-    description: 'Beautiful cherry blossom season footage from Japan.',
+    description: 'Peaceful sakura season footage.',
     category: 'anime'
   },
   {
     id: '6',
-    title: '🎵 Synthwave / Retrowave Mix',
+    title: 'Synthwave Dreams',
     thumbnail: 'https://i.ytimg.com/vi/4xDzrJKXOOY/maxresdefault.jpg',
-    url: 'https://www.youtube.com/embed/4xDzrJKXOOY',
+    url: 'https://www.youtube.com/embed/4xDzrJKXOOY?autoplay=0&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0&fs=1',
     duration: '52:18',
     views: '4.2M',
-    description: 'Neon-soaked synthwave music perfect for night coding sessions.',
+    description: 'Neon-soaked synthwave for night sessions.',
     category: 'music'
   }
 ];
@@ -84,6 +84,35 @@ export default function WaifuTube({ onClose }: WaifuTubeProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const videoRef = useRef<HTMLIFrameElement>(null);
+
+  
+  useEffect(() => {
+    const autoplayVideo: Video = {
+      id: 'featured',
+      title: 'Featured Video',
+      thumbnail: 'https://i.ytimg.com/vi/g_6OK9fznGI/maxresdefault.jpg',
+      url: 'https://www.youtube.com/embed/g_6OK9fznGI?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0&fs=1&start=0',
+      duration: 'Featured',
+      views: 'Now Playing',
+      description: 'Curated content selected just for you.',
+      category: 'music'
+    };
+    
+    setCurrentVideo(autoplayVideo);
+    setIsFullscreen(true);
+  }, []);
+
+  // ESC key to exit fullscreen
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen]);
 
   const categories = ['all', 'anime', 'music', 'gaming', 'tech'];
 
@@ -108,11 +137,11 @@ export default function WaifuTube({ onClose }: WaifuTubeProps) {
  
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'anime': return '🎌';
-      case 'music': return '🎵';
-      case 'gaming': return '🎮';
-      case 'tech': return '💻';
-      default: return '📺';
+      case 'anime': return '♡';
+      case 'music': return '♪';
+      case 'gaming': return '◆';
+      case 'tech': return '◇';
+      default: return '☆';
     }
   };
 
@@ -120,11 +149,11 @@ export default function WaifuTube({ onClose }: WaifuTubeProps) {
     <div className={`waifutube ${isFullscreen ? 'fullscreen' : ''}`}>
       <div className="waifutube-header">
         <div className="header-left">
-          <h2>📺 WaifuTube</h2>
+          <h2>♡ WaifuTube</h2>
           <div className="search-container">
             <input
               type="text"
-              placeholder="Search videos..."
+              placeholder="Search cute videos..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"
@@ -134,7 +163,7 @@ export default function WaifuTube({ onClose }: WaifuTubeProps) {
         <div className="header-right">
           {currentVideo && (
             <button onClick={toggleFullscreen} className="fullscreen-btn">
-              {isFullscreen ? '🗗' : '🗖'}
+              {isFullscreen ? '◇' : '◆'}
             </button>
           )}
           <button className="close-btn" onClick={onClose}>×</button>
@@ -154,6 +183,16 @@ export default function WaifuTube({ onClose }: WaifuTubeProps) {
                 allowFullScreen
                 className="video-player"
               />
+              
+              {/* Fullscreen overlay controls */}
+              {isFullscreen && (
+                <div className="fullscreen-overlay">
+                  <button onClick={() => setIsFullscreen(false)} className="exit-fullscreen-btn">
+                    ✕
+                  </button>
+                  <div className="fullscreen-hint">Press ESC to exit fullscreen</div>
+                </div>
+              )}
             </div>
             
             <div className="video-info">
@@ -232,9 +271,9 @@ export default function WaifuTube({ onClose }: WaifuTubeProps) {
 
       <div className="waifutube-footer">
         <div className="stats">
-          <span>{filteredVideos.length} videos</span>
-          <span>Curated Collection</span>
-          <span>Waifu Approved</span>
+          <span>♡ {filteredVideos.length} cute videos</span>
+          <span>☆ Curated with love</span>
+          <span>♪ Waifu approved</span>
         </div>
       </div>
     </div>
