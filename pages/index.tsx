@@ -4,14 +4,19 @@ import { useState } from 'react';
 import Head from 'next/head';
 import BootScreen from '../components/BootScreen';
 import Desktop from '../src/components/desktop/Desktop';
+import WaifuLockScreen from '../src/components/system/WaifuLockScreen';
 import { useRouter } from 'next/router';
 
 export default function Home() {
   const router = useRouter();
-  const [systemState, setSystemState] = useState<'booting' | 'desktop' | 'shutdown'>('booting');
+  const [systemState, setSystemState] = useState<'booting' | 'locked' | 'desktop' | 'shutdown'>('booting');
   const booted = router.query.booted === '1';
   
   const handleBootComplete = () => {
+    setSystemState('locked');
+  };
+
+  const handleUnlock = () => {
     setSystemState('desktop');
   };
 
@@ -25,6 +30,10 @@ export default function Home() {
   const renderContent = () => {
     if (systemState === 'booting' && !booted) {
       return <BootScreen onBootComplete={handleBootComplete} />;
+    }
+    
+    if (systemState === 'locked' && !booted) {
+      return <WaifuLockScreen onUnlock={handleUnlock} />;
     }
     
     if (systemState === 'desktop' || booted) {

@@ -5,9 +5,10 @@
 /* Import Professional Windows 98/XP Theme */
 @import url('../src/styles/professional-theme.css');
 @import url('../src/styles/system-boot.css');
+@import url('../src/styles/waifu-lock-screen.css');
 @import url('../src/styles/mascot.css');
 @import url('../src/styles/tetris.css');
-@import url('../src/styles/waifutube-clean.css');
+@import url('../src/styles/waifutube.css');
 @import url('../src/styles/browser.css');
 
 /* Professional CRT Monitor Effects */
