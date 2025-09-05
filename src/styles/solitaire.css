@@ -1,0 +1,357 @@
+/* Solitaire Game Styles */
+.solitaire-menu {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0f4c0f 0%, #1a5f1a 50%, #0f4c0f 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'MS Sans Serif', Arial, sans-serif;
+}
+
+.solitaire-header {
+  text-align: center;
+  margin-bottom: 32px;
+  color: white;
+}
+
+.solitaire-header h2 {
+  font-size: 32px;
+  margin: 0 0 8px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.solitaire-header p {
+  font-size: 16px;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.menu-options {
+  background: var(--bg-light);
+  border: 2px inset var(--border-color);
+  padding: 24px;
+  border-radius: 4px;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.new-game-btn {
+  background: linear-gradient(180deg, #90c695 0%, #5a8a5f 100%);
+  border: 2px outset var(--border-color);
+  padding: 12px 24px;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 20px;
+  width: 100%;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.new-game-btn:hover {
+  background: linear-gradient(180deg, #a0d6a5 0%, #6a9a6f 100%);
+}
+
+.new-game-btn:active {
+  border: 2px inset var(--border-color);
+}
+
+.game-rules {
+  max-width: 300px;
+}
+
+.game-rules h3 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.game-rules ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.game-rules li {
+  margin-bottom: 4px;
+}
+
+/* Game Interface */
+.solitaire-game {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0f4c0f 0%, #1a5f1a 50%, #0f4c0f 100%);
+  display: flex;
+  flex-direction: column;
+  font-family: 'MS Sans Serif', Arial, sans-serif;
+  overflow: hidden;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--title-bar-bg);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.game-info {
+  display: flex;
+  gap: 20px;
+  font-size: 12px;
+}
+
+.game-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.game-controls button {
+  background: var(--button-bg);
+  border: 1px outset var(--border-color);
+  padding: 4px 12px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.game-controls button:hover {
+  background: var(--button-hover-bg);
+}
+
+.game-controls button:active {
+  border: 1px inset var(--border-color);
+}
+
+/* Game Board */
+.game-board {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  overflow: hidden;
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 100px;
+}
+
+.stock-waste {
+  display: flex;
+  gap: 20px;
+}
+
+.foundation-piles {
+  display: flex;
+  gap: 10px;
+}
+
+/* Card Styles */
+.card {
+  width: 60px;
+  height: 84px;
+  background: white;
+  border: 1px solid #333;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.card.selected {
+  transform: translateY(-5px);
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
+  border-color: #ffff00;
+}
+
+.card.back {
+  background: linear-gradient(135deg, #0066cc 0%, #004499 50%, #0066cc 100%);
+  color: white;
+  font-size: 24px;
+}
+
+.card-rank {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.card-suit {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.card-rank.red,
+.card-suit.red {
+  color: #cc0000;
+}
+
+.card-rank.black,
+.card-suit.black {
+  color: #000000;
+}
+
+/* Empty Piles */
+.empty-pile {
+  width: 60px;
+  height: 84px;
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.empty-pile:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.foundation-empty {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tableau-empty {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: bold;
+}
+
+/* Specific Pile Styles */
+.stock-pile,
+.waste-pile,
+.foundation-pile {
+  position: relative;
+}
+
+.stock-pile .empty-pile {
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Tableau */
+.tableau {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+  min-height: 300px;
+}
+
+.tableau-column {
+  flex: 1;
+  position: relative;
+  min-height: 200px;
+}
+
+/* Win Dialog */
+.win-dialog {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.win-content {
+  background: var(--bg-light);
+  border: 2px outset var(--border-color);
+  padding: 32px;
+  text-align: center;
+  border-radius: 4px;
+  box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.win-content h2 {
+  margin: 0 0 16px 0;
+  font-size: 24px;
+  color: var(--text-primary);
+}
+
+.win-content p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.win-content button {
+  background: linear-gradient(180deg, #90c695 0%, #5a8a5f 100%);
+  border: 2px outset var(--border-color);
+  padding: 8px 16px;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+  margin-top: 16px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.win-content button:hover {
+  background: linear-gradient(180deg, #a0d6a5 0%, #6a9a6f 100%);
+}
+
+.win-content button:active {
+  border: 2px inset var(--border-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .game-board {
+    padding: 10px;
+    gap: 20px;
+  }
+  
+  .top-row {
+    gap: 10px;
+  }
+  
+  .tableau {
+    gap: 6px;
+  }
+  
+  .card {
+    width: 45px;
+    height: 63px;
+  }
+  
+  .empty-pile {
+    width: 45px;
+    height: 63px;
+    font-size: 14px;
+  }
+  
+  .card-rank {
+    font-size: 11px;
+  }
+  
+  .card-suit {
+    font-size: 16px;
+  }
+}

@@ -6,8 +6,11 @@ import FileExplorer from '../../applications/FileExplorer';
 import Minesweeper from '../../applications/Minesweeper';
 import Settings from '../apps/Settings';
 import TetrisGame from '../games/TetrisGame';
-import WaifuTube from '../apps/WaifuTube';
+import VideoPlayer from '../apps/VideoPlayer';
 import WaifuBrowser from '../apps/WaifuBrowser';
+import ProjectViewer from '../apps/ProjectViewer';
+import Solitaire from '../games/Solitaire';
+import MediaPlayer from '../apps/MediaPlayer';
 import { Icons } from '../ui/Icons';
 
 interface StartMenuProps {
@@ -31,29 +34,43 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
     {
       id: 'waifu-chat',
       title: 'Waifu Chat',
-      icon: <Icons.Notepad size={16} color="#FF69B4" />,
+      icon: <Icons.Chat size={16} />,
       appId: 'waifu-chat',
       category: 'programs'
     },
     {
       id: 'tetris',
       title: 'Tetris Game',
-      icon: <span style={{fontSize: '16px'}}>🎮</span>,
+      icon: <Icons.Tetris size={16} />,
       appId: 'tetris',
       category: 'programs'
     },
     {
-      id: 'waifutube',
-      title: 'WaifuTube',
-      icon: <span style={{fontSize: '16px'}}>📺</span>,
-      appId: 'waifutube',
+      id: 'video-player',
+      title: 'Video Player',
+      icon: <Icons.VideoPlayer size={16} />,
+      appId: 'video-player',
       category: 'programs'
     },
     {
       id: 'waifu-browser',
       title: 'Waifu Browser',
-      icon: <span style={{fontSize: '16px'}}>🌐</span>,
+      icon: <Icons.Browser size={16} />,
       appId: 'waifu-browser',
+      category: 'programs'
+    },
+    {
+      id: 'gitroaster',
+      title: 'GitRoaster',
+      icon: <Icons.Project size={16} color="#E74C3C" />,
+      appId: 'gitroaster',
+      category: 'programs'
+    },
+    {
+      id: 'snippix',
+      title: 'Snippix',
+      icon: <Icons.Project size={16} color="#3498DB" />,
+      appId: 'snippix',
       category: 'programs'
     },
     {
@@ -73,8 +90,22 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
     {
       id: 'minesweeper',
       title: 'Minesweeper',
-      icon: <Icons.Settings size={16} color="#8B0000" />,
+      icon: <Icons.Minesweeper size={16} />,
       appId: 'minesweeper',
+      category: 'programs'
+    },
+    {
+      id: 'solitaire',
+      title: 'Solitaire',
+      icon: <Icons.Solitaire size={16} />,
+      appId: 'solitaire',
+      category: 'programs'
+    },
+    {
+      id: 'media-player',
+      title: 'Media Player',
+      icon: <Icons.MediaPlayer size={16} />,
+      appId: 'media-player',
       category: 'programs'
     },
     {
@@ -83,13 +114,6 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
       icon: <Icons.Computer size={16} />,
       appId: 'file-explorer',
       category: 'system'
-    },
-    {
-      id: 'minesweeper',
-      title: 'Minesweeper',
-      icon: <Icons.Settings size={16} color="#8B0000" />,
-      appId: 'minesweeper',
-      category: 'programs'
     },
     {
       id: 'settings',
@@ -110,11 +134,25 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
       case 'tetris':
         component = <TetrisGame />;
         break;
-      case 'waifutube':
-        component = <WaifuTube />;
+      case 'video-player':
+        component = <VideoPlayer />;
         break;
       case 'waifu-browser':
         component = <WaifuBrowser />;
+        break;
+      case 'gitroaster':
+        component = <ProjectViewer 
+          projectUrl="https://gitroaster.vercel.app" 
+          projectName="GitRoaster"
+          projectDescription="AI-powered code review and analysis tool"
+        />;
+        break;
+      case 'snippix':
+        component = <ProjectViewer 
+          projectUrl="https://snippix.vercel.app" 
+          projectName="Snippix"
+          projectDescription="Smart code snippet manager and organizer"
+        />;
         break;
       case 'notepad':
         component = <Notepad />;
@@ -127,6 +165,12 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
         break;
       case 'minesweeper':
         component = <Minesweeper />;
+        break;
+      case 'solitaire':
+        component = <Solitaire />;
+        break;
+      case 'media-player':
+        component = <MediaPlayer />;
         break;
       case 'settings':
         component = <Settings />;

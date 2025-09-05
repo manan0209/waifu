@@ -5,8 +5,12 @@ import Calculator from '../../applications/Calculator';
 import FileExplorer from '../../applications/FileExplorer';
 import Minesweeper from '../../applications/Minesweeper';
 import TetrisGame from '../games/TetrisGame';
-import WaifuTube from '../apps/WaifuTube';
+import Solitaire from '../games/Solitaire';
+import MediaPlayer from '../apps/MediaPlayer';
+import VideoPlayer from '../apps/VideoPlayer';
 import WaifuBrowser from '../apps/WaifuBrowser';
+import ProjectViewer from '../apps/ProjectViewer';
+import Settings from '../apps/Settings';
 import { Icons } from '../ui/Icons';
 
 interface DesktopIconsProps {
@@ -29,7 +33,7 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
     {
       id: 'waifu-chat',
       title: 'Waifu Chat',
-      icon: <Icons.Notepad size={32} color="#FF69B4" />,
+      icon: <Icons.Chat size={32} />,
       x: 50,
       y: 50,
       appId: 'waifu-chat'
@@ -37,26 +41,42 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
     {
       id: 'tetris',
       title: 'Tetris',
-      icon: <span style={{fontSize: '32px'}}>🎮</span>,
+      icon: <Icons.Tetris size={32} />,
       x: 150,
       y: 50,
       appId: 'tetris'
     },
     {
-      id: 'waifutube',
-      title: 'WaifuTube',
-      icon: <span style={{fontSize: '32px'}}>📺</span>,
+      id: 'video-player',
+      title: 'Video Player',
+      icon: <Icons.VideoPlayer size={32} />,
       x: 250,
       y: 50,
-      appId: 'waifutube'
+      appId: 'video-player'
     },
     {
       id: 'waifu-browser',
       title: 'Waifu Browser',
-      icon: <span style={{fontSize: '32px'}}>🌐</span>,
+      icon: <Icons.Browser size={32} />,
       x: 350,
       y: 50,
       appId: 'waifu-browser'
+    },
+    {
+      id: 'gitroaster',
+      title: 'GitRoaster',
+      icon: <Icons.Project size={32} color="#E74C3C" />,
+      x: 450,
+      y: 50,
+      appId: 'gitroaster'
+    },
+    {
+      id: 'snippix',
+      title: 'Snippix',
+      icon: <Icons.Project size={32} color="#3498DB" />,
+      x: 550,
+      y: 50,
+      appId: 'snippix'
     },
     {
       id: 'notepad',
@@ -85,7 +105,7 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
     {
       id: 'minesweeper',
       title: 'Minesweeper',
-      icon: <Icons.Settings size={32} color="#8B0000" />,
+      icon: <Icons.Minesweeper size={32} />,
       x: 150,
       y: 250,
       appId: 'minesweeper'
@@ -93,10 +113,34 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
     {
       id: 'recycle-bin',
       title: 'Recycle Bin',
-      icon: <Icons.Folder size={32} color="#654321" />,
+      icon: <Icons.RecycleBin size={32} />,
       x: 50,
       y: 350,
       appId: 'recycle-bin'
+    },
+    {
+      id: 'settings',
+      title: 'Settings',
+      icon: <Icons.Settings size={32} />,
+      x: 150,
+      y: 350,
+      appId: 'settings'
+    },
+    {
+      id: 'solitaire',
+      title: 'Solitaire',
+      icon: <Icons.Solitaire size={32} />,
+      x: 250,
+      y: 350,
+      appId: 'solitaire'
+    },
+    {
+      id: 'media-player',
+      title: 'Media Player',
+      icon: <Icons.MediaPlayer size={32} />,
+      x: 350,
+      y: 350,
+      appId: 'media-player'
     }
   ];
 
@@ -114,11 +158,25 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
       case 'tetris':
         component = <TetrisGame />;
         break;
-      case 'waifutube':
-        component = <WaifuTube />;
+      case 'video-player':
+        component = <VideoPlayer />;
         break;
       case 'waifu-browser':
         component = <WaifuBrowser />;
+        break;
+      case 'gitroaster':
+        component = <ProjectViewer 
+          projectUrl="https://gitroaster.vercel.app" 
+          projectName="GitRoaster"
+          projectDescription="AI-powered code review and analysis tool"
+        />;
+        break;
+      case 'snippix':
+        component = <ProjectViewer 
+          projectUrl="https://snippix.vercel.app" 
+          projectName="Snippix"
+          projectDescription="Smart code snippet manager and organizer"
+        />;
         break;
       case 'notepad':
         component = <Notepad />;
@@ -131,6 +189,15 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
         break;
       case 'minesweeper':
         component = <Minesweeper />;
+        break;
+      case 'settings':
+        component = <Settings />;
+        break;
+      case 'solitaire':
+        component = <Solitaire />;
+        break;
+      case 'media-player':
+        component = <MediaPlayer />;
         break;
       default:
         return;

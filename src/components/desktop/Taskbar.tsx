@@ -37,7 +37,7 @@ export default function Taskbar({
 
   const quickLaunchApps = [
     { id: 'file-explorer', icon: <Icons.Computer size={16} />, title: 'My Computer' },
-    { id: 'waifu-chat', icon: <Icons.Notepad size={16} color="#FF69B4" />, title: 'Waifu Chat' },
+    { id: 'waifu-chat', icon: <Icons.Chat size={16} />, title: 'Waifu Chat' },
     { id: 'notepad', icon: <Icons.Notepad size={16} />, title: 'Notepad' },
     { id: 'calculator', icon: <Icons.Calculator size={16} />, title: 'Calculator' }
   ];
@@ -95,11 +95,19 @@ export default function Taskbar({
             title={window.title}
           >
             <div className="task-icon">
-              {window.appId === 'waifu-chat' && <Icons.Notepad size={16} color="#FF69B4" />}
+              {window.appId === 'waifu-chat' && <Icons.Chat size={16} />}
+              {window.appId === 'tetris' && <Icons.Tetris size={16} />}
+              {window.appId === 'video-player' && <Icons.VideoPlayer size={16} />}
+              {window.appId === 'waifu-browser' && <Icons.Browser size={16} />}
+              {window.appId === 'gitroaster' && <Icons.Project size={16} color="#E74C3C" />}
+              {window.appId === 'snippix' && <Icons.Project size={16} color="#3498DB" />}
               {window.appId === 'notepad' && <Icons.Notepad size={16} />}
               {window.appId === 'calculator' && <Icons.Calculator size={16} />}
               {window.appId === 'file-explorer' && <Icons.Computer size={16} />}
+              {window.appId === 'minesweeper' && <Icons.Minesweeper size={16} />}
               {window.appId === 'settings' && <Icons.Settings size={16} />}
+              {window.appId === 'solitaire' && <Icons.Solitaire size={16} />}
+              {window.appId === 'media-player' && <Icons.MediaPlayer size={16} />}
             </div>
             <span className="task-title">{window.title}</span>
           </button>
