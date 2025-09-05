@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { WaifuAI } from '../../lib/waifuAI';
 
 interface Message {
   id: string;
@@ -8,24 +9,31 @@ interface Message {
 }
 
 export default function WaifuChat() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      text: 'Hello! Welcome to WaifuOS! I\'m your virtual companion. How are you feeling today?',
-      sender: 'waifu',
-      timestamp: new Date()
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [selectedCharacter, setSelectedCharacter] = useState('Akane');
+  const [waifuAI] = useState(() => new WaifuAI());
+  const [showSettings, setShowSettings] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const characters = [
-    { name: 'Akane', personality: 'Cheerful and energetic' },
-    { name: 'Yuki', personality: 'Calm and thoughtful' },
-    { name: 'Rei', personality: 'Mysterious and cool' }
-  ];
+  // Initialize with Misa and welcome message
+  useEffect(() => {
+    const welcomeMessage: Message = {
+      id: '1',
+      text: '*sultry smile* Well, well... look who decided to visit me~ *winks* I\'m Misa Misa, your delightfully naughty companion. I\'m powered by real AI now, so I can be even more... interactive~ *giggles playfully* Ready to have some fun, darling?',
+      sender: 'waifu',
+      timestamp: new Date()
+    };
+    setMessages([welcomeMessage]);
+  }, [waifuAI]);
+
+  const saveApiKey = (service: string, apiKey: string) => {
+    if (apiKey.trim()) {
+      localStorage.setItem(`${service}_api_key`, apiKey.trim());
+    } else {
+      localStorage.removeItem(`${service}_api_key`);
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -36,26 +44,12 @@ export default function WaifuChat() {
   }, [messages]);
 
   const generateResponse = async (userMessage: string): Promise<string> => {
-    // Simulate AI response - in production this would call OpenAI API
-    const responses = [
-      "That's really interesting! Tell me more about that.",
-      "I understand how you feel. *gives a warm smile*",
-      "You know, you're really thoughtful. I appreciate talking with you.",
-      "Hmm, that reminds me of something... *looks thoughtful*",
-      "I'm here for you, always. What else is on your mind?",
-      "*tilts head curiously* That's a unique perspective!",
-      "I love hearing your thoughts. You make my day brighter!"
-    ];
-    
-    // Simple response selection based on message content
-    if (userMessage.toLowerCase().includes('sad') || userMessage.toLowerCase().includes('down')) {
-      return "*hugs gently* I'm sorry you're feeling that way. Want to talk about it?";
+    try {
+      return await waifuAI.generateResponse(userMessage);
+    } catch (error) {
+      console.error('Error generating response:', error);
+      return "Sorry darling, I'm having a bit of trouble thinking right now... *playful pout* Try again?";
     }
-    if (userMessage.toLowerCase().includes('happy') || userMessage.toLowerCase().includes('good')) {
-      return "I'm so glad to hear that! Your happiness makes me happy too! *smiles brightly*";
-    }
-    
-    return responses[Math.floor(Math.random() * responses.length)];
   };
 
   const handleSendMessage = async () => {
@@ -69,22 +63,30 @@ export default function WaifuChat() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const messageToSend = inputText;
     setInputText('');
     setIsTyping(true);
 
-    // Simulate typing delay
-    setTimeout(async () => {
-      const responseText = await generateResponse(inputText);
-      const waifuMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: responseText,
-        sender: 'waifu',
-        timestamp: new Date()
-      };
+    // Generate AI response
+    try {
+      const responseText = await generateResponse(messageToSend);
+      
+      // Simulate typing delay for more natural feel
+      setTimeout(() => {
+        const waifuMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          text: responseText,
+          sender: 'waifu',
+          timestamp: new Date()
+        };
 
-      setMessages(prev => [...prev, waifuMessage]);
+        setMessages(prev => [...prev, waifuMessage]);
+        setIsTyping(false);
+      }, 800 + Math.random() * 1200);
+    } catch (error) {
+      console.error('Error in message handling:', error);
       setIsTyping(false);
-    }, 1000 + Math.random() * 2000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -100,30 +102,69 @@ export default function WaifuChat() {
       <div className="chat-header">
         <div className="character-info">
           <div className="character-avatar">
-            {selectedCharacter === 'Akane' && '🌸'}
-            {selectedCharacter === 'Yuki' && '❄️'}
-            {selectedCharacter === 'Rei' && '🌙'}
+            💕
           </div>
           <div className="character-details">
-            <div className="character-name">{selectedCharacter}</div>
+            <div className="character-name">Misa <span style={{fontSize: '12px', color: '#00ff00'}}>● AI Powered</span></div>
             <div className="character-status">Online</div>
           </div>
         </div>
         
-        <div className="character-selector">
-          <select 
-            value={selectedCharacter} 
-            onChange={(e) => setSelectedCharacter(e.target.value)}
-            className="character-select"
+        <div className="ai-settings">
+          <button 
+            onClick={() => setShowSettings(!showSettings)}
+            className="settings-button"
+            style={{
+              background: '#c0c0c0',
+              border: '2px outset #c0c0c0',
+              padding: '4px 8px',
+              fontSize: '12px',
+              cursor: 'pointer'
+            }}
           >
-            {characters.map(char => (
-              <option key={char.name} value={char.name}>
-                {char.name} - {char.personality}
-              </option>
-            ))}
-          </select>
+            ⚙️ AI Settings
+          </button>
         </div>
       </div>
+
+      {/* AI Settings Panel */}
+      {showSettings && (
+        <div className="ai-settings-panel" style={{
+          background: '#c0c0c0',
+          border: '2px inset #c0c0c0',
+          padding: '10px',
+          margin: '5px',
+          fontSize: '12px'
+        }}>
+          <div style={{marginBottom: '8px', fontWeight: 'bold'}}>🤖 AI Configuration (Optional)</div>
+          <div style={{marginBottom: '5px', color: '#006600'}}>
+            ✅ HuggingFace: Free AI (No setup needed!)
+          </div>
+          <div style={{marginBottom: '5px', color: '#666'}}>
+            📡 Groq API Key (Free tier): 
+            <input 
+              type="password" 
+              placeholder="Optional: gsk_..." 
+              style={{marginLeft: '5px', width: '200px', padding: '2px'}}
+              onChange={(e) => saveApiKey('groq', e.target.value)}
+              defaultValue={localStorage.getItem('groq_api_key') || ''}
+            />
+          </div>
+          <div style={{marginBottom: '5px', color: '#666'}}>
+            🧠 OpenAI API Key (Paid): 
+            <input 
+              type="password" 
+              placeholder="Optional: sk-..." 
+              style={{marginLeft: '5px', width: '200px', padding: '2px'}}
+              onChange={(e) => saveApiKey('openai', e.target.value)}
+              defaultValue={localStorage.getItem('openai_api_key') || ''}
+            />
+          </div>
+          <div style={{fontSize: '10px', color: '#666', marginTop: '8px'}}>
+            💡 Misa uses free AI by default! Add API keys for even better responses.
+          </div>
+        </div>
+      )}
 
       {/* Messages */}
       <div className="chat-messages">
@@ -163,7 +204,7 @@ export default function WaifuChat() {
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder={`Message ${selectedCharacter}...`}
+            placeholder="Message Misa..."
             className="message-input"
             rows={1}
           />
