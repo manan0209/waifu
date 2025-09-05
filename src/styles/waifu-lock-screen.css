@@ -1,5 +1,5 @@
-/* Awesome Waifu Lock Screen */
-.windows-lock-screen {
+/* Clean Lock Screen */
+.clean-lock-screen {
   position: fixed;
   top: 0;
   left: 0;
@@ -7,54 +7,17 @@
   height: 100vh;
   overflow: hidden;
   z-index: 9998;
-  user-select: none;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
-/* Animated background particles */
-.background-particles {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.particle {
-  position: absolute;
-  font-size: 1.5rem;
-  color: rgba(255, 182, 193, 0.6);
-  animation: floatParticle linear infinite;
-  text-shadow: 0 0 10px rgba(255, 182, 193, 0.8);
-}
-
-@keyframes floatParticle {
-  0% {
-    transform: translateY(100vh) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-50px) rotate(360deg);
-    opacity: 0;
-  }
-}
-
-/* Background with waifu image */
+/* Background */
 .lock-background {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
 }
 
 .background-image {
@@ -70,843 +33,140 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(1px);
 }
 
-/* Top status bar */
-.status-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 10;
-  background: rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.status-left, .status-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.weather-widget {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 8px 12px;
-  border-radius: 20px;
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.weather-icon {
-  font-size: 1.2rem;
-}
-
-.weather-temp {
-  font-weight: 600;
-}
-
-.weather-condition {
-  font-size: 0.9rem;
-  opacity: 0.9;
-}
-
-.battery-indicator {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 6px 12px;
-  border-radius: 15px;
-  color: white;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  position: relative;
-  width: 60px;
-  height: 25px;
-}
-
-.battery-level {
-  position: absolute;
-  left: 2px;
-  top: 2px;
-  bottom: 2px;
-  background: linear-gradient(90deg, #4CAF50, #8BC34A);
-  border-radius: 12px;
-  transition: width 0.3s ease;
-}
-
-.battery-text {
-  position: relative;
-  z-index: 2;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-}
-
-.wifi-strength {
-  font-size: 1.2rem;
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-}
-
-/* Main lock screen content */
-.lock-screen-content {
+/* Content */
+.lock-content {
   position: relative;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   z-index: 2;
-  padding-top: 60px;
+  padding: 60px;
 }
 
-/* Time and greeting section */
-.time-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 40px 60px;
+/* Time display - left aligned */
+.time-display {
   color: white;
-  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  text-align: left;
+  animation: fadeInLeft 1s ease-out;
 }
 
 .greeting {
-  font-size: 1.8rem;
-  font-weight: 300;
-  margin-bottom: 10px;
-  opacity: 0.9;
-  animation: fadeIn 1s ease-out;
-}
-
-.lock-time {
-  font-size: 5rem;
-  font-weight: 200;
-  letter-spacing: -2px;
-  margin-bottom: 8px;
-  line-height: 0.9;
-  animation: slideUp 1s ease-out 0.2s both;
-}
-
-.lock-date {
   font-size: 1.5rem;
   font-weight: 400;
+  margin-bottom: 10px;
   opacity: 0.9;
   letter-spacing: 0.5px;
-  animation: slideUp 1s ease-out 0.4s both;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 0.9; transform: translateY(0); }
+.current-time {
+  font-size: 6rem;
+  font-weight: 700;
+  letter-spacing: -3px;
+  margin-bottom: 8px;
+  line-height: 0.9;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
 }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* User profile section */
-.user-profile-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 40px;
-}
-
-.user-avatar {
-  position: relative;
-  margin-bottom: 30px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  animation: avatarAppear 1s ease-out 0.6s both;
-}
-
-.user-avatar:hover {
-  transform: scale(1.05);
-}
-
-.avatar-image {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 182, 193, 0.3);
-  transition: all 0.3s ease;
-}
-
-.user-avatar:hover .avatar-image {
-  border-color: rgba(255, 182, 193, 1);
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.6), 0 0 80px rgba(255, 182, 193, 0.5);
-}
-
-.avatar-ring {
-  position: absolute;
-  top: -8px;
-  left: -8px;
-  right: -8px;
-  bottom: -8px;
-  border: 2px solid transparent;
-  border-radius: 50%;
-  background: linear-gradient(45deg, rgba(255, 182, 193, 0.6), transparent, rgba(255, 182, 193, 0.6));
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  animation: ringPulse 2s ease-in-out infinite;
-}
-
-.user-avatar:hover .avatar-ring {
-  opacity: 1;
-}
-
-.online-indicator {
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-  width: 20px;
-  height: 20px;
-  background: #4CAF50;
-  border: 3px solid white;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
-  animation: onlinePulse 2s ease-in-out infinite;
-}
-
-@keyframes avatarAppear {
-  from { opacity: 0; transform: scale(0.5); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes ringPulse {
-  0%, 100% { transform: scale(1); opacity: 0.6; }
-  50% { transform: scale(1.1); opacity: 1; }
-}
-
-@keyframes onlinePulse {
-  0%, 100% { box-shadow: 0 0 10px rgba(76, 175, 80, 0.5); }
-  50% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.8); }
-}
-
-/* User info section */
-.user-info {
-  text-align: center;
-  color: white;
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-  animation: userInfoSlide 1s ease-out 0.8s both;
-}
-
-.username {
-  font-size: 2rem;
-  font-weight: 300;
-  margin-bottom: 15px;
+.current-date {
+  font-size: 1.3rem;
+  font-weight: 400;
+  opacity: 0.85;
   letter-spacing: 1px;
 }
 
-.waifu-quote {
-  margin-bottom: 25px;
-  min-height: 30px;
+/* Unlock prompt */
+.unlock-prompt {
+  align-self: center;
+  animation: fadeInUp 1s ease-out 0.5s both;
 }
 
-.quote-text {
-  font-size: 1.2rem;
-  font-style: italic;
-  color: rgba(255, 182, 193, 1);
-  text-shadow: 0 0 15px rgba(255, 182, 193, 0.8);
-  animation: quoteGlow 3s ease-in-out infinite;
-}
-
-@keyframes quoteGlow {
-  0%, 100% { text-shadow: 0 0 15px rgba(255, 182, 193, 0.8); }
-  50% { text-shadow: 0 0 25px rgba(255, 182, 193, 1); }
-}
-
-@keyframes userInfoSlide {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.login-prompt {
-  font-size: 1.1rem;
-  padding: 15px 30px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(255, 182, 193, 0.5);
-  border-radius: 25px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  position: relative;
-  overflow: hidden;
-}
-
-.login-prompt::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
-}
-
-.login-prompt:hover::before {
-  left: 100%;
-}
-
-.login-prompt:hover {
-  background: rgba(255, 182, 193, 0.2);
-  border-color: rgba(255, 182, 193, 0.8);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(255, 182, 193, 0.3);
-}
-
-/* Unlock methods */
-.unlock-methods {
-  width: 100%;
-  max-width: 400px;
-  animation: unlockSlide 0.5s ease-out;
-}
-
-@keyframes unlockSlide {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.method-tabs {
-  display: flex;
-  margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 25px;
-  padding: 5px;
-  backdrop-filter: blur(10px);
-}
-
-.tab {
-  flex: 1;
-  padding: 10px 15px;
-  background: transparent;
-  border: none;
+.unlock-text {
   color: white;
-  cursor: pointer;
-  border-radius: 20px;
-  transition: all 0.3s ease;
-  font-weight: 500;
-}
-
-.tab.active {
-  background: rgba(255, 182, 193, 0.6);
-  box-shadow: 0 2px 10px rgba(255, 182, 193, 0.3);
-}
-
-.tab:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-/* Password form */
-.password-form {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 25px;
-  padding: 5px;
-  border: 2px solid rgba(255, 182, 193, 0.3);
-  transition: border-color 0.3s ease;
-}
-
-.password-form:focus-within {
-  border-color: #ff6b8a;
-  box-shadow: 0 0 0 3px rgba(255, 107, 138, 0.3);
-}
-
-.password-input {
-  background: transparent;
-  border: none;
-  padding: 12px 20px;
   font-size: 1rem;
-  color: #333;
-  flex: 1;
-  outline: none;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  border-radius: 20px;
-}
-
-.password-input::placeholder {
-  color: #666;
-}
-
-.login-button {
-  background: linear-gradient(135deg, #ff6b8a, #ff8fab);
-  border: none;
-  padding: 12px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 10px rgba(255, 107, 138, 0.3);
-}
-
-.login-button:hover {
-  background: linear-gradient(135deg, #ff5a7a, #ff7a9b);
-  transform: scale(1.05);
-  box-shadow: 0 4px 15px rgba(255, 107, 138, 0.4);
-}
-
-.login-arrow {
-  color: white;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-/* PIN input */
-.pin-input-section {
-  text-align: center;
-}
-
-.pin-display {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 25px;
-}
-
-.pin-dot {
-  width: 15px;
-  height: 15px;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  transition: all 0.3s ease;
-}
-
-.pin-dot.filled {
-  background: #ff6b8a;
-  border-color: #ff6b8a;
-  box-shadow: 0 0 10px rgba(255, 107, 138, 0.5);
-}
-
-.pin-keypad {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  max-width: 200px;
-  margin: 0 auto;
-}
-
-.pin-key {
-  width: 50px;
-  height: 50px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: 1.2rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.pin-key:hover {
-  background: rgba(255, 182, 193, 0.3);
-  border-color: rgba(255, 182, 193, 0.6);
-  transform: scale(1.1);
-}
-
-.clear-key {
-  grid-column: span 2;
-  border-radius: 25px;
-  width: auto;
-}
-
-/* Pattern input */
-.pattern-section {
-  text-align: center;
-}
-
-.pattern-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  max-width: 150px;
-  margin: 0 auto 20px;
-}
-
-.pattern-dot {
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.pattern-dot:hover {
-  border-color: #ff6b8a;
-  background: rgba(255, 107, 138, 0.3);
-  transform: scale(1.2);
-}
-
-.pattern-hint {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.9rem;
-}
-
-/* Quick actions */
-.quick-actions {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px;
-  animation: quickActionsSlide 1s ease-out 1s both;
-}
-
-@keyframes quickActionsSlide {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.quick-action {
-  width: 60px;
-  height: 60px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.quick-action:hover {
-  background: rgba(255, 182, 193, 0.3);
-  border-color: rgba(255, 182, 193, 0.6);
-  transform: scale(1.1);
-}
-
-/* Bottom section */
-.bottom-section {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.notifications-preview {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 10px 15px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-}
-
-.notifications-preview:hover {
-  background: rgba(255, 182, 193, 0.2);
-  border-color: rgba(255, 182, 193, 0.4);
-}
-
-.notification-indicator {
-  position: relative;
-  width: 25px;
-  height: 25px;
-  background: #ff6b8a;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.notification-count {
-  color: white;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.notification-text {
-  font-size: 0.9rem;
-}
-
-.system-info {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-
-.accessibility-btn,
-.power-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 20px;
-  padding: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  color: white;
-  font-size: 1.2rem;
-}
-
-.accessibility-btn:hover,
-.power-btn:hover {
-  background: rgba(255, 182, 193, 0.2);
-  border-color: rgba(255, 182, 193, 0.5);
-  transform: scale(1.1);
-}
-
-/* Notifications panel */
-.notifications-panel {
-  position: absolute;
-  bottom: 80px;
-  left: 30px;
-  width: 350px;
-  max-height: 400px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 15px;
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  animation: notificationsPanelSlide 0.3s ease-out;
-  overflow: hidden;
-}
-
-@keyframes notificationsPanelSlide {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.notifications-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  border-bottom: 1px solid rgba(255, 182, 193, 0.3);
-  background: rgba(255, 182, 193, 0.1);
-}
-
-.notifications-header h3 {
-  margin: 0;
-  color: #333;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.notifications-header button {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  color: #666;
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-}
-
-.notifications-header button:hover {
-  background: rgba(255, 182, 193, 0.2);
-  color: #333;
-}
-
-.notifications-list {
-  max-height: 300px;
-  overflow-y: auto;
-  padding: 10px;
-}
-
-.notification-item {
-  display: flex;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.notification-item:hover {
-  background: rgba(255, 182, 193, 0.1);
-}
-
-.notification-icon {
-  font-size: 1.5rem;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 182, 193, 0.2);
-  border-radius: 50%;
-}
-
-.notification-content {
-  flex: 1;
-}
-
-.notification-app {
-  font-size: 0.8rem;
-  color: #ff6b8a;
-  font-weight: 600;
-  text-transform: uppercase;
+  font-weight: 400;
+  opacity: 0.7;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
   letter-spacing: 0.5px;
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
-.notification-title {
-  font-size: 0.9rem;
-  color: #333;
-  font-weight: 600;
-  margin: 2px 0;
+.clean-lock-screen:hover .unlock-text {
+  opacity: 1;
+  transform: translateY(-2px);
 }
 
-.notification-message {
-  font-size: 0.8rem;
-  color: #666;
-  line-height: 1.3;
+/* Animations */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-.notification-time {
-  font-size: 0.7rem;
-  color: #999;
-  margin-top: 4px;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Responsive design */
+/* Responsive */
 @media (max-width: 768px) {
-  .time-section {
-    padding: 30px 30px;
+  .lock-content {
+    padding: 40px;
+  }
+  
+  .current-time {
+    font-size: 4.5rem;
   }
   
   .greeting {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
   }
   
-  .lock-time {
-    font-size: 3.5rem;
+  .current-date {
+    font-size: 1.1rem;
   }
   
-  .lock-date {
-    font-size: 1.2rem;
-  }
-  
-  .username {
-    font-size: 1.5rem;
-  }
-  
-  .avatar-image {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .user-profile-section {
-    padding: 20px;
-  }
-  
-  .bottom-section {
-    padding: 20px;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .notifications-panel {
-    left: 20px;
-    right: 20px;
-    width: auto;
-  }
-  
-  .status-bar {
-    padding: 10px 15px;
-  }
-  
-  .weather-widget {
-    padding: 6px 10px;
-  }
-  
-  .quick-actions {
-    gap: 15px;
-  }
-  
-  .quick-action {
-    width: 50px;
-    height: 50px;
-    font-size: 1.2rem;
+  .unlock-text {
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
-  .time-section {
-    padding: 20px;
+  .lock-content {
+    padding: 30px;
+  }
+  
+  .current-time {
+    font-size: 3.5rem;
   }
   
   .greeting {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   
-  .lock-time {
-    font-size: 2.5rem;
-  }
-  
-  .lock-date {
+  .current-date {
     font-size: 1rem;
   }
   
-  .username {
-    font-size: 1.2rem;
-  }
-  
-  .avatar-image {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .login-prompt {
-    font-size: 1rem;
-    padding: 12px 24px;
-  }
-  
-  .password-input {
-    font-size: 0.9rem;
-    padding: 10px 16px;
-  }
-  
-  .unlock-methods {
-    max-width: 300px;
-  }
-  
-  .status-bar {
-    flex-direction: column;
-    gap: 10px;
-    align-items: stretch;
-  }
-  
-  .status-left, .status-right {
-    justify-content: center;
+  .unlock-text {
+    font-size: 0.85rem;
   }
 }
