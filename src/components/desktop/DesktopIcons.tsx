@@ -7,7 +7,7 @@ import Minesweeper from '../../applications/Minesweeper';
 import TetrisGame from '../games/TetrisGame';
 import Solitaire from '../games/Solitaire';
 import MediaPlayer from '../apps/MediaPlayer';
-import VideoPlayer from '../apps/VideoPlayer';
+import WaifuTube from '../apps/VideoPlayer';
 import WaifuBrowser from '../apps/WaifuBrowser';
 import ProjectViewer from '../apps/ProjectViewer';
 import Settings from '../apps/Settings';
@@ -93,7 +93,7 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
     },
     {
       id: 'video-player',
-      title: 'Video Player',
+      title: 'WaifuTube',
       icon: <Icons.VideoPlayer size={32} />,
       x: 250,
       y: 50,
@@ -240,7 +240,7 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
     const componentMap: Record<string, React.ReactNode> = {
       'waifu-chat': <WaifuChat />,
       'tetris': <TetrisGame />,
-      'video-player': <VideoPlayer />,
+      'video-player': <WaifuTube />,
       'waifu-browser': <WaifuBrowser />,
       'gitroaster': <ProjectViewer projectName="GitRoaster" projectUrl="https://github.com/gitroaster" />,
       'snippix': <ProjectViewer projectName="Snippix" projectUrl="https://github.com/snippix" />,

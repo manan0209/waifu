@@ -1,136 +1,141 @@
 import React, { useState, useRef } from 'react';
 
-interface VideoPlayerProps {
+interface WaifuTubeProps {
   onClose?: () => void;
 }
 
 interface Video {
   id: string;
-  title: string;
   url: string;
-  description: string;
+  embedId: string;
 }
 
-// Curated video collection
-const VIDEOS: Video[] = [
+// Your specified videos with clean embeds
+const WAIFU_VIDEOS: Video[] = [
   {
     id: '1',
-    title: 'Lofi Hip Hop - Study Beats',
-    url: 'https://www.youtube.com/embed/5qap5aO4i9A?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0&fs=1&autohide=1',
-    description: 'Perfect background music for coding and studying sessions.'
+    url: 'https://www.youtube.com/embed/g_6OK9fznGI?enablejsapi=1&autoplay=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0',
+    embedId: 'g_6OK9fznGI'
   },
   {
-    id: '2',
-    title: 'Synthwave Retrowave Mix',
-    url: 'https://www.youtube.com/embed/4xDzrJKXOOY?autoplay=0&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0&fs=1&autohide=1',
-    description: 'Neon-soaked synthwave for coding in the digital night.'
+    id: '2', 
+    url: 'https://www.youtube.com/embed/0C1Wolpxn9w?enablejsapi=1&autoplay=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0',
+    embedId: '0C1Wolpxn9w'
   },
   {
     id: '3',
-    title: 'Anime Piano Collection',
-    url: 'https://www.youtube.com/embed/9bE0W8bP3to?autoplay=0&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0&fs=1&autohide=1',
-    description: 'Beautiful piano covers of your favorite anime themes.'
+    url: 'https://www.youtube.com/embed/1kdlBZgcvcU?enablejsapi=1&autoplay=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0',
+    embedId: '1kdlBZgcvcU'
   },
   {
     id: '4',
-    title: 'Cyberpunk Ambience',
-    url: 'https://www.youtube.com/embed/r7dSz6E8Lis?autoplay=0&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0&fs=1&autohide=1',
-    description: 'Immersive cyberpunk city sounds for deep focus.'
+    url: 'https://www.youtube.com/embed/-pHfPJGatgE?enablejsapi=1&autoplay=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&cc_load_policy=0',
+    embedId: '-pHfPJGatgE'
   }
 ];
 
-export default function VideoPlayer({ onClose }: VideoPlayerProps) {
-  const [currentVideo, setCurrentVideo] = useState<Video>(VIDEOS[0]); // Auto-load first video
+export default function WaifuTube({ onClose }: WaifuTubeProps) {
+  const [currentVideo, setCurrentVideo] = useState<Video>(WAIFU_VIDEOS[0]);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showPlaylist, setShowPlaylist] = useState(true);
   const playerRef = useRef<HTMLIFrameElement>(null);
-
-  const toggleFullscreen = () => {
-    setIsFullscreen(!isFullscreen);
-  };
 
   const handleVideoSelect = (video: Video) => {
     setCurrentVideo(video);
   };
 
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
   return (
-    <div className={`video-player ${isFullscreen ? 'fullscreen' : ''}`}>
-      {/* Header */}
-      <div className="video-player-header">
-        <div className="header-left">
-          <h2>🎥 Video Player</h2>
-        </div>
-        <div className="header-right">
-          <button onClick={toggleFullscreen} className="fullscreen-btn" title="Toggle Fullscreen">
-            {isFullscreen ? '⛶' : '⛶'}
-          </button>
-          {!isFullscreen && (
-            <button className="close-btn" onClick={onClose} title="Close">×</button>
-          )}
+    <div className={`waifu-tube ${isFullscreen ? 'fullscreen-mode' : ''}`}>
+      {/* QuickTime-style Header */}
+      <div className="waifu-tube-header">
+        <div className="header-content">
+          <div className="logo-section">
+            <div className="qt-logo"></div>
+            <span className="app-title">WaifuTube</span>
+          </div>
+          <div className="window-controls">
+            <button className="control-btn minimize" title="Minimize">─</button>
+            <button className="control-btn maximize" onClick={toggleFullscreen} title="Maximize">□</button>
+            <button className="control-btn close" onClick={onClose} title="Close">×</button>
+          </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="video-player-content">
-        {/* Video Container */}
-        <div className="video-container">
-          <iframe
-            ref={playerRef}
-            src={currentVideo.url}
-            title={currentVideo.title}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            className="video-iframe"
-          />
-          
-          {/* Fullscreen Controls */}
-          {isFullscreen && (
-            <div className="fullscreen-controls">
-              <button onClick={() => setIsFullscreen(false)} className="exit-fullscreen">
-                ✕ Exit Fullscreen
+      <div className="main-content">
+        {/* Video Section */}
+        <div className="video-section">
+          <div className="video-container">
+            <iframe
+              ref={playerRef}
+              src={currentVideo.url}
+              title="WaifuTube Video"
+              className="video-frame"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+
+          {/* Simple Control Bar */}
+          <div className="control-bar">
+            <div className="control-group left">
+              <span className="video-info">Video {currentVideo.id} of {WAIFU_VIDEOS.length}</span>
+            </div>
+
+            <div className="control-group right">
+              <button 
+                className="playlist-toggle" 
+                onClick={() => setShowPlaylist(!showPlaylist)}
+                title="Toggle Playlist"
+              >
+                ≡
               </button>
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Video Info & Playlist */}
-        {!isFullscreen && (
-          <div className="video-sidebar">
-            <div className="current-video-info">
-              <h3>{currentVideo.title}</h3>
-              <p>{currentVideo.description}</p>
+        {/* Playlist Sidebar */}
+        {showPlaylist && !isFullscreen && (
+          <div className="playlist-sidebar">
+            <div className="playlist-header">
+              <h3>Videos</h3>
+              <span className="video-count">{WAIFU_VIDEOS.length} videos</span>
             </div>
-
-            <div className="video-playlist">
-              <h4>🎵 Playlist</h4>
-              <div className="playlist-items">
-                {VIDEOS.map((video) => (
-                  <div
-                    key={video.id}
-                    className={`playlist-item ${currentVideo.id === video.id ? 'active' : ''}`}
-                    onClick={() => handleVideoSelect(video)}
-                  >
-                    <div className="playlist-icon">🎬</div>
-                    <div className="playlist-info">
-                      <div className="playlist-title">{video.title}</div>
-                      <div className="playlist-desc">{video.description.slice(0, 50)}...</div>
+            
+            <div className="playlist-content">
+              {WAIFU_VIDEOS.map((video, index) => (
+                <div
+                  key={video.id}
+                  className={`playlist-item ${currentVideo.id === video.id ? 'active' : ''}`}
+                  onClick={() => handleVideoSelect(video)}
+                >
+                  <div className="video-thumbnail">
+                    <img src={`https://img.youtube.com/vi/${video.embedId}/mqdefault.jpg`} alt={`Video ${video.id}`} />
+                  </div>
+                  <div className="video-info">
+                    <h4 className="video-title">Video {index + 1}</h4>
+                    <div className="video-meta">
+                      <span className="video-id">{video.embedId}</span>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
       </div>
 
-      {/* Footer */}
-      {!isFullscreen && (
-        <div className="video-player-footer">
-          <div className="controls">
-            <span>Now Playing: {currentVideo.title}</span>
-          </div>
+      {/* Now Playing Info */}
+      <div className="now-playing-bar">
+        <div className="now-playing-info">
+          <div className="current-title">Currently Playing: Video {currentVideo.id}</div>
+          <div className="video-id-display">{currentVideo.embedId}</div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
