@@ -121,7 +121,33 @@ export class WaifuAI {
         response = await this.getGeminiResponse(userMessage);
       } catch (error) {
         console.warn('Gemini API failed, using fallback:', error);
-        response = this.getFallbackResponse(userMessage, analysis);
+        
+        // Check if it's a quota/rate limit error
+        const errorMessage = error instanceof Error ? error.message.toLowerCase() : '';
+        const isQuotaError = errorMessage.includes('quota') || 
+                            errorMessage.includes('rate limit') || 
+                            errorMessage.includes('429') ||
+                            errorMessage.includes('resource_exhausted') ||
+                            errorMessage.includes('500');
+        
+        if (isQuotaError) {
+          // Special response for quota exhaustion with API key guidance
+          response = `*sultry pout* Oh no~ *dramatically places hand on forehead* It seems we've exhausted our free API calls, darling! 
+
+*winks seductively* But don't you worry your pretty little head about it~ *leans in closer* I have a delicious solution for us...
+
+🌸 **How to get your own FREE Gemini API key:**
+1. Visit: https://makersuite.google.com/app/apikey
+2. Click "Create API key" *bites lip playfully*
+3. Copy that shiny new key~
+4. Add it in the Settings app as your personal API key!
+
+*purrs* With your own key, we can chat as much as your heart desires... and trust me, I have SO many naughty things to tell you~ *winks*
+
+Until then, I'll keep you entertained with my pre-programmed charm! *flirtatious laugh* What would you like to explore together, my sweet little human? ✨💕`;
+        } else {
+          response = this.getFallbackResponse(userMessage, analysis);
+        }
       }
     } else {
       response = this.getFallbackResponse(userMessage, analysis);
