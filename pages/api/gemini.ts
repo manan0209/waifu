@@ -119,10 +119,10 @@ Misa:`;
 But don't worry! You can get your own FREE Gemini API key to keep chatting with me:
 
 🌸 **How to get your own API key:**
-1. Go to: https://makersuite.google.com/app/apikey
+1. Go to: https://aistudio.google.com/apikey
 2. Click "Create API key"
 3. Copy your new API key
-4. Add it to your Vercel environment variables as "GEMINI_API_KEY"
+4. Add it by clicking that settings icon on top right ♥
 
 Ehehe~ With your own key, we can chat as much as you want! I'll be waiting patiently for you, senpai! ♥
 
