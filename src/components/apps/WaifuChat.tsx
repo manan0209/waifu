@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { WaifuAI } from '../../lib/waifuAI';
 
 interface Message {
@@ -12,28 +12,28 @@ export default function WaifuChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [waifuAI] = useState(() => new WaifuAI());
   const [showSettings, setShowSettings] = useState(false);
+  const [userApiKey, setUserApiKey] = useState('');
+  const [apiProvider, setApiProvider] = useState<'default' | 'gemini' | 'openai'>('default');
+  const [waifuAI] = useState(() => new WaifuAI());
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Initialize with Misa and welcome message
   useEffect(() => {
     const welcomeMessage: Message = {
       id: '1',
-      text: '*sultry smile* Well, well... look who decided to visit me~ *winks* I\'m Misa Misa, your delightfully naughty companion. I\'m powered by real AI now, so I can be even more... interactive~ *giggles playfully* Ready to have some fun, darling?',
+      text: '*sultry smile* Well, well... look who decided to visit me~ *winks* I\'m Misa Misa, your delightfully naughty companion. Ready to have some fun, darling?',
       sender: 'waifu',
       timestamp: new Date()
     };
     setMessages([welcomeMessage]);
-  }, [waifuAI]);
 
-  const saveApiKey = (service: string, apiKey: string) => {
-    if (apiKey.trim()) {
-      localStorage.setItem(`${service}_api_key`, apiKey.trim());
-    } else {
-      localStorage.removeItem(`${service}_api_key`);
-    }
-  };
+    // Load saved API settings
+    const savedApiKey = localStorage.getItem('user_api_key');
+    const savedProvider = localStorage.getItem('api_provider') as 'default' | 'gemini' | 'openai';
+    if (savedApiKey) setUserApiKey(savedApiKey);
+    if (savedProvider) setApiProvider(savedProvider);
+  }, [waifuAI]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -45,11 +45,32 @@ export default function WaifuChat() {
 
   const generateResponse = async (userMessage: string): Promise<string> => {
     try {
-      return await waifuAI.generateResponse(userMessage);
+      // Set user API key if provided
+      if (userApiKey && apiProvider !== 'default') {
+        waifuAI.setUserApiKey(userApiKey, apiProvider);
+      }
+      const response = await waifuAI.generateResponse(userMessage);
+      
+      // Clean up the response formatting
+      return response
+        .replace(/^Misa:\s*/i, '') // Remove "Misa:" prefix
+        .replace(/^\*(.+?)\*\s*/, '*$1* ') // Fix action formatting
+        .trim();
     } catch (error) {
       console.error('Error generating response:', error);
       return "Sorry darling, I'm having a bit of trouble thinking right now... *playful pout* Try again?";
     }
+  };
+
+  const saveApiSettings = () => {
+    if (userApiKey) {
+      localStorage.setItem('user_api_key', userApiKey);
+      localStorage.setItem('api_provider', apiProvider);
+    } else {
+      localStorage.removeItem('user_api_key');
+      localStorage.removeItem('api_provider');
+    }
+    setShowSettings(false);
   };
 
   const handleSendMessage = async () => {
@@ -98,6 +119,7 @@ export default function WaifuChat() {
 
   return (
     <div className="waifu-chat-app">
+      
       {/* Header */}
       <div className="chat-header">
         <div className="character-info">
@@ -105,73 +127,25 @@ export default function WaifuChat() {
             💕
           </div>
           <div className="character-details">
-            <div className="character-name">Misa <span style={{fontSize: '12px', color: '#00ff00'}}>● AI Powered</span></div>
+            <div className="character-name">Misa</div>
             <div className="character-status">Online</div>
           </div>
         </div>
-        
-        <div className="ai-settings">
-          <button 
-            onClick={() => setShowSettings(!showSettings)}
-            className="settings-button"
-            style={{
-              background: '#c0c0c0',
-              border: '2px outset #c0c0c0',
-              padding: '4px 8px',
-              fontSize: '12px',
-              cursor: 'pointer'
-            }}
-          >
-            ⚙️ AI Settings
-          </button>
-        </div>
-      </div>
-
-      {/* AI Settings Panel */}
-      {showSettings && (
-        <div className="ai-settings-panel" style={{
-          background: '#c0c0c0',
-          border: '2px inset #c0c0c0',
-          padding: '10px',
-          margin: '5px',
-          fontSize: '12px'
-        }}>
-          <div style={{marginBottom: '8px', fontWeight: 'bold'}}>🤖 AI Configuration (Optional)</div>
-          <div style={{marginBottom: '5px', color: '#006600'}}>
-            ✅ HuggingFace: Free AI (No setup needed!)
-          </div>
-          <div style={{marginBottom: '5px', color: '#666'}}>
-            📡 Groq API Key (Free tier): 
-            <input 
-              type="password" 
-              placeholder="Optional: gsk_..." 
-              style={{marginLeft: '5px', width: '200px', padding: '2px'}}
-              onChange={(e) => saveApiKey('groq', e.target.value)}
-              defaultValue={localStorage.getItem('groq_api_key') || ''}
-            />
-          </div>
-          <div style={{marginBottom: '5px', color: '#666'}}>
-            🧠 OpenAI API Key (Paid): 
-            <input 
-              type="password" 
-              placeholder="Optional: sk-..." 
-              style={{marginLeft: '5px', width: '200px', padding: '2px'}}
-              onChange={(e) => saveApiKey('openai', e.target.value)}
-              defaultValue={localStorage.getItem('openai_api_key') || ''}
-            />
-          </div>
-          <div style={{fontSize: '10px', color: '#666', marginTop: '8px'}}>
-            💡 Misa uses free AI by default! Add API keys for even better responses.
-          </div>
-        </div>
-      )}
-
-      {/* Messages */}
+        <button 
+          onClick={() => setShowSettings(true)}
+          className="settings-button"
+          title="API Settings"
+        >
+          ⚙️
+        </button>
+      </div>      
       <div className="chat-messages">
         {messages.map(message => (
           <div key={message.id} className={`message ${message.sender}`}>
             <div className="message-content">
-              <div className="message-text">{message.text}</div>
+              <div className="message-text" style={{ whiteSpace: 'pre-wrap' }}>
+                {message.text}
+              </div>
               <div className="message-time">
                 {message.timestamp.toLocaleTimeString('en-US', {
                   hour: '2-digit',
@@ -217,6 +191,49 @@ export default function WaifuChat() {
           </button>
         </div>
       </div>
+
+      {/* Settings Modal */}
+      {showSettings && (
+        <div className="settings-modal">
+          <div className="settings-content">
+            <h3>API Settings</h3>
+            <p>Use your own API key for unlimited AI responses!</p>
+            
+            <div className="setting-group">
+              <label>API Provider:</label>
+              <select 
+                value={apiProvider} 
+                onChange={(e) => setApiProvider(e.target.value as 'default' | 'gemini' | 'openai')}
+              >
+                <option value="default">Default (Free)</option>
+                <option value="gemini">Google Gemini</option>
+                <option value="openai">OpenAI</option>
+              </select>
+            </div>
+
+            {apiProvider !== 'default' && (
+              <div className="setting-group">
+                <label>API Key:</label>
+                <input
+                  type="password"
+                  value={userApiKey}
+                  onChange={(e) => setUserApiKey(e.target.value)}
+                  placeholder={`Enter your ${apiProvider === 'gemini' ? 'Gemini' : 'OpenAI'} API key...`}
+                />
+                <small>
+                  {apiProvider === 'gemini' && 'Get free API key from: https://makersuite.google.com/app/apikey'}
+                  {apiProvider === 'openai' && 'Get API key from: https://platform.openai.com/api-keys'}
+                </small>
+              </div>
+            )}
+
+            <div className="settings-buttons">
+              <button onClick={() => setShowSettings(false)}>Cancel</button>
+              <button onClick={saveApiSettings}>Save</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

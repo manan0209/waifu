@@ -1,4 +1,3 @@
-// AI Service for Waifu Chat - Simplified with only Misa Misa
 export interface WaifuPersonality {
   name: string;
   basePrompt: string;
@@ -26,6 +25,7 @@ export interface ConversationContext {
 export class WaifuAI {
   private context: ConversationContext;
   private apiKey: string | null = null;
+  private userApiProvider: 'gemini' | 'openai' | null = null;
   
   
   public static personalities: Record<string, WaifuPersonality> = {
@@ -56,26 +56,32 @@ export class WaifuAI {
       mood: 'playful'
     };
 
-    // Always try API first
-    this.apiKey = 'internal-api'; // We'll use our internal API route
+    this.apiKey = 'internal-api';
   }
+
 
   // Get current personality
   public getPersonality(): WaifuPersonality {
     return this.context.personality;
   }
 
- 
+  // Set user's own API key
+  public setUserApiKey(apiKey: string, provider: 'gemini' | 'openai') {
+    this.apiKey = apiKey;
+    this.userApiProvider = provider;
+  }
+
+  // Switch personality (not needed anymore but keeping for compatibility)
   public switchPersonality(personalityKey: string) {
     // Always return to Misa
     this.context.personality = WaifuAI.personalities['misa'];
   }
 
-  // Analyze user message for context
+
   private analyzeMessage(message: string): { mood: string; topics: string[]; sentiment: 'positive' | 'negative' | 'neutral' } {
     const lowerMessage = message.toLowerCase();
     
-    // Basic sentiment analysis
+
     const positiveWords = ['happy', 'good', 'great', 'awesome', 'love', 'excited', 'amazing', 'wonderful'];
     const negativeWords = ['sad', 'bad', 'terrible', 'hate', 'angry', 'upset', 'worried', 'depressed'];
     
@@ -92,19 +98,19 @@ export class WaifuAI {
     return { mood: sentiment, topics, sentiment };
   }
 
-  // Generate response using OpenAI API or fallback
+
   public async generateResponse(userMessage: string): Promise<string> {
-    // Add user message to history
+   
     this.context.conversationHistory.push({
       role: 'user',
       content: userMessage,
       timestamp: new Date()
     });
 
-    // Analyze the message
+
     const analysis = this.analyzeMessage(userMessage);
     
-    // Update context based on analysis
+
     if (analysis.sentiment === 'positive') this.context.mood = 'happy';
     else if (analysis.sentiment === 'negative') this.context.mood = 'concerned';
 
@@ -112,15 +118,12 @@ export class WaifuAI {
 
     if (this.apiKey) {
       try {
-        console.log('Attempting Gemini API call...');
         response = await this.getGeminiResponse(userMessage);
-        console.log('Gemini API success!');
       } catch (error) {
         console.warn('Gemini API failed, using fallback:', error);
         response = this.getFallbackResponse(userMessage, analysis);
       }
     } else {
-      console.log('No API key, using fallback responses');
       response = this.getFallbackResponse(userMessage, analysis);
     }
 
@@ -144,8 +147,14 @@ export class WaifuAI {
 
   // Google Gemini API response via internal API route
   private async getGeminiResponse(userMessage: string): Promise<string> {
-    console.log('Making Gemini API request via internal route for message:', userMessage);
-
+    // If user provided their own API key, use it directly
+    if (this.userApiProvider === 'openai') {
+      return await this.getOpenAIResponse(userMessage);
+    } else if (this.userApiProvider === 'gemini') {
+      return await this.getDirectGeminiResponse(userMessage);
+    }
+    
+    // Otherwise use internal API route
     const response = await fetch('/api/gemini', {
       method: 'POST',
       headers: {
@@ -158,30 +167,96 @@ export class WaifuAI {
       })
     });
 
-    console.log('Internal API response status:', response.status);
-
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('Internal API error:', errorData);
       throw new Error(`Internal API request failed: ${response.status} - ${errorData.error}`);
     }
 
     const data = await response.json();
-    console.log('Internal API response:', data);
-    
-    if (!data.response) {
-      throw new Error('No response from internal API');
+    return data.response;
+  }
+
+  // Direct Gemini API call for user's own API key
+  private async getDirectGeminiResponse(userMessage: string): Promise<string> {
+    const conversationText = this.context.conversationHistory
+      .filter(msg => msg.role !== 'system')
+      .map(msg => `${msg.role === 'user' ? 'User' : 'Misa'}: ${msg.content}`)
+      .slice(-10)
+      .join('\n');
+
+    const prompt = `${this.context.personality.basePrompt}
+
+Previous conversation:
+${conversationText}
+
+User: ${userMessage}
+Misa:`;
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${this.apiKey}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: prompt
+          }]
+        }],
+        generationConfig: {
+          temperature: 0.9,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 200,
+        }
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Gemini API request failed: ${response.status}`);
     }
 
-    console.log('AI Response:', data.response);
-    return data.response;
+    const data = await response.json();
+    const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    
+    if (!aiResponse) {
+      throw new Error('No response from Gemini');
+    }
+
+    return aiResponse.trim();
+  }
+
+  // Direct OpenAI API call for user's own API key
+  private async getOpenAIResponse(userMessage: string): Promise<string> {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: this.context.conversationHistory.slice(-10),
+        max_tokens: 200,
+        temperature: 0.9,
+        presence_penalty: 0.1,
+        frequency_penalty: 0.1
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`OpenAI API request failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0]?.message?.content || 'No response received';
   }
 
   // Fallback response system with Misa's personality
   private getFallbackResponse(userMessage: string, analysis: any): string {
     const lowerMessage = userMessage.toLowerCase();
 
-    // Greeting responses
+
     if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
       const greetings = [
         "*sultry smile* Well, well... look who decided to visit me~ *winks* Hey there, darling!",
@@ -192,7 +267,6 @@ export class WaifuAI {
       return greetings[Math.floor(Math.random() * greetings.length)];
     }
 
-    // Emotional support responses
     if (analysis.sentiment === 'negative') {
       const supportResponses = [
         "*soft, caring expression* Oh honey... *gently caresses your cheek* Life being a bitch again? Come here~ *opens arms seductively but caringly*",
@@ -214,7 +288,7 @@ export class WaifuAI {
       return happyResponses[Math.floor(Math.random() * happyResponses.length)];
     }
 
-    // Topic-based responses
+    
     if (analysis.topics.length > 0) {
       const topic = analysis.topics[0];
       
