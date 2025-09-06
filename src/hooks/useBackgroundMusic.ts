@@ -23,9 +23,6 @@ export function useBackgroundMusic(audioSrc: string, options: BackgroundMusicOpt
     // Event listeners
     const handleLoadedData = () => {
       setIsLoaded(true);
-      if (autoPlay) {
-        play();
-      }
     };
 
     const handlePlay = () => setIsPlaying(true);
@@ -48,7 +45,7 @@ export function useBackgroundMusic(audioSrc: string, options: BackgroundMusicOpt
       audio.pause();
       audio.src = '';
     };
-  }, [audioSrc, loop, autoPlay]);
+  }, [audioSrc, loop]);
 
   // Update volume when it changes
   useEffect(() => {

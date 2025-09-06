@@ -12,9 +12,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'User message is required' });
   }
 
-  const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   
   if (!apiKey) {
+    console.error('GEMINI_API_KEY not configured');
     return res.status(500).json({ error: 'API key not configured' });
   }
 

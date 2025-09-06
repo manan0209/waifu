@@ -21,6 +21,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
   const [showAltTab, setShowAltTab] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [hasPlayedStartup, setHasPlayedStartup] = useState(false);
+  const [musicStarted, setMusicStarted] = useState(false);
   
   const { playButtonClick, playNotification, playStartup } = useSystemSounds();
   
@@ -28,8 +29,16 @@ export default function Desktop({ onShutdown }: DesktopProps) {
   const bgMusic = useBackgroundMusic('/bgmusic.mp3', {
     volume: 0.2,
     loop: true,
-    autoPlay: true 
+    autoPlay: false 
   });
+
+  // Start music after first user interaction
+  const startMusicAfterInteraction = () => {
+    if (!musicStarted && bgMusic.isLoaded) {
+      bgMusic.play();
+      setMusicStarted(true);
+    }
+  };
 
   
   useEffect(() => {
@@ -38,16 +47,11 @@ export default function Desktop({ onShutdown }: DesktopProps) {
         playStartup();
         addNotification('System', 'Welcome to WaifuOS!', 'success');
         setHasPlayedStartup(true);
-        
-        // Start background music after a brief delay
-        setTimeout(() => {
-          bgMusic.play();
-        }, 1500);
       }, 500);
       
       return () => clearTimeout(timer);
     }
-  }, [hasPlayedStartup, playStartup, bgMusic]); 
+  }, [hasPlayedStartup, playStartup]); 
 
   
   useEffect(() => {
@@ -94,11 +98,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
   const handleStartClick = () => {
     playButtonClick();
     setShowStartMenu(!showStartMenu);
-    
-    // Start background music on first user interaction
-    if (!bgMusic.isPlaying) {
-      bgMusic.play();
-    }
+    startMusicAfterInteraction(); // Start music on user interaction
   };
 
   const openWindow = (appId: string, title: string, component: React.ReactNode) => {
@@ -163,7 +163,10 @@ export default function Desktop({ onShutdown }: DesktopProps) {
         <div className="wallpaper"></div>
         
         
-        <DesktopIcons onOpenWindow={openWindow} />
+        <DesktopIcons 
+          onOpenWindow={openWindow} 
+          onUserInteraction={startMusicAfterInteraction}
+        />
         
         {/* Desktop Mascot */}
         <DesktopMascot

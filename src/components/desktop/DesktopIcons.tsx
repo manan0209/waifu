@@ -15,6 +15,7 @@ import { Icons } from '../ui/Icons';
 
 interface DesktopIconsProps {
   onOpenWindow: (appId: string, title: string, component: React.ReactNode) => void;
+  onUserInteraction?: () => void;
 }
 
 interface DesktopIcon {
@@ -26,7 +27,7 @@ interface DesktopIcon {
   appId: string;
 }
 
-export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
+export default function DesktopIcons({ onOpenWindow, onUserInteraction }: DesktopIconsProps) {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [draggedIcon, setDraggedIcon] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -234,6 +235,8 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
 
   // Handle double click to open app
   const handleDoubleClick = (iconId: string) => {
+    onUserInteraction?.(); // Trigger music on user interaction
+    
     const componentMap: Record<string, React.ReactNode> = {
       'waifu-chat': <WaifuChat />,
       'tetris': <TetrisGame />,
@@ -262,6 +265,7 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
   const handleIconClick = (iconId: string) => {
     if (draggedIcon) return; // Don't select while dragging
     setSelectedIcon(selectedIcon === iconId ? null : iconId);
+    onUserInteraction?.(); // Trigger music on user interaction
   };
 
   const handleDesktopClick = (e: React.MouseEvent) => {
