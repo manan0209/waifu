@@ -6,6 +6,7 @@ import StartMenu from './StartMenu';
 import AltTabSwitcher from './AltTabSwitcher';
 import NotificationManager from '../system/NotificationManager';
 import DesktopMascot from '../mascot/DesktopMascot';
+import WaifuChat from '../apps/WaifuChat';
 import { useSystemSounds } from '../../hooks/useSystemSounds';
 import { useBackgroundMusic } from '../../hooks/useBackgroundMusic';
 
@@ -163,7 +164,8 @@ export default function Desktop({ onShutdown }: DesktopProps) {
         <DesktopMascot
           isVisible={true}
           currentApp={windows.find(w => !w.isMinimized)?.title || ''}
-          onMascotClick={() => addNotification('Mascot', 'Hello! I\'m your desktop companion!', 'info')}
+          onMascotClick={() => addNotification('Mascot', 'Hello! I\'m Misa, your desktop companion! ♥', 'info')}
+          onOpenWaifuChat={() => openWindow('waifu-chat', 'Waifu Chat', <WaifuChat />)}
         />
       </div>
 

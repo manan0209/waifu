@@ -251,7 +251,7 @@ export const ChatIcon: React.FC<IconProps> = ({ size = 16, className }) => (
     
     <circle fill="#FF1493" cx="5" cy="6" r="0.5"/>
     <circle fill="#FF1493" cx="7" cy="6" r="0.5"/>
-    <path fill="#FF1493" d="M4.5 8 Q6 9 7.5 8" stroke="#FF1493" strokeWidth="0.5" fill="none"/>
+    <path d="M4.5 8 Q6 9 7.5 8" stroke="#FF1493" strokeWidth="0.5" fill="none"/>
     
     <rect fill="#FFB6C1" x="9" y="5" width="4" height="1"/>
     <rect fill="#FFB6C1" x="9" y="7" width="3" height="1"/>

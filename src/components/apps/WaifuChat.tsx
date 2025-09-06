@@ -18,7 +18,7 @@ export default function WaifuChat() {
   const [waifuAI] = useState(() => new WaifuAI());
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Initialize with Misa and welcome message
+  
   useEffect(() => {
     const welcomeMessage: Message = {
       id: '1',
@@ -51,10 +51,10 @@ export default function WaifuChat() {
       }
       const response = await waifuAI.generateResponse(userMessage);
       
-      // Clean up the response formatting
+      
       return response
-        .replace(/^Misa:\s*/i, '') // Remove "Misa:" prefix
-        .replace(/^\*(.+?)\*\s*/, '*$1* ') // Fix action formatting
+        .replace(/^Misa:\s*/i, '') 
+        .replace(/^\*(.+?)\*\s*/, '*$1* ') 
         .trim();
     } catch (error) {
       console.error('Error generating response:', error);
@@ -92,7 +92,7 @@ export default function WaifuChat() {
     try {
       const responseText = await generateResponse(messageToSend);
       
-      // Simulate typing delay for more natural feel
+    
       setTimeout(() => {
         const waifuMessage: Message = {
           id: (Date.now() + 1).toString(),
@@ -124,7 +124,7 @@ export default function WaifuChat() {
       <div className="chat-header">
         <div className="character-info">
           <div className="character-avatar">
-            💕
+            <img src="/mascot.png" alt="Misa" className="avatar-image" />
           </div>
           <div className="character-details">
             <div className="character-name">Misa</div>
@@ -142,6 +142,16 @@ export default function WaifuChat() {
       <div className="chat-messages">
         {messages.map(message => (
           <div key={message.id} className={`message ${message.sender}`}>
+            {message.sender === 'waifu' && (
+              <div className="message-avatar">
+                <img src="/mascot.png" alt="Misa" className="avatar-image" />
+              </div>
+            )}
+            {message.sender === 'user' && (
+              <div className="message-avatar">
+                <img src="/useravtr.png" alt="User" className="avatar-image user-avatar" />
+              </div>
+            )}
             <div className="message-content">
               <div className="message-text" style={{ whiteSpace: 'pre-wrap' }}>
                 {message.text}
@@ -158,6 +168,9 @@ export default function WaifuChat() {
         
         {isTyping && (
           <div className="message waifu">
+            <div className="message-avatar">
+              <img src="/mascot.png" alt="Misa" className="avatar-image typing" />
+            </div>
             <div className="message-content">
               <div className="typing-indicator">
                 <span></span>

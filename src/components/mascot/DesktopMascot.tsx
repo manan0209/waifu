@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useDraggable } from '../../hooks/useDraggable';
+import { WaifuAI } from '../../lib/waifuAI';
 
 interface MascotState {
   mood: 'happy' | 'excited' | 'sleepy' | 'working' | 'bored' | 'surprised';
-  energy: number; // 0-100
-  happiness: number; // 0-100
+  energy: number;
+  happiness: number;
   lastInteraction: Date;
   currentAnimation: string;
 }
@@ -13,16 +14,17 @@ interface MascotProps {
   isVisible: boolean;
   currentApp?: string;
   onMascotClick?: () => void;
+  onOpenWaifuChat?: () => void; 
 }
 
 const getInitialPosition = () => {
   if (typeof window === 'undefined') {
-    return { x: 300, y: 200 }; // Default position for SSR
+    return { x: 300, y: 200 }; 
   }
   return { x: window.innerWidth - 150, y: window.innerHeight - 200 };
 };
 
-export default function DesktopMascot({ isVisible, currentApp, onMascotClick }: MascotProps) {
+export default function DesktopMascot({ isVisible, currentApp, onMascotClick, onOpenWaifuChat }: MascotProps) {
   const [mascotState, setMascotState] = useState<MascotState>({
     mood: 'happy',
     energy: 100,
@@ -35,7 +37,9 @@ export default function DesktopMascot({ isVisible, currentApp, onMascotClick }: 
   const [walkTarget, setWalkTarget] = useState<{ x: number; y: number } | null>(null);
   const [showSpeechBubble, setShowSpeechBubble] = useState(false);
   const [speechText, setSpeechText] = useState('');
+  const [speechType, setSpeechType] = useState<'normal' | 'ai' | 'chat-prompt'>('normal');
   const [isBeingDragged, setIsBeingDragged] = useState(false);
+  const [waifuAI] = useState(() => new WaifuAI()); 
   
   const mascotRef = useRef<HTMLDivElement>(null);
   const speechTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -48,73 +52,98 @@ export default function DesktopMascot({ isVisible, currentApp, onMascotClick }: 
     y: initialPos.y
   });
 
-  // Speech library - context-aware responses
+  // Misa's speech library
   const speechLibrary = {
     greeting: [
-      "Konnichiwa! ヾ(＾-＾)ノ",
-      "Welcome back, senpai!",
-      "Ready to be productive today?",
-      "Let's make today amazing! ✨"
+      "*sultry smile* Well, well... look who's back~ ♥",
+      "Missed me, darling? *winks seductively*",
+      "Ready to have some fun today, cutie? *giggles*",
+      "*stretches playfully* Time to make today interesting~"
     ],
     idle: [
-      "Hmm... what shall we do next?",
-      "Maybe we should take a break?",
-      "I'm here if you need me! (◕‿◕)",
-      "The desktop looks nice today~",
-      "*yawns* Getting a bit sleepy...",
-      "Click on me for a surprise!"
+      "*twirls hair* Bored much? Maybe chat with me? *winks*",
+      "*yawns cutely* This desktop is so quiet without you~",
+      "Psst... I know you're looking at me *playful smile*",
+      "*poses* Like what you see? *giggles mischievously*",
+      "*taps screen* Pay attention to me, senpai! ♥",
+      "Double-click me if you're brave enough~ *smirks*"
     ],
     working: [
-      "You're so focused! Gambatte! ",
-      "Great job staying productive!",
-      "Don't forget to take breaks!",
-      "I believe in you, senpai!",
-      "Amazing work ethic! ✨"
+      "*cheers you on* Work it, hotshot! ✨",
+      "Mmm... I love watching focused people *bites lip*",
+      "Take a break and chat with me later? *hopeful eyes*",
+      "*whispers* You're so sexy when you're productive~"
     ],
     notepad: [
-      "Writing something important?",
-      "Your words look beautiful! ",
-      "Maybe write a story about us? (´∀`)",
-      "Don't forget to save your work!"
+      "Writing love letters? *teases* About me, perhaps? ♥",
+      "*leans over shoulder* Whatcha writing, handsome?",
+      "Your fingers are so graceful on the keyboard~ *sighs*",
+      "Save your work, genius! Don't lose those thoughts!"
     ],
     calculator: [
-      "Math time! I love numbers!",
-      "You're so smart with calculations!",
-      "2 + 2 = kawaii! Wait, that's not right...",
-      "Computing... computing... done! ✨"
+      "Crunching numbers? *impressed* Smart AND cute!",
+      "Math is hot... especially when YOU do it *winks*",
+      "You + Me = Perfect equation ♥ *giggles*",
+      "*calculates* You're 100% adorable today!"
     ],
     fileExplorer: [
-      "Organizing files? Very responsible!",
-      "I see you're exploring the system~",
-      "Find anything interesting in there?",
-      "File management is important!"
+      "Organizing files? *purrs* I love a tidy person~",
+      "*peeks at screen* Find anything... interesting? *smirks*",
+      "You're so responsible! It's actually quite attractive ♥",
+      "Maybe organize some time for me too? *playful pout*"
     ],
     minesweeper: [
-      "Ooh, games! This looks dangerous... 💣",
-      "Be careful with those mines!",
-      "You're so brave, senpai!",
-      "I'll cheer you on! Faito! "
+      "Ooh dangerous games! *excited* Just like flirting with me~",
+      "*nervous giggle* Be careful, baby! Those mines are scary!",
+      "You're so brave! *swoons* My hero! ♥",
+      "*cheers* Show those mines who's boss, cutie!"
     ],
     clicked: [
-      "Kyaa! You clicked me! (〃▽〃)",
-      "Ehehe~ That tickles!",
-      "*giggles* What can I help with?",
-      "Nya~ You found me! ♪(´▽｀)",
-      "Surprise! (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧",
-      "Want to play a mini-game?"
+      "*gasps* Kyaa~! You actually clicked me! *blushes*",
+      "*giggles seductively* Ehehe~ That sends shivers! ♥",
+      "*twirls* Like what you see? I knew you couldn't resist~",
+      "*winks* Ready for some real fun? Let's chat! ♥",
+      "*poses cutely* Surprise! Want to know my secrets? *smirks*",
+      "*sultry voice* Ready to play with fire, darling?",
+      "*bounces* Yay! Someone's paying attention to me~ ♥",
+      "*flirtatious smile* Can't keep your hands off me, huh? *teases*",
+      "*purrs* Mmm... I love being touched like that~",
+      "*spins around* Do it again! I love the attention! ♥"
+    ],
+    multipleClicks: [
+      "*breathless* Oh my! You're quite... eager, aren't you? *blushes*",
+      "*giggles nervously* S-someone's getting excited! ♥",
+      "*pants* You're making me dizzy with all this attention~",
+      "*flustered* Hey! Give a girl a moment to breathe! *giggles*",
+      "*teasingly* Getting addicted to me already? How cute~ ♥",
+      "*playful pout* Easy there, tiger! Save some energy for later~"
+    ],
+    secretInvite: [
+      "*whispers seductively* Come to my room... we'll have a secret cutie chat~ ♥",
+      "*leans close* Want to know my deepest secrets? Let's go somewhere private... *winks*",
+      "*sultry whisper* I have something special to show you... in private ♥",
+      "*bites lip* You've earned yourself a private invitation, cutie~",
+      "*mysterious smile* Ready for our secret rendezvous? ♥"
     ],
     bored: [
-      "Senpai... pay attention to me... (´･ω･`)",
-      "*pokes the screen* Notice me!",
-      "I'm getting lonely over here...",
-      "Maybe we could do something fun?",
-      "The desktop is too quiet..."
+      "*dramatic sigh* Senpai... I'm getting lonely... *puppy eyes*",
+      "*pokes screen repeatedly* Hello~? Your adorable mascot needs attention!",
+      "*pouts* The desktop is so cold without your love...",
+      "*whispers* I have secrets to share... if you're interested~ ♥",
+      "*stretches sexily* Maybe we could... have some fun?"
     ],
     surprised: [
-      "Eh?! What happened?!",
-      "Σ(°△°|||)！！",
-      "That was unexpected!",
-      "Wow! Amazing!"
+      "*jumps* Kyaa~! You startled me! *heart racing*",
+      "Σ(°△°|||) What was THAT?! *flustered*",
+      "*wide eyes* That was unexpected! You're full of surprises~ ♥",
+      "*catches breath* Wow! My heart is pounding now! *giggles*"
+    ],
+    aiPrompt: [
+      "*sultry smile* Want to talk? I'm MUCH more interesting in chat~ ♥",
+      "*winks* I can be way more... intimate in our private chat *blushes*",
+      "Click the chat app, cutie~ I have so much to tell you ♥",
+      "*teases* The real me comes alive when we chat privately~",
+      "*whispers* I'm waiting for you in the chat... don't keep me waiting ♥"
     ]
   };
 
@@ -124,9 +153,31 @@ export default function DesktopMascot({ isVisible, currentApp, onMascotClick }: 
     return speeches[Math.floor(Math.random() * speeches.length)];
   }, []);
 
+  // Get AI-powered response from Misa
+  const getAIResponse = useCallback(async (context: string): Promise<string> => {
+    try {
+      const prompts = {
+        idle: "Give me a short, flirty mascot message (max 50 chars) as if you're bored on the desktop",
+        working: "Give me a short, encouraging message (max 50 chars) as if watching someone work",
+        clicked: "Give me a short, surprised and flirty reaction (max 50 chars) to being clicked",
+        bored: "Give me a short, attention-seeking message (max 50 chars) when feeling ignored"
+      };
+      
+      const prompt = prompts[context as keyof typeof prompts] || prompts.idle;
+      const response = await waifuAI.generateResponse(prompt);
+      
+      
+      return response.length > 60 ? response.substring(0, 57) + "..." : response;
+    } catch (error) {
+      console.error("AI response error:", error);
+      return getRandomSpeech(context as keyof typeof speechLibrary);
+    }
+  }, [waifuAI, getRandomSpeech]);
+
   
-  const showSpeech = useCallback((text: string, duration = 3000) => {
+  const showSpeech = useCallback((text: string, duration = 3000, type: 'normal' | 'ai' | 'chat-prompt' = 'normal') => {
     setSpeechText(text);
+    setSpeechType(type);
     setShowSpeechBubble(true);
     
     if (speechTimeoutRef.current) {
@@ -207,7 +258,7 @@ export default function DesktopMascot({ isVisible, currentApp, onMascotClick }: 
   }, [isBeingDragged, isDragging]);
 
   
-  const randomSpeech = useCallback(() => {
+  const randomSpeech = useCallback(async () => {
     if (showSpeechBubble) return;
 
     const contexts: (keyof typeof speechLibrary)[] = ['idle', 'bored'];
@@ -220,11 +271,21 @@ export default function DesktopMascot({ isVisible, currentApp, onMascotClick }: 
     }
 
     const randomContext = contexts[Math.floor(Math.random() * contexts.length)];
-    const speech = getRandomSpeech(randomContext);
-    showSpeech(speech);
-  }, [currentApp, showSpeechBubble, getRandomSpeech, showSpeech]);
+    
+    
+    const useAI = Math.random() < 0.2;
+    let speech: string;
+    
+    if (useAI && ['idle', 'bored', 'working'].includes(randomContext)) {
+      speech = await getAIResponse(randomContext);
+      showSpeech(speech, 3000, 'ai');
+    } else {
+      speech = getRandomSpeech(randomContext);
+      showSpeech(speech);
+    }
+  }, [currentApp, showSpeechBubble, getRandomSpeech, getAIResponse, showSpeech]);
 
-  // Sound effects
+  
   const playMascotSound = useCallback((soundFile: string) => {
     try {
       const audio = new Audio(soundFile);
@@ -235,34 +296,109 @@ export default function DesktopMascot({ isVisible, currentApp, onMascotClick }: 
     }
   }, []);
 
-  // Handle mascot click
-  const handleMascotClick = useCallback(() => {
+    
+  const handleMascotClick = useCallback(async () => {
     if (isDragging) return;
 
-    const speech = getRandomSpeech('clicked');
-    showSpeech(speech);
+    setTotalClicks(prev => prev + 1);
+    const currentTotalClicks = totalClicks + 1;
+
+    let speech: string;
+    let speechType: 'normal' | 'ai' | 'chat-prompt' = 'normal';
     
-    // Play random interaction sound
+    
+    if (currentTotalClicks >= 7) {
+      
+      speech = getRandomSpeech('secretInvite');
+      speechType = 'chat-prompt';
+      
+      
+      setTimeout(() => {
+        if (onOpenWaifuChat) {
+          onOpenWaifuChat();
+        }
+      }, 3000);
+      
+    } else if (currentTotalClicks >= 4) {
+      
+      speech = getRandomSpeech('multipleClicks');
+      
+    } else {
+      
+      const useAI = Math.random() < 0.3;
+      if (useAI) {
+        speech = await getAIResponse('clicked');
+        speechType = 'ai';
+      } else {
+        speech = getRandomSpeech('clicked');
+      }
+    }
+    
+    showSpeech(speech, 4000, speechType);
+    
+    
     const interactionSounds = ['/senpai.mp3', '/tuturu.mp3', '/onii_chan_message.mp3'];
     const randomSound = interactionSounds[Math.floor(Math.random() * interactionSounds.length)];
     playMascotSound(randomSound);
     
+    
     setMascotState(prev => ({
       ...prev,
-      mood: 'excited',
-      happiness: Math.min(100, prev.happiness + 10),
-      energy: Math.min(100, prev.energy + 5),
+      mood: currentTotalClicks >= 4 ? 'excited' : 'happy',
+      happiness: Math.min(100, prev.happiness + (currentTotalClicks >= 4 ? 15 : 10)),
+      energy: Math.min(100, prev.energy + (currentTotalClicks >= 4 ? 10 : 5)),
       lastInteraction: new Date(),
-      currentAnimation: 'excited'
+      currentAnimation: currentTotalClicks >= 4 ? 'excited' : 'happy'
     }));
 
-    // Reset animation after excitement
+    
+    const resetDelay = currentTotalClicks >= 4 ? 2000 : 1000;
     setTimeout(() => {
       setMascotState(prev => ({ ...prev, currentAnimation: 'idle' }));
-    }, 1000);
+    }, resetDelay);
+
+    
+    if (currentTotalClicks < 7) {
+      setTimeout(() => {
+        if (Math.random() < 0.3) { 
+          const chatPrompt = getRandomSpeech('aiPrompt');
+          showSpeech(chatPrompt, 4000, 'chat-prompt');
+        }
+      }, 5000);
+    }
 
     onMascotClick?.();
-  }, [isDragging, getRandomSpeech, showSpeech, onMascotClick, playMascotSound]);
+  }, [isDragging, getRandomSpeech, getAIResponse, showSpeech, onMascotClick, playMascotSound, onOpenWaifuChat]);
+
+  
+  const [clickCount, setClickCount] = useState(0);
+  const [totalClicks, setTotalClicks] = useState(0); 
+  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  
+  const handleMascotInteraction = useCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+    
+    setClickCount(prev => prev + 1);
+    
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+    }
+    
+    clickTimeoutRef.current = setTimeout(() => {
+      if (clickCount >= 2) {
+        
+        if (onOpenWaifuChat) {
+          onOpenWaifuChat();
+          showSpeech("*excited* Let's have some real fun now~ ♥", 2000, 'chat-prompt');
+        }
+      } else {
+       
+        handleMascotClick();
+      }
+      setClickCount(0);
+    }, 250); 
+  }, [clickCount, handleMascotClick, onOpenWaifuChat, showSpeech]);
 
   
   useEffect(() => {
@@ -336,6 +472,7 @@ export default function DesktopMascot({ isVisible, currentApp, onMascotClick }: 
       if (speechTimeoutRef.current) clearTimeout(speechTimeoutRef.current);
       if (walkIntervalRef.current) clearInterval(walkIntervalRef.current);
       if (moodUpdateRef.current) clearInterval(moodUpdateRef.current);
+      if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
     };
   }, []);
 
@@ -344,7 +481,7 @@ export default function DesktopMascot({ isVisible, currentApp, onMascotClick }: 
   return (
     <div 
       ref={mascotRef}
-      className={`desktop-mascot mood-${mascotState.mood} animation-${mascotState.currentAnimation} ${isWalking ? 'walking' : ''}`}
+      className={`desktop-mascot mood-${mascotState.mood} animation-${mascotState.currentAnimation} ${isWalking ? 'walking' : ''} ${totalClicks >= 4 ? 'multiple-clicks' : ''} ${totalClicks >= 7 ? 'secret-mode' : ''}`}
       style={{
         position: 'fixed',
         left: 0,
@@ -356,11 +493,11 @@ export default function DesktopMascot({ isVisible, currentApp, onMascotClick }: 
         pointerEvents: 'auto'
       }}
       onMouseDown={handleMouseDown}
-      onClick={handleMascotClick}
+      onClick={handleMascotInteraction}
     >
       {/* Speech Bubble */}
       {showSpeechBubble && (
-        <div className="speech-bubble">
+        <div className={`speech-bubble ${speechType === 'ai' ? 'ai-response' : ''} ${speechType === 'chat-prompt' ? 'chat-prompt' : ''}`}>
           <div className="speech-text">{speechText}</div>
           <div className="speech-tail"></div>
         </div>
@@ -412,18 +549,20 @@ export default function DesktopMascot({ isVisible, currentApp, onMascotClick }: 
         </div>
 
         
-        {mascotState.mood === 'excited' && (
+        {(mascotState.mood === 'excited' || totalClicks >= 4) && (
           <div className="particle-effects">
-            {Array.from({ length: 6 }, (_, i) => (
-              <div key={i} className={`particle particle-${i}`}>✨</div>
+            {Array.from({ length: totalClicks >= 7 ? 8 : 6 }, (_, i) => (
+              <div key={i} className={`particle particle-${i}`}>
+                {totalClicks >= 7 ? '💕' : '✨'}
+              </div>
             ))}
           </div>
         )}
 
         
-        {mascotState.mood === 'happy' && (
+        {(mascotState.mood === 'happy' || totalClicks >= 7) && (
           <div className="floating-hearts">
-            {Array.from({ length: 3 }, (_, i) => (
+            {Array.from({ length: totalClicks >= 7 ? 5 : 3 }, (_, i) => (
               <div key={i} className={`floating-heart heart-${i}`}>♥</div>
             ))}
           </div>
