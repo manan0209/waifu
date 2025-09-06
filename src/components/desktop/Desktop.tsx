@@ -24,27 +24,32 @@ export default function Desktop({ onShutdown }: DesktopProps) {
   
   const { playButtonClick, playNotification, playStartup } = useSystemSounds();
   
-  // Background music
+  
   const bgMusic = useBackgroundMusic('/bgmusic.mp3', {
     volume: 0.2,
     loop: true,
-    autoPlay: false // We'll start it after user interaction
+    autoPlay: true 
   });
 
-  // Play startup sound when desktop loads (only once)
+  
   useEffect(() => {
     if (!hasPlayedStartup) {
       const timer = setTimeout(() => {
         playStartup();
         addNotification('System', 'Welcome to WaifuOS!', 'success');
         setHasPlayedStartup(true);
+        
+        // Start background music after a brief delay
+        setTimeout(() => {
+          bgMusic.play();
+        }, 1500);
       }, 500);
       
       return () => clearTimeout(timer);
     }
-  }, []); // Empty dependency array to run only once
+  }, [hasPlayedStartup, playStartup, bgMusic]); 
 
-  // Update clock every second
+  
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -208,6 +213,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
         onWindowClick={minimizeWindow}
         startMenuOpen={showStartMenu}
         onOpenWindow={openWindow}
+        bgMusic={bgMusic}
       />
 
       {/* Notification Manager */}

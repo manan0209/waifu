@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import WaifuChat from '../apps/WaifuChat';
 import Notepad from '../../applications/Notepad';
 import Calculator from '../../applications/Calculator';
@@ -28,6 +28,50 @@ interface DesktopIcon {
 
 export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
+  const [draggedIcon, setDraggedIcon] = useState<string | null>(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [iconPositions, setIconPositions] = useState<Record<string, { x: number; y: number }>>({});
+
+  // Improved default positions with better spacing
+  const getDefaultPositions = () => {
+    const spacing = 120;
+    const startX = 30;
+    const startY = 30;
+    const iconsPerRow = 6;
+    
+    return {
+      'waifu-chat': { x: startX, y: startY },
+      'tetris': { x: startX + spacing, y: startY },
+      'video-player': { x: startX + spacing * 2, y: startY },
+      'waifu-browser': { x: startX + spacing * 3, y: startY },
+      'gitroaster': { x: startX + spacing * 4, y: startY },
+      'snippix': { x: startX + spacing * 5, y: startY },
+      'notepad': { x: startX, y: startY + spacing },
+      'calculator': { x: startX + spacing, y: startY + spacing },
+      'file-explorer': { x: startX + spacing * 2, y: startY + spacing },
+      'minesweeper': { x: startX + spacing * 3, y: startY + spacing },
+      'solitaire': { x: startX + spacing * 4, y: startY + spacing },
+      'media-player': { x: startX + spacing * 5, y: startY + spacing },
+      'recycle-bin': { x: startX, y: startY + spacing * 2 },
+      'settings': { x: startX + spacing, y: startY + spacing * 2 }
+    };
+  };
+
+  // Load saved positions from localStorage or use defaults
+  useEffect(() => {
+    const savedPositions = localStorage.getItem('desktop-icon-positions');
+    if (savedPositions) {
+      setIconPositions(JSON.parse(savedPositions));
+    } else {
+      setIconPositions(getDefaultPositions());
+    }
+  }, []);
+
+  // Save positions to localStorage
+  const savePositions = (positions: Record<string, { x: number; y: number }>) => {
+    localStorage.setItem('desktop-icon-positions', JSON.stringify(positions));
+    setIconPositions(positions);
+  };
 
   const desktopIcons: DesktopIcon[] = [
     {
@@ -144,66 +188,80 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
     }
   ];
 
-  const handleIconClick = (icon: DesktopIcon) => {
-    setSelectedIcon(icon.id);
+  // Handle mouse down for drag start
+  const handleMouseDown = (e: React.MouseEvent, iconName: string) => {
+    if (e.button === 0) { // Left click only
+      setSelectedIcon(iconName);
+      setDraggedIcon(iconName);
+      
+      const rect = e.currentTarget.getBoundingClientRect();
+      setDragOffset({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+      
+      e.preventDefault();
+    }
   };
 
-  const handleIconDoubleClick = (icon: DesktopIcon) => {
-    let component;
-    
-    switch (icon.appId) {
-      case 'waifu-chat':
-        component = <WaifuChat />;
-        break;
-      case 'tetris':
-        component = <TetrisGame />;
-        break;
-      case 'video-player':
-        component = <VideoPlayer />;
-        break;
-      case 'waifu-browser':
-        component = <WaifuBrowser />;
-        break;
-      case 'gitroaster':
-        component = <ProjectViewer 
-          projectUrl="https://gitroaster.vercel.app" 
-          projectName="GitRoaster"
-          projectDescription="AI-powered code review and analysis tool"
-        />;
-        break;
-      case 'snippix':
-        component = <ProjectViewer 
-          projectUrl="https://snippix.vercel.app" 
-          projectName="Snippix"
-          projectDescription="Smart code snippet manager and organizer"
-        />;
-        break;
-      case 'notepad':
-        component = <Notepad />;
-        break;
-      case 'calculator':
-        component = <Calculator />;
-        break;
-      case 'file-explorer':
-        component = <FileExplorer />;
-        break;
-      case 'minesweeper':
-        component = <Minesweeper />;
-        break;
-      case 'settings':
-        component = <Settings />;
-        break;
-      case 'solitaire':
-        component = <Solitaire />;
-        break;
-      case 'media-player':
-        component = <MediaPlayer />;
-        break;
-      default:
-        return;
+  // Handle mouse move for dragging
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (draggedIcon && iconPositions[draggedIcon]) {
+      const newX = e.clientX - dragOffset.x;
+      const newY = e.clientY - dragOffset.y;
+      
+      // Constrain to screen bounds
+      const constrainedX = Math.max(0, Math.min(window.innerWidth - 80, newX));
+      const constrainedY = Math.max(0, Math.min(window.innerHeight - 100, newY));
+      
+      const newPositions = {
+        ...iconPositions,
+        [draggedIcon]: { x: constrainedX, y: constrainedY }
+      };
+      
+      setIconPositions(newPositions);
     }
+  };
 
-    onOpenWindow(icon.appId, icon.title, component);
+  // Handle mouse up to end drag
+  const handleMouseUp = () => {
+    if (draggedIcon && iconPositions[draggedIcon]) {
+      savePositions(iconPositions);
+    }
+    setDraggedIcon(null);
+    setDragOffset({ x: 0, y: 0 });
+  };
+
+  // Handle double click to open app
+  const handleDoubleClick = (iconId: string) => {
+    const componentMap: Record<string, React.ReactNode> = {
+      'waifu-chat': <WaifuChat />,
+      'tetris': <TetrisGame />,
+      'video-player': <VideoPlayer />,
+      'waifu-browser': <WaifuBrowser />,
+      'gitroaster': <ProjectViewer projectName="GitRoaster" projectUrl="https://github.com/gitroaster" />,
+      'snippix': <ProjectViewer projectName="Snippix" projectUrl="https://github.com/snippix" />,
+      'notepad': <Notepad />,
+      'calculator': <Calculator />,
+      'file-explorer': <FileExplorer />,
+      'minesweeper': <Minesweeper />,
+      'solitaire': <Solitaire />,
+      'media-player': <MediaPlayer />,
+      'settings': <Settings />
+    };
+
+    const icon = desktopIcons.find(icon => icon.id === iconId);
+    const component = componentMap[iconId];
+    
+    if (icon && component) {
+      onOpenWindow(iconId, icon.title, component);
+    }
+  };
+
+  // Handle single click to select icon
+  const handleIconClick = (iconId: string) => {
+    if (draggedIcon) return; // Don't select while dragging
+    setSelectedIcon(selectedIcon === iconId ? null : iconId);
   };
 
   const handleDesktopClick = (e: React.MouseEvent) => {
@@ -213,26 +271,36 @@ export default function DesktopIcons({ onOpenWindow }: DesktopIconsProps) {
   };
 
   return (
-    <div className="desktop-icons" onClick={handleDesktopClick}>
-      {desktopIcons.map(icon => (
-        <div
-          key={icon.id}
-          className={`desktop-icon ${selectedIcon === icon.id ? 'selected' : ''}`}
-          style={{
-            left: icon.x,
-            top: icon.y
-          }}
-          onClick={() => handleIconClick(icon)}
-          onDoubleClick={() => handleIconDoubleClick(icon)}
-        >
-          <div className="icon-image">
-            {icon.icon}
+    <div 
+      className="desktop-icons" 
+      onClick={handleDesktopClick}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+    >
+      {desktopIcons.map(icon => {
+        const position = iconPositions[icon.id] || { x: icon.x, y: icon.y };
+        return (
+          <div
+            key={icon.id}
+            className={`desktop-icon ${selectedIcon === icon.id ? 'selected' : ''} ${draggedIcon === icon.id ? 'dragging' : ''}`}
+            style={{
+              left: position.x,
+              top: position.y,
+              cursor: draggedIcon === icon.id ? 'grabbing' : 'grab'
+            }}
+            onMouseDown={(e) => handleMouseDown(e, icon.id)}
+            onClick={() => handleIconClick(icon.id)}
+            onDoubleClick={() => handleDoubleClick(icon.id)}
+          >
+            <div className="icon-image">
+              {icon.icon}
+            </div>
+            <div className="icon-label">
+              {icon.title}
+            </div>
           </div>
-          <div className="icon-label">
-            {icon.title}
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

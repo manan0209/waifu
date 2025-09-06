@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Icons } from '../ui/Icons';
 import MusicControl from '../audio/MusicControl';
+import { useBackgroundMusic } from '../../hooks/useBackgroundMusic';
 
 interface TaskbarProps {
   onStartClick: () => void;
@@ -9,6 +10,7 @@ interface TaskbarProps {
   onWindowClick: (windowId: string) => void;
   startMenuOpen: boolean;
   onOpenWindow?: (appId: string, title: string, component: React.ReactNode) => void;
+  bgMusic?: ReturnType<typeof useBackgroundMusic>;
 }
 
 export default function Taskbar({ 
@@ -17,7 +19,8 @@ export default function Taskbar({
   windows, 
   onWindowClick,
   startMenuOpen,
-  onOpenWindow 
+  onOpenWindow,
+  bgMusic 
 }: TaskbarProps) {
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('en-US', {
@@ -131,7 +134,7 @@ export default function Taskbar({
       {/* System Tray */}
       <div className="system-tray">
         {/* Music Control */}
-        <MusicControl className="tray-music-control" />
+        <MusicControl className="tray-music-control" bgMusic={bgMusic} />
 
         
 

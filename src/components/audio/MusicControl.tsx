@@ -3,14 +3,18 @@ import { useBackgroundMusic } from '../../hooks/useBackgroundMusic';
 
 interface MusicControlProps {
   className?: string;
+  bgMusic?: ReturnType<typeof useBackgroundMusic>;
 }
 
-export default function MusicControl({ className = '' }: MusicControlProps) {
-  const bgMusic = useBackgroundMusic('/bgmusic.mp3', {
+export default function MusicControl({ className = '', bgMusic: externalBgMusic }: MusicControlProps) {
+  
+  const fallbackBgMusic = useBackgroundMusic('/bgmusic.mp3', {
     volume: 0.2,
     loop: true,
     autoPlay: false
   });
+  
+  const bgMusic = externalBgMusic || fallbackBgMusic;
 
   const handleToggle = () => {
     bgMusic.togglePlayPause();

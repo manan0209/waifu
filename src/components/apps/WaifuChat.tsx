@@ -88,7 +88,7 @@ export default function WaifuChat() {
     setInputText('');
     setIsTyping(true);
 
-    // Generate AI response
+    
     try {
       const responseText = await generateResponse(messageToSend);
       
@@ -120,7 +120,7 @@ export default function WaifuChat() {
   return (
     <div className="waifu-chat-app">
       
-      {/* Header */}
+      
       <div className="chat-header">
         <div className="character-info">
           <div className="character-avatar">
