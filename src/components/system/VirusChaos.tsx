@@ -38,12 +38,19 @@ export default function VirusChaos({ isActive, onComplete, onOpenSusApp }: Virus
   const [chaosIcons, setChaosIcons] = useState<ChaosIcon[]>([]);
   const [errorDialogs, setErrorDialogs] = useState<ErrorDialog[]>([]);
   const [chaos, setChaos] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
   
   const { playNotification } = useSystemSounds();
 
   useEffect(() => {
-    if (!isActive) return;
+    if (!isActive) {
+      setHasStarted(false);
+      return;
+    }
+    
+    if (hasStarted) return;
 
+    setHasStarted(true);
     setChaos(true);
 
     // Start the chaos sequence
@@ -113,6 +120,7 @@ export default function VirusChaos({ isActive, onComplete, onOpenSusApp }: Virus
         setChaosIcons([]);
         setErrorDialogs([]);
         setChaos(false);
+        setHasStarted(false);
         
         // Open the sus app after chaos
         onOpenSusApp?.();
@@ -125,7 +133,7 @@ export default function VirusChaos({ isActive, onComplete, onOpenSusApp }: Virus
     return () => {
       clearTimeout(chaosTimer);
     };
-  }, [isActive, onComplete, onOpenSusApp]);
+  }, [isActive]); // Removed onComplete and onOpenSusApp from dependencies
 
   if (!chaos) return null;
 

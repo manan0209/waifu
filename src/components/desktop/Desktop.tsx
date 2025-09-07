@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Taskbar from './Taskbar';
 import WindowManager from './WindowManager';
 import DesktopIcons from './DesktopIcons';
@@ -219,13 +219,30 @@ export default function Desktop({ onShutdown }: DesktopProps) {
     setVirusActive(true);
   };
 
-  const handleVirusChaosComplete = () => {
+  const handleVirusChaosComplete = useCallback(() => {
     setVirusActive(false);
     addNotification('System Recovery', 'Virus simulation complete. System restored.', 'success');
-  };
+  }, []);
 
-  const handleOpenSusApp = () => {
-    // Open the sus app in a maximized window
+  const handleOpenSusApp = useCallback(() => {
+    // Check if sus app is already open
+    const existingSusApp = windows.find(window => window.appId === 'sus-app');
+    
+    if (existingSusApp) {
+      // If already open, just bring it to front and unminimize it
+      setWindows(prev => prev.map(window => 
+        window.appId === 'sus-app' 
+          ? { 
+              ...window, 
+              isMinimized: false, 
+              zIndex: Math.max(...prev.map(w => w.zIndex)) + 1 
+            }
+          : window
+      ));
+      return;
+    }
+
+    // Open the sus app in a maximized window only if not already open
     const susApp = <WebApp title="System Security Check" url="https://sus.3kh0.net/" />;
     const newWindow = {
       id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -243,7 +260,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
     
     setWindows(prev => [...prev, newWindow]);
     addNotification('Security', 'Running advanced system security check...', 'warning');
-  };
+  }, [windows]);
 
   return (
     <div className="desktop">
