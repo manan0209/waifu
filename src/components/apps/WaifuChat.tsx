@@ -210,7 +210,7 @@ export default function WaifuChat() {
         <div className="settings-modal">
           <div className="settings-content">
             <h3>API Settings</h3>
-            <p>Use your own API key for unlimited AI responses!</p>
+            <p>Default uses HackClub AI (free & unlimited)! Use your own API key for alternative providers.</p>
             
             <div className="setting-group">
               <label>API Provider:</label>
@@ -218,7 +218,7 @@ export default function WaifuChat() {
                 value={apiProvider} 
                 onChange={(e) => setApiProvider(e.target.value as 'default' | 'gemini' | 'openai')}
               >
-                <option value="default">Default (Free)</option>
+                <option value="default">HackClub AI (Free & Unlimited)</option>
                 <option value="gemini">Google Gemini</option>
                 <option value="openai">OpenAI</option>
               </select>
