@@ -286,29 +286,6 @@ export const RecycleBinIcon: React.FC<IconProps> = ({ size = 16, className }) =>
   </svg>
 );
 
-// Custom App Icons using actual image files
-export const GitRoasterIcon: React.FC<IconProps> = ({ size = 32, className }) => (
-  <img 
-    src="/roast.svg" 
-    alt="GitRoaster" 
-    width={size} 
-    height={size} 
-    className={className}
-    style={{ objectFit: 'contain' }}
-  />
-);
-
-export const SnippixIcon: React.FC<IconProps> = ({ size = 32, className }) => (
-  <img 
-    src="/snippix 512.png" 
-    alt="Snippix" 
-    width={size} 
-    height={size} 
-    className={className}
-    style={{ objectFit: 'contain' }}
-  />
-);
-
 // Window Control Icons
 export const MinimizeIcon: React.FC<IconProps> = ({ size = 16, className }) => (
   <svg width={size} height={size} viewBox="0 0 16 16" className={className}>
@@ -340,6 +317,19 @@ export const CloseIcon: React.FC<IconProps> = ({ size = 16, className }) => (
   </svg>
 );
 
+export const RefreshIcon: React.FC<IconProps> = ({ size = 16, className }) => (
+  <svg width={size} height={size} viewBox="0 0 16 16" className={className}>
+    <path 
+      fill="#000000" 
+      d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"
+    />
+    <path 
+      fill="#000000" 
+      d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"
+    />
+  </svg>
+);
+
 // Export all icons
 export const Icons = {
   Folder: FolderIcon,
@@ -362,10 +352,9 @@ export const Icons = {
   Chat: ChatIcon,
   Image: ImageIcon,
   RecycleBin: RecycleBinIcon,
-  GitRoaster: GitRoasterIcon,
-  Snippix: SnippixIcon,
   Minimize: MinimizeIcon,
   Maximize: MaximizeIcon,
   Restore: RestoreIcon,
-  Close: CloseIcon
+  Close: CloseIcon,
+  Refresh: RefreshIcon
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Taskbar from './Taskbar';
 import WindowManager from './WindowManager';
 import DesktopIcons from './DesktopIcons';
@@ -7,6 +7,7 @@ import AltTabSwitcher from './AltTabSwitcher';
 import NotificationManager from '../system/NotificationManager';
 import DesktopMascot from '../mascot/DesktopMascot';
 import WaifuChat from '../apps/WaifuChat';
+import ContextMenu from './ContextMenu';
 import { useSystemSounds } from '../../hooks/useSystemSounds';
 import { useBackgroundMusic } from '../../hooks/useBackgroundMusic';
 
@@ -22,7 +23,9 @@ export default function Desktop({ onShutdown }: DesktopProps) {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [hasPlayedStartup, setHasPlayedStartup] = useState(false);
   const [musicStarted, setMusicStarted] = useState(false);
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
   
+  const desktopIconsRef = useRef<any>(null);
   const { playButtonClick, playNotification, playStartup } = useSystemSounds();
   
   
@@ -176,15 +179,45 @@ export default function Desktop({ onShutdown }: DesktopProps) {
     ));
   };
 
+  // Context menu handlers
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setContextMenu({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleCloseContextMenu = () => {
+    setContextMenu(null);
+  };
+
+  const handleRefresh = () => {
+    // Reset icon positions to defaults
+    if (desktopIconsRef.current?.resetPositions) {
+      desktopIconsRef.current.resetPositions();
+    }
+    
+    // Clear localStorage for icon positions
+    localStorage.removeItem('desktop-icon-positions');
+    
+    // Show notification
+    addNotification('Desktop', 'Icon positions reset to default', 'success');
+    
+    // Close context menu
+    setContextMenu(null);
+  };
+
   return (
     <div className="desktop">
       
-      <div className="desktop-background">
+      <div 
+        className="desktop-background"
+        onContextMenu={handleContextMenu}
+      >
         
         <div className="wallpaper"></div>
         
         
         <DesktopIcons 
+          ref={desktopIconsRef}
           onOpenWindow={openWindow} 
           onUserInteraction={startMusicAfterInteraction}
         />
@@ -245,6 +278,16 @@ export default function Desktop({ onShutdown }: DesktopProps) {
         notifications={notifications}
         onDismiss={removeNotification}
       />
+
+      {/* Context Menu */}
+      {contextMenu && (
+        <ContextMenu
+          x={contextMenu.x}
+          y={contextMenu.y}
+          onClose={handleCloseContextMenu}
+          onRefresh={handleRefresh}
+        />
+      )}
     </div>
   );
 }

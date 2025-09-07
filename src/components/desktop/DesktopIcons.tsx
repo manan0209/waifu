@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import WaifuChat from '../apps/WaifuChat';
 import WebApp from '../../applications/WebApp';
 import Notepad from '../../applications/Notepad';
@@ -17,6 +17,10 @@ interface DesktopIconsProps {
   onUserInteraction?: () => void;
 }
 
+interface DesktopIconsRef {
+  resetPositions: () => void;
+}
+
 interface DesktopIcon {
   id: string;
   title: string;
@@ -26,7 +30,8 @@ interface DesktopIcon {
   appId: string;
 }
 
-export default function DesktopIcons({ onOpenWindow, onUserInteraction }: DesktopIconsProps) {
+const DesktopIcons = forwardRef<DesktopIconsRef, DesktopIconsProps>(
+  ({ onOpenWindow, onUserInteraction }, ref) => {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [draggedIcon, setDraggedIcon] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -55,6 +60,18 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
       'settings': { x: startX + spacing, y: startY + spacing * 2 }
     };
   };
+
+  // Reset to default positions
+  const resetToDefaults = () => {
+    const defaultPositions = getDefaultPositions();
+    setIconPositions(defaultPositions);
+    localStorage.setItem('desktop-icon-positions', JSON.stringify(defaultPositions));
+  };
+
+  // Expose reset function to parent
+  useImperativeHandle(ref, () => ({
+    resetPositions: resetToDefaults
+  }), []);
 
   // Load saved positions from localStorage or use defaults
   useEffect(() => {
@@ -298,4 +315,8 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
       
     </div>
   );
-}
+});
+
+DesktopIcons.displayName = 'DesktopIcons';
+
+export default DesktopIcons;
