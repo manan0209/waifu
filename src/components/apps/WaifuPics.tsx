@@ -226,7 +226,6 @@ export default function WaifuPics({ onClose }: WaifuPicsProps) {
 
           {/* Image Grid */}
           <div className="image-grid">
-            {console.log('Rendering image grid. Loading:', loading, 'Images length:', images.length, 'Images:', images)}
             {loading && images.length === 0 ? (
               // Loading placeholders
               Array.from({ length: 12 }).map((_, index) => (
