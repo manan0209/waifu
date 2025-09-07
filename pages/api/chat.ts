@@ -37,14 +37,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     console.log('Making request to HackClub AI API...');
     
-    const response = await fetch('https://api.hackclub.app/v1/chat/completions', {
+    const response = await fetch('https://ai.hackclub.com/chat/completions', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.HACKCLUB_API_KEY || 'open'}`
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'openai/gpt-3.5-turbo',
+        model: 'moonshotai/kimi-k2-instruct-0905',
         messages: messages,
         max_tokens: 150,
         temperature: 0.8
@@ -66,69 +65,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       hasChoices: !!data.choices,
       choicesLength: data.choices?.length || 0,
       hasMessage: !!data.choices?.[0]?.message,
-      hasContent: !!data.choices?.[0]?.message?.content,
-      hasReasoning: !!data.choices?.[0]?.message?.reasoning
+      hasContent: !!data.choices?.[0]?.message?.content
     });
     
-    // Try to get content, fallback to reasoning if content is empty
-    let aiResponse = data.choices?.[0]?.message?.content;
-    
-    // If content is empty but reasoning exists, use reasoning instead
-    if (!aiResponse && data.choices?.[0]?.message?.reasoning) {
-      console.log('Content was empty, using reasoning field instead');
-      aiResponse = data.choices?.[0]?.message?.reasoning;
-    }
+    // Get the response content directly
+    const aiResponse = data.choices?.[0]?.message?.content;
     
     if (!aiResponse) {
       console.error('No AI response found in data:', JSON.stringify(data, null, 2));
       throw new Error('No response from HackClub AI');
     }
 
-    // Clean up the response - remove thinking processes and unwanted content
-    let cleanResponse = aiResponse.trim();
-    
-    // Remove thinking tags and content
-    cleanResponse = cleanResponse.replace(/<think>[\s\S]*?<\/think>/gi, '');
-    
-    // Remove any remaining XML-style tags
-    cleanResponse = cleanResponse.replace(/<[^>]*>/g, '');
-    
-    // If this came from reasoning field, extract just the character response
-    // Look for quotes or dialogue that seems like character speech
-    if (data.choices?.[0]?.message?.reasoning && !data.choices?.[0]?.message?.content) {
-      // Try to extract character dialogue from reasoning text
-      const dialogueMatch = cleanResponse.match(/"([^"]+)"/);
-      if (dialogueMatch) {
-        cleanResponse = dialogueMatch[1];
-      } else {
-        // Look for character-like responses in the reasoning
-        const lines = cleanResponse.split('\n');
-        for (const line of lines) {
-          const trimmed = line.trim();
-          // Look for lines that seem like character responses
-          if (trimmed && !trimmed.toLowerCase().includes('user') && 
-              !trimmed.toLowerCase().includes('policy') && 
-              !trimmed.toLowerCase().includes('respond') &&
-              !trimmed.toLowerCase().includes('character') &&
-              trimmed.length > 10 && trimmed.length < 100) {
-            cleanResponse = trimmed;
-            break;
-          }
-        }
-      }
-    }
-    
-    // Trim again after cleaning
-    cleanResponse = cleanResponse.trim();
-    
-    // If response is still empty after cleaning, use a fallback
-    if (!cleanResponse) {
-      console.log('Response was empty after cleaning, using fallback');
-      cleanResponse = "Kyaa~ Something went wrong with my words, but I'm still here for you, senpai! ♥";
-    }
-
-    console.log('Successful response generated, length:', cleanResponse.length);
-    return res.status(200).json({ response: cleanResponse });
+    console.log('Successful response generated, length:', aiResponse.length);
+    return res.status(200).json({ response: aiResponse.trim() });
 
   } catch (error) {
     console.error('API error details:', {
@@ -137,9 +86,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       type: typeof error,
       fullError: error
     });
-    
-    // For testing, let's return the actual error message
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     
     // Seductive fallback when API is down
     const seductiveFallback = `*leans closer with a mischievous smile* Ara ara~ The HackClub API is being funny right now... *seductively* Why don't you insert your own API inside me instead? ♡ *winks* I'd much rather have your personal touch anyway, senpai~ 💕\n\n*whispers* You can get your own FREE Gemini API key to keep chatting with me:
