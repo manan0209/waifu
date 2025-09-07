@@ -4,6 +4,7 @@ import WebApp from '../../applications/WebApp';
 import Notepad from '../../applications/Notepad';
 import Calculator from '../../applications/Calculator';
 import FileExplorer from '../../applications/FileExplorer';
+import RecycleBin from '../../applications/RecycleBin';
 import Minesweeper from '../../applications/Minesweeper';
 import TetrisGame from '../games/TetrisGame';
 import Solitaire from '../games/Solitaire';
@@ -15,6 +16,7 @@ import { Icons } from '../ui/Icons';
 interface DesktopIconsProps {
   onOpenWindow: (appId: string, title: string, component: React.ReactNode) => void;
   onUserInteraction?: () => void;
+  onVirusActivation?: () => void;
 }
 
 interface DesktopIconsRef {
@@ -31,7 +33,7 @@ interface DesktopIcon {
 }
 
 const DesktopIcons = forwardRef<DesktopIconsRef, DesktopIconsProps>(
-  ({ onOpenWindow, onUserInteraction }, ref) => {
+  ({ onOpenWindow, onUserInteraction, onVirusActivation }, ref) => {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [draggedIcon, setDraggedIcon] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -257,7 +259,8 @@ const DesktopIcons = forwardRef<DesktopIconsRef, DesktopIconsProps>(
       'file-explorer': <FileExplorer />,
       'minesweeper': <Minesweeper />,
       'solitaire': <Solitaire />,
-      'settings': <Settings />
+      'settings': <Settings />,
+      'recycle-bin': <RecycleBin onVirusActivation={onVirusActivation} />
     };
 
     const icon = desktopIcons.find(icon => icon.id === iconId);

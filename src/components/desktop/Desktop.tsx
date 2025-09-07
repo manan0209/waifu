@@ -8,6 +8,8 @@ import NotificationManager from '../system/NotificationManager';
 import DesktopMascot from '../mascot/DesktopMascot';
 import WaifuChat from '../apps/WaifuChat';
 import ContextMenu from './ContextMenu';
+import VirusChaos from '../system/VirusChaos';
+import WebApp from '../../applications/WebApp';
 import { useSystemSounds } from '../../hooks/useSystemSounds';
 import { useBackgroundMusic } from '../../hooks/useBackgroundMusic';
 
@@ -24,6 +26,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
   const [hasPlayedStartup, setHasPlayedStartup] = useState(false);
   const [musicStarted, setMusicStarted] = useState(false);
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
+  const [virusActive, setVirusActive] = useState(false);
   
   const desktopIconsRef = useRef<any>(null);
   const { playButtonClick, playNotification, playStartup } = useSystemSounds();
@@ -82,7 +85,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
 
   const addNotification = (title: string, message: string, type: 'info' | 'success' | 'warning' | 'error' = 'info', duration: number = 900) => {
     const notification = {
-      id: Date.now().toString(),
+      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       title,
       message,
       type,
@@ -127,7 +130,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
     }
 
     const newWindow = {
-      id: Date.now().toString(),
+      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       appId,
       title,
       component,
@@ -205,6 +208,43 @@ export default function Desktop({ onShutdown }: DesktopProps) {
     setContextMenu(null);
   };
 
+  const handleVirusActivation = () => {
+    // Close any open recycle bin windows
+    setWindows(prev => prev.filter(w => w.appId !== 'recycle-bin'));
+    
+    // Show virus notification
+    addNotification('VIRUS ALERT', '🦠 System compromised! Chaos mode activated!', 'error');
+    
+    // Activate virus chaos
+    setVirusActive(true);
+  };
+
+  const handleVirusChaosComplete = () => {
+    setVirusActive(false);
+    addNotification('System Recovery', 'Virus simulation complete. System restored.', 'success');
+  };
+
+  const handleOpenSusApp = () => {
+    // Open the sus app in a maximized window
+    const susApp = <WebApp title="System Security Check" url="https://sus.3kh0.net/" />;
+    const newWindow = {
+      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      appId: 'sus-app',
+      title: 'System Security Check',
+      component: susApp,
+      x: 0,
+      y: 0,
+      width: window.innerWidth,
+      height: window.innerHeight - 40, // Account for taskbar
+      isMinimized: false,
+      isMaximized: true,
+      zIndex: windows.length + 1
+    };
+    
+    setWindows(prev => [...prev, newWindow]);
+    addNotification('Security', 'Running advanced system security check...', 'warning');
+  };
+
   return (
     <div className="desktop">
       
@@ -220,6 +260,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
           ref={desktopIconsRef}
           onOpenWindow={openWindow} 
           onUserInteraction={startMusicAfterInteraction}
+          onVirusActivation={handleVirusActivation}
         />
         
         {/* Desktop Mascot */}
@@ -288,6 +329,13 @@ export default function Desktop({ onShutdown }: DesktopProps) {
           onRefresh={handleRefresh}
         />
       )}
+
+      {/* Virus Chaos Overlay */}
+      <VirusChaos
+        isActive={virusActive}
+        onComplete={handleVirusChaosComplete}
+        onOpenSusApp={handleOpenSusApp}
+      />
     </div>
   );
 }

@@ -2470,3 +2470,240 @@
   margin: 2px 0;
   border-bottom: 1px solid #c0c0c0;
 }
+
+/* Recycle Bin Styles */
+.recycle-bin-window {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #c0c0c0;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+}
+
+.recycle-bin-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: #c0c0c0;
+  border-bottom: 1px solid #808080;
+}
+
+.toolbar-button {
+  background: #c0c0c0;
+  border: 1px outset #c0c0c0;
+  padding: 4px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: 'MS Sans Serif', sans-serif;
+}
+
+.toolbar-button:hover:not(:disabled) {
+  background: #d4d0c8;
+}
+
+.toolbar-button:active:not(:disabled) {
+  border: 1px inset #c0c0c0;
+}
+
+.toolbar-button:disabled {
+  color: #808080;
+  cursor: default;
+}
+
+.toolbar-separator {
+  width: 1px;
+  height: 20px;
+  background: #808080;
+  margin: 0 4px;
+}
+
+.toolbar-info {
+  margin-left: auto;
+  color: #000;
+  font-size: 11px;
+}
+
+.recycle-bin-content {
+  flex: 1;
+  background: white;
+  border: 2px inset #c0c0c0;
+  margin: 2px;
+  overflow: auto;
+}
+
+.file-list-header {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr;
+  background: #c0c0c0;
+  border-bottom: 1px solid #808080;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.column-header {
+  padding: 4px 8px;
+  border-right: 1px solid #808080;
+  background: #c0c0c0;
+  cursor: pointer;
+}
+
+.column-header:hover {
+  background: #d4d0c8;
+}
+
+.file-list {
+  background: white;
+}
+
+.file-row {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr;
+  padding: 2px 0;
+  cursor: pointer;
+  border-bottom: 1px dotted #c0c0c0;
+}
+
+.file-row:hover {
+  background: #e0e0e0;
+}
+
+.file-row.selected {
+  background: #316ac5;
+  color: white;
+}
+
+.file-row.virus-file {
+  background: #ffe0e0;
+}
+
+.file-row.virus-file.selected {
+  background: #cc0000;
+  color: white;
+}
+
+.file-cell {
+  padding: 2px 8px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.name-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.file-icon {
+  flex-shrink: 0;
+}
+
+.file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recycle-bin-status {
+  background: #c0c0c0;
+  border-top: 1px solid #808080;
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+/* Virus Chaos Animations */
+.virus-chaos-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.chaos-icon {
+  position: absolute;
+  animation: chaos-dance 0.5s infinite alternate;
+  pointer-events: none;
+}
+
+.chaos-icon.multiply {
+  animation: chaos-multiply 2s ease-out forwards;
+}
+
+@keyframes chaos-dance {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1.2);
+  }
+}
+
+@keyframes chaos-multiply {
+  0% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.5) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.1) rotate(360deg);
+  }
+}
+
+.virus-error-dialog {
+  position: fixed;
+  background: #c0c0c0;
+  border: 2px outset #c0c0c0;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+  min-width: 300px;
+  z-index: 10001;
+  font-family: 'MS Sans Serif', sans-serif;
+  animation: error-shake 0.2s infinite alternate;
+}
+
+@keyframes error-shake {
+  0% {
+    transform: translateX(-2px);
+  }
+  100% {
+    transform: translateX(2px);
+  }
+}
+
+.virus-error-header {
+  background: #316ac5;
+  color: white;
+  padding: 4px 8px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.virus-error-content {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.virus-error-icon {
+  color: #ff0000;
+  font-size: 32px;
+}
+
+.virus-error-message {
+  flex: 1;
+  font-size: 11px;
+  line-height: 1.4;
+}
