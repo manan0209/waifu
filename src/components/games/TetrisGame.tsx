@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 
+interface Piece {
+  type: keyof typeof TETRIS_PIECES;
+  shape: number[][];
+  x: number;
+  y: number;
+  rotation: number;
+}
+
 interface TetrisProps {
   onClose?: () => void;
 }
@@ -43,14 +51,22 @@ const TETRIS_PIECES = {
 
 const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
+
+// Tetris piece definitions with waifu-themed colors
 const PIECE_COLORS = {
-  I: '#00f0f0',
-  O: '#f0f000',
-  T: '#a000f0',
-  S: '#00f000',
-  Z: '#f00000',
-  J: '#0000f0',
-  L: '#f0a000'
+  I: '#ff6b9d', // Pink
+  O: '#c44569', // Purple
+  T: '#f8b500', // Orange
+  S: '#40e0d0', // Turquoise
+  Z: '#ff7675', // Coral
+  J: '#74b9ff', // Blue
+  L: '#00b894'  // Green
+};
+
+// Generate random piece type
+const getRandomPiece = (): keyof typeof TETRIS_PIECES => {
+  const pieces = Object.keys(TETRIS_PIECES) as (keyof typeof TETRIS_PIECES)[];
+  return pieces[Math.floor(Math.random() * pieces.length)];
 };
 
 interface GameState {
@@ -71,25 +87,22 @@ interface GameState {
 }
 
 export default function TetrisGame({ onClose }: TetrisProps) {
-  const [gameState, setGameState] = useState<GameState>({
+  const [gameState, setGameState] = useState({
     board: Array(BOARD_HEIGHT).fill(null).map(() => Array(BOARD_WIDTH).fill(0)),
-    currentPiece: null,
-    nextPiece: 'T',
+    currentPiece: null as Piece | null,
+    nextPiece: getRandomPiece(),
     score: 0,
     level: 1,
     lines: 0,
+    linesCleared: 0,
     gameOver: false,
+    gameStarted: false,
+    isPaused: false,
     paused: false
   });
 
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
   const lastDropTime = useRef(Date.now());
-
-  // Generate random piece
-  const getRandomPiece = useCallback((): keyof typeof TETRIS_PIECES => {
-    const pieces = Object.keys(TETRIS_PIECES) as (keyof typeof TETRIS_PIECES)[];
-    return pieces[Math.floor(Math.random() * pieces.length)];
-  }, []);
 
   // Create new piece
   const createPiece = useCallback((type: keyof typeof TETRIS_PIECES) => {
@@ -250,7 +263,7 @@ export default function TetrisGame({ onClose }: TetrisProps) {
         };
       }
     });
-  }, [checkCollision, placePiece, clearLines, createPiece, getRandomPiece]);
+  }, [checkCollision, placePiece, clearLines, createPiece]);
 
   // Hard drop
   const hardDrop = useCallback(() => {
@@ -292,7 +305,7 @@ export default function TetrisGame({ onClose }: TetrisProps) {
         level: newLevel
       };
     });
-  }, [checkCollision, placePiece, clearLines, createPiece, getRandomPiece]);
+  }, [checkCollision, placePiece, clearLines, createPiece]);
 
   // Game loop
   useEffect(() => {
@@ -326,7 +339,7 @@ export default function TetrisGame({ onClose }: TetrisProps) {
         nextPiece: getRandomPiece()
       }));
     }
-  }, [gameState.currentPiece, gameState.gameOver, createPiece, getRandomPiece]);
+  }, [gameState.currentPiece, gameState.gameOver, createPiece]);
 
   // Keyboard controls
   useEffect(() => {
@@ -375,12 +388,37 @@ export default function TetrisGame({ onClose }: TetrisProps) {
       score: 0,
       level: 1,
       lines: 0,
+      linesCleared: 0,
       gameOver: false,
+      gameStarted: true,
+      isPaused: false,
       paused: false
     });
   };
 
   
+  // Render next piece preview
+  const renderNextPiece = () => {
+    const nextShape = TETRIS_PIECES[gameState.nextPiece][0];
+    return (
+      <div className="next-piece-preview">
+        {nextShape.map((row, y) => (
+          <div key={y} className="preview-row">
+            {row.map((cell, x) => (
+              <div
+                key={x}
+                className={`preview-cell ${cell !== 0 ? 'filled' : ''}`}
+                style={{
+                  backgroundColor: cell !== 0 ? PIECE_COLORS[gameState.nextPiece] : 'transparent'
+                }}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   const renderBoard = () => {
     const displayBoard = gameState.board.map(row => [...row]);
     
@@ -416,67 +454,141 @@ export default function TetrisGame({ onClose }: TetrisProps) {
   };
 
   return (
-    <div className="tetris-game">
-      <div className="tetris-header">
-        <h2>🎮 Tetris</h2>
-        <button className="close-btn" onClick={onClose}>×</button>
-      </div>
+    <div className="tetris-game" onKeyDown={(e) => {
+      if (gameState.gameOver) return;
       
-      <div className="tetris-content">
-        <div className="tetris-board-container">
+      switch (e.key) {
+        case 'ArrowLeft':
+          e.preventDefault();
+          movePiece(-1, 0);
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          movePiece(1, 0);
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          movePiece(0, 1);
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          rotatePiece();
+          break;
+        case ' ':
+          e.preventDefault();
+          hardDrop();
+          break;
+        case 'p':
+        case 'P':
+          e.preventDefault();
+          setGameState(prev => ({ ...prev, paused: !prev.paused }));
+          break;
+      }
+    }} tabIndex={0}>
+      <div className="tetris-header">
+        <h2>Tetris</h2>
+        <button className="close-btn" onClick={onClose}>×</button>
+        <div className="game-info">
+          <div className="score-board">
+            <div className="score-item">
+              <span className="label">Score</span>
+              <span className="value">{gameState.score.toLocaleString()}</span>
+            </div>
+            <div className="score-item">
+              <span className="label">Level</span>
+              <span className="value">{gameState.level}</span>
+            </div>
+            <div className="score-item">
+              <span className="label">Lines</span>
+              <span className="value">{gameState.lines}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="tetris-container">
+        <div className="game-area">
           <div className="tetris-board">
             {renderBoard()}
           </div>
-          
-          {gameState.gameOver && (
-            <div className="game-over-overlay">
-              <div className="game-over-message">
-                <h3>Game Over!</h3>
-                <p>Final Score: {gameState.score}</p>
-                <button onClick={restartGame}>Play Again</button>
-              </div>
-            </div>
-          )}
-          
-          {gameState.paused && (
-            <div className="paused-overlay">
-              <div className="paused-message">
-                <h3>Paused</h3>
-                <p>Press P to continue</p>
-              </div>
-            </div>
-          )}
         </div>
-        
-        <div className="tetris-sidebar">
-          <div className="score-panel">
-            <h3>Score</h3>
-            <div className="score-value">{gameState.score.toLocaleString()}</div>
-            
-            <h3>Level</h3>
-            <div className="level-value">{gameState.level}</div>
-            
-            <h3>Lines</h3>
-            <div className="lines-value">{gameState.lines}</div>
+
+        <div className="game-sidebar">
+          <div className="next-piece-container">
+            <h3>Next</h3>
+            {renderNextPiece()}
           </div>
           
-          <div className="controls-panel">
+          <div className="controls-info">
             <h3>Controls</h3>
-            <div className="control-item">← → Move</div>
-            <div className="control-item">↑ Rotate</div>
-            <div className="control-item">↓ Soft Drop</div>
-            <div className="control-item">Space Hard Drop</div>
-            <div className="control-item">P Pause</div>
+            <div className="control-item">
+              <span className="key">← →</span> Move
+            </div>
+            <div className="control-item">
+              <span className="key">↓</span> Drop
+            </div>
+            <div className="control-item">
+              <span className="key">↑</span> Rotate
+            </div>
+            <div className="control-item">
+              <span className="key">Space</span> Hard Drop
+            </div>
+            <div className="control-item">
+              <span className="key">P</span> Pause
+            </div>
           </div>
-          
-          <div className="game-controls">
-            <button onClick={() => setGameState(prev => ({ ...prev, paused: !prev.paused }))}>
+
+          <div className="game-actions">
+            <button 
+              className="game-button pause-button"
+              onClick={() => setGameState(prev => ({ ...prev, paused: !prev.paused }))}
+            >
               {gameState.paused ? 'Resume' : 'Pause'}
             </button>
-            <button onClick={restartGame}>Restart</button>
+            
+            <button 
+              className="game-button restart-button"
+              onClick={restartGame}
+            >
+              Restart
+            </button>
           </div>
         </div>
       </div>
+
+      {gameState.gameOver && (
+        <div className="game-over-overlay">
+          <div className="game-over-modal">
+            <h2>Game Over!</h2>
+            <div className="final-score">
+              <p>Final Score: <span>{gameState.score.toLocaleString()}</span></p>
+              <p>Level Reached: <span>{gameState.level}</span></p>
+              <p>Lines Cleared: <span>{gameState.lines}</span></p>
+            </div>
+            <button 
+              className="game-button restart-button"
+              onClick={restartGame}
+            >
+              Play Again
+            </button>
+          </div>
+        </div>
+      )}
+      
+      {gameState.paused && (
+        <div className="paused-overlay">
+          <div className="paused-modal">
+            <h2>Paused</h2>
+            <p>Press P to continue or use the Resume button</p>
+            <button 
+              className="game-button resume-button"
+              onClick={() => setGameState(prev => ({ ...prev, paused: false }))}
+            >
+              Resume
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
