@@ -107,12 +107,12 @@ export default function Desktop({ onShutdown }: DesktopProps) {
     let windowHeight = 400;
     
     // Larger windows for web apps
-    if (appId === 'gitroaster' || appId === 'snippix') {
+    if (appId === 'gitroaster' || appId === 'snippix' || appId === 'tetris' || appId === 'video-player') {
       windowWidth = 1200;
       windowHeight = 800;
     }
     // Medium size for media apps
-    else if (appId === 'video-player' || appId === 'media-player') {
+    else if (appId === 'media-player' || appId === 'minesweeper') {
       windowWidth = 800;
       windowHeight = 600;
     }
