@@ -2707,3 +2707,79 @@
   font-size: 11px;
   line-height: 1.4;
 }
+
+/* Copy button styles for Misa's messages */
+.message-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.copy-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s ease;
+  opacity: 0;
+  transform: translateX(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  backdrop-filter: blur(5px);
+}
+
+.copy-button svg {
+  transition: all 0.2s ease;
+}
+
+.message.waifu:hover .copy-button {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.copy-button:hover {
+  background: rgba(255, 105, 180, 0.15);
+  border-color: rgba(255, 105, 180, 0.4);
+  color: #ff69b4;
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(255, 105, 180, 0.3);
+}
+
+.copy-button:hover svg {
+  transform: scale(1.1);
+  stroke-width: 2.5;
+}
+
+.copy-button:active {
+  transform: scale(0.9);
+  background: rgba(255, 105, 180, 0.25);
+}
+
+/* Copy success animation */
+.copy-button.copied {
+  background: rgba(76, 217, 100, 0.15);
+  border-color: rgba(76, 217, 100, 0.4);
+  color: #4cd964;
+}
+
+.copy-button.copied svg {
+  animation: copy-success 0.3s ease-in-out;
+}
+
+@keyframes copy-success {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* Copy button for user messages (hidden) */
+.message.user .copy-button {
+  display: none;
+}

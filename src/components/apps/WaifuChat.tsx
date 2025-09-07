@@ -117,6 +117,45 @@ export default function WaifuChat() {
     }
   };
 
+  const copyToClipboard = async (text: string, buttonElement?: HTMLButtonElement) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      
+      // Visual feedback
+      if (buttonElement) {
+        buttonElement.classList.add('copied');
+        setTimeout(() => {
+          buttonElement.classList.remove('copied');
+        }, 600);
+      }
+      
+      console.log('Message copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        console.log('Message copied to clipboard (fallback)!');
+        
+        // Visual feedback for fallback
+        if (buttonElement) {
+          buttonElement.classList.add('copied');
+          setTimeout(() => {
+            buttonElement.classList.remove('copied');
+          }, 600);
+        }
+      } catch (fallbackErr) {
+        console.error('Fallback copy failed: ', fallbackErr);
+      }
+      document.body.removeChild(textArea);
+    }
+  };
+
   return (
     <div className="waifu-chat-app">
       
@@ -156,11 +195,25 @@ export default function WaifuChat() {
               <div className="message-text" style={{ whiteSpace: 'pre-wrap' }}>
                 {message.text}
               </div>
-              <div className="message-time">
-                {message.timestamp.toLocaleTimeString('en-US', {
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
+              <div className="message-actions">
+                <div className="message-time">
+                  {message.timestamp.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </div>
+                {message.sender === 'waifu' && (
+                  <button
+                    onClick={(e) => copyToClipboard(message.text, e.currentTarget)}
+                    className="copy-button"
+                    title="Copy Misa's message"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                  </button>
+                )}
               </div>
             </div>
           </div>
