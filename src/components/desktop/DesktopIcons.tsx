@@ -244,7 +244,7 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
       'video-player': <WaifuTube />,
       // 'waifu-pics': <WaifuPics onClose={() => {}} />, // Temporarily disabled
       'gitroaster': <WebApp title="GitRoaster - AI-powered code review and analysis tool" url="https://gitroaster.vercel.app" />,
-      'snippix': <WebApp title="Snippix - Smart code snippet manager and organizer" url="https://snippix.vercel.app" />,
+      'snippix': <WebApp title="Snippix - Smart code snippet manager and organizer" url="https://snippixbymnn.vercel.app" />,
       'notepad': <Notepad />,
       'calculator': <Calculator />,
       'file-explorer': <FileExplorer />,

@@ -142,7 +142,7 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
         component = <WebApp title="GitRoaster - AI-powered code review and analysis tool" url="https://gitroaster.vercel.app" />;
         break;
       case 'snippix':
-        component = <WebApp title="Snippix - Smart code snippet manager and organizer" url="https://snippix.vercel.app" />;
+        component = <WebApp title="Snippix - Smart code snippet manager and organizer" url="https://snippixbymnn.vercel.app" />;
         break;
       // Temporarily disabled
       // case 'waifu-browser':
