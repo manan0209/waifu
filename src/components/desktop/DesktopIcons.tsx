@@ -7,7 +7,6 @@ import FileExplorer from '../../applications/FileExplorer';
 import Minesweeper from '../../applications/Minesweeper';
 import TetrisGame from '../games/TetrisGame';
 import Solitaire from '../games/Solitaire';
-import MediaPlayer from '../apps/MediaPlayer';
 import WaifuTube from '../apps/VideoPlayer';
 import WaifuPics from '../apps/WaifuPics';
 import Settings from '../apps/Settings';
@@ -52,7 +51,6 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
       'file-explorer': { x: startX + spacing * 2, y: startY + spacing },
       'minesweeper': { x: startX + spacing * 3, y: startY + spacing },
       'solitaire': { x: startX + spacing * 4, y: startY + spacing },
-      'media-player': { x: startX + spacing * 5, y: startY + spacing },
       'recycle-bin': { x: startX, y: startY + spacing * 2 },
       'settings': { x: startX + spacing, y: startY + spacing * 2 }
     };
@@ -179,14 +177,6 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
       x: 250,
       y: 350,
       appId: 'solitaire'
-    },
-    {
-      id: 'media-player',
-      title: 'Media Player',
-      icon: <Icons.MediaPlayer size={32} />,
-      x: 350,
-      y: 350,
-      appId: 'media-player'
     }
   ];
 
@@ -250,7 +240,6 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
       'file-explorer': <FileExplorer />,
       'minesweeper': <Minesweeper />,
       'solitaire': <Solitaire />,
-      'media-player': <MediaPlayer />,
       'settings': <Settings />
     };
 

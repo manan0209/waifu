@@ -7,7 +7,7 @@ interface BackgroundMusicOptions {
 }
 
 export function useBackgroundMusic(audioSrc: string, options: BackgroundMusicOptions = {}) {
-  const { volume = 0.3, loop = true, autoPlay = true } = options;
+  const { volume = 0.8, loop = true, autoPlay = true } = options;
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);

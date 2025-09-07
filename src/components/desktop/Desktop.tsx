@@ -27,7 +27,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
   
   
   const bgMusic = useBackgroundMusic('/bgmusic.mp3', {
-    volume: 0.2,
+    volume: 0.8,
     loop: true,
     autoPlay: false 
   });
@@ -77,7 +77,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [showAltTab, windows]);
 
-  const addNotification = (title: string, message: string, type: 'info' | 'success' | 'warning' | 'error' = 'info', duration: number = 5000) => {
+  const addNotification = (title: string, message: string, type: 'info' | 'success' | 'warning' | 'error' = 'info', duration: number = 900) => {
     const notification = {
       id: Date.now().toString(),
       title,
@@ -87,6 +87,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
       timestamp: new Date()
     };
     
+    console.log('Adding notification with duration:', duration, notification);
     setNotifications(prev => [...prev, notification]);
     playNotification();
   };
@@ -111,8 +112,8 @@ export default function Desktop({ onShutdown }: DesktopProps) {
       windowWidth = 1200;
       windowHeight = 800;
     }
-    // Medium size for media apps
-    else if (appId === 'media-player' || appId === 'minesweeper') {
+    // Medium size for games
+    else if (appId === 'minesweeper') {
       windowWidth = 800;
       windowHeight = 600;
     }

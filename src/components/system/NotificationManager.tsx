@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 interface Notification {
   id: string;
@@ -16,24 +16,44 @@ interface NotificationManagerProps {
 
 export default function NotificationManager({ notifications, onDismiss }: NotificationManagerProps) {
   const [visibleNotifications, setVisibleNotifications] = useState<Notification[]>([]);
+  const timersRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
   useEffect(() => {
     setVisibleNotifications(notifications.slice(-3)); 
   }, [notifications]);
 
+  // Create auto-dismiss timers for new notifications
   useEffect(() => {
+    const timers = timersRef.current;
     
-    const timers = visibleNotifications.map(notification => {
-      if (notification.duration > 0) {
-        return setTimeout(() => {
+    visibleNotifications.forEach(notification => {
+      // Only create timer if it doesn't exist and has a positive duration
+      if (notification.duration > 0 && !timers.has(notification.id)) {
+        console.log('Creating timer for notification:', notification.id, 'duration:', notification.duration);
+        const timer = setTimeout(() => {
+          console.log('Auto-dismissing notification:', notification.id);
           onDismiss(notification.id);
+          timers.delete(notification.id);
         }, notification.duration);
+        
+        timers.set(notification.id, timer);
       }
-      return null;
-    }).filter(Boolean);
+    });
 
+    // Clean up timers for notifications that are no longer visible
+    const visibleIds = new Set(visibleNotifications.map(n => n.id));
+    timers.forEach((timer, id) => {
+      if (!visibleIds.has(id)) {
+        console.log('Clearing timer for removed notification:', id);
+        clearTimeout(timer);
+        timers.delete(id);
+      }
+    });
+
+    // Cleanup on unmount
     return () => {
-      timers.forEach(timer => timer && clearTimeout(timer));
+      timers.forEach(timer => clearTimeout(timer));
+      timers.clear();
     };
   }, [visibleNotifications, onDismiss]);
 
