@@ -8,7 +8,7 @@ import TetrisGame from '../games/TetrisGame';
 import Solitaire from '../games/Solitaire';
 import MediaPlayer from '../apps/MediaPlayer';
 import WaifuTube from '../apps/VideoPlayer';
-import WaifuBrowser from '../apps/WaifuBrowser';
+import WaifuPics from '../apps/WaifuPics';
 import ProjectViewer from '../apps/ProjectViewer';
 import Settings from '../apps/Settings';
 import { Icons } from '../ui/Icons';
@@ -44,7 +44,7 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
       'waifu-chat': { x: startX, y: startY },
       'tetris': { x: startX + spacing, y: startY },
       'video-player': { x: startX + spacing * 2, y: startY },
-      'waifu-browser': { x: startX + spacing * 3, y: startY },
+      'waifu-pics': { x: startX + spacing * 3, y: startY },
       'gitroaster': { x: startX + spacing * 4, y: startY },
       'snippix': { x: startX + spacing * 5, y: startY },
       'notepad': { x: startX, y: startY + spacing },
@@ -99,14 +99,15 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
       y: 50,
       appId: 'video-player'
     },
-    {
-      id: 'waifu-browser',
-      title: 'Waifu Browser',
-      icon: <Icons.Browser size={32} />,
-      x: 350,
-      y: 50,
-      appId: 'waifu-browser'
-    },
+    // Temporarily disabled Waifu Browser - keeping code for future fixes
+    // {
+    //   id: 'waifu-pics',
+    //   title: 'Waifu Browser',
+    //   icon: <Icons.Browser size={32} />,
+    //   x: 350,
+    //   y: 50,
+    //   appId: 'waifu-pics'
+    // },
     {
       id: 'gitroaster',
       title: 'GitRoaster',
@@ -241,7 +242,7 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
       'waifu-chat': <WaifuChat />,
       'tetris': <TetrisGame />,
       'video-player': <WaifuTube />,
-      'waifu-browser': <WaifuBrowser />,
+      // 'waifu-pics': <WaifuPics onClose={() => {}} />, // Temporarily disabled
       'gitroaster': <ProjectViewer projectName="GitRoaster" projectUrl="https://github.com/gitroaster" />,
       'snippix': <ProjectViewer projectName="Snippix" projectUrl="https://github.com/snippix" />,
       'notepad': <Notepad />,

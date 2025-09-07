@@ -7,7 +7,7 @@ import Minesweeper from '../../applications/Minesweeper';
 import Settings from '../apps/Settings';
 import TetrisGame from '../games/TetrisGame';
 import VideoPlayer from '../apps/VideoPlayer';
-import WaifuBrowser from '../apps/WaifuBrowser';
+import WaifuPics from '../apps/WaifuPics';
 import ProjectViewer from '../apps/ProjectViewer';
 import Solitaire from '../games/Solitaire';
 import MediaPlayer from '../apps/MediaPlayer';
@@ -52,13 +52,14 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
       appId: 'video-player',
       category: 'programs'
     },
-    {
-      id: 'waifu-browser',
-      title: 'Waifu Browser',
-      icon: <Icons.Browser size={16} />,
-      appId: 'waifu-browser',
-      category: 'programs'
-    },
+    // Temporarily disabled Waifu Browser
+    // {
+    //   id: 'waifu-browser',
+    //   title: 'Waifu Browser',
+    //   icon: <Icons.Browser size={16} />,
+    //   appId: 'waifu-browser',
+    //   category: 'programs'
+    // },
     {
       id: 'gitroaster',
       title: 'GitRoaster',
@@ -137,9 +138,10 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
       case 'video-player':
         component = <VideoPlayer />;
         break;
-      case 'waifu-browser':
-        component = <WaifuBrowser />;
-        break;
+      // Temporarily disabled
+      // case 'waifu-browser':
+      //   component = <WaifuPics onClose={() => {}} />;
+      //   break;
       case 'gitroaster':
         component = <ProjectViewer 
           projectUrl="https://gitroaster.vercel.app" 

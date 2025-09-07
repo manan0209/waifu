@@ -258,6 +258,20 @@ export const ChatIcon: React.FC<IconProps> = ({ size = 16, className }) => (
   </svg>
 );
 
+// Image/Picture Icon
+export const ImageIcon: React.FC<IconProps> = ({ size = 16, className }) => (
+  <svg width={size} height={size} viewBox="0 0 16 16" className={className}>
+    <rect fill="#FFFFFF" x="1" y="2" width="14" height="12" stroke="#808080" strokeWidth="1"/>
+    <rect fill="#F0F0F0" x="2" y="3" width="12" height="10"/>
+    <circle fill="#FFD700" cx="5" cy="6" r="1.5"/>
+    <polygon fill="#32CD32" points="2,10 5,7 8,10 11,8 14,11 14,13 2,13"/>
+    <polygon fill="#228B22" points="8,10 11,8 14,11 11,11 8,11"/>
+    <rect fill="#FF69B4" x="12" y="4" width="1" height="1"/>
+    <rect fill="#FF69B4" x="11" y="5" width="1" height="1"/>
+    <rect fill="#FF69B4" x="13" y="5" width="1" height="1"/>
+  </svg>
+);
+
 // Recycle Bin Icon
 export const RecycleBinIcon: React.FC<IconProps> = ({ size = 16, className }) => (
   <svg width={size} height={size} viewBox="0 0 16 16" className={className}>
@@ -323,6 +337,7 @@ export const Icons = {
   Browser: BrowserIcon,
   Project: ProjectIcon,
   Chat: ChatIcon,
+  Image: ImageIcon,
   RecycleBin: RecycleBinIcon,
   Minimize: MinimizeIcon,
   Maximize: MaximizeIcon,
