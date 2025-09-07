@@ -234,7 +234,7 @@ export default function WaifuChat() {
                   placeholder={`Enter your ${apiProvider === 'gemini' ? 'Gemini' : 'OpenAI'} API key...`}
                 />
                 <small>
-                  {apiProvider === 'gemini' && 'Get free API key from: https://makersuite.google.com/app/apikey'}
+                  {apiProvider === 'gemini' && 'Get free API key from: https://aistudio.google.com/app/usage'}
                   {apiProvider === 'openai' && 'Get API key from: https://platform.openai.com/api-keys'}
                 </small>
               </div>

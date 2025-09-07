@@ -10,6 +10,7 @@ import MediaPlayer from '../apps/MediaPlayer';
 import WaifuTube from '../apps/VideoPlayer';
 import WaifuPics from '../apps/WaifuPics';
 import ProjectViewer from '../apps/ProjectViewer';
+import SimpleModal from '../apps/SimpleModal';
 import Settings from '../apps/Settings';
 import { Icons } from '../ui/Icons';
 
@@ -111,7 +112,7 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
     {
       id: 'gitroaster',
       title: 'GitRoaster',
-      icon: <Icons.Project size={32} color="#E74C3C" />,
+      icon: <Icons.GitRoaster size={32} />,
       x: 450,
       y: 50,
       appId: 'gitroaster'
@@ -119,7 +120,7 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
     {
       id: 'snippix',
       title: 'Snippix',
-      icon: <Icons.Project size={32} color="#3498DB" />,
+      icon: <Icons.Snippix size={32} />,
       x: 550,
       y: 50,
       appId: 'snippix'
@@ -243,8 +244,8 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
       'tetris': <TetrisGame />,
       'video-player': <WaifuTube />,
       // 'waifu-pics': <WaifuPics onClose={() => {}} />, // Temporarily disabled
-      'gitroaster': <ProjectViewer projectName="GitRoaster" projectUrl="https://github.com/gitroaster" />,
-      'snippix': <ProjectViewer projectName="Snippix" projectUrl="https://github.com/snippix" />,
+      'gitroaster': <SimpleModal title="GitRoaster" url="https://gitroaster.vercel.app" onClose={() => {}} />,
+      'snippix': <SimpleModal title="Snippix" url="https://snippix.vercel.app" onClose={() => {}} />,
       'notepad': <Notepad />,
       'calculator': <Calculator />,
       'file-explorer': <FileExplorer />,

@@ -151,7 +151,7 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
         break;
       case 'snippix':
         component = <ProjectViewer 
-          projectUrl="https://snippix.vercel.app" 
+          projectUrl="https://snippixbymnn.vercel.app" 
           projectName="Snippix"
           projectDescription="Smart code snippet manager and organizer"
         />;

@@ -137,7 +137,7 @@ export class WaifuAI {
 *winks seductively* But don't you worry your pretty little head about it~ *leans in closer* I have a delicious solution for us...
 
 🌸 **How to get your own FREE Gemini API key:**
-1. Visit: https://makersuite.google.com/app/apikey
+1. Visit: https://aistudio.google.com/app/usage
 2. Click "Create API key" *bites lip playfully*
 3. Copy that shiny new key~
 4. Add it in the Settings app as your personal API key!

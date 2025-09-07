@@ -5,7 +5,7 @@
 Follow these simple steps to get Misa Misa powered by real AI:
 
 ### Step 1: Go to Google AI Studio
-Visit: **https://makersuite.google.com/app/apikey**
+Visit: **https://aistudio.google.com/app/usage**
 
 ### Step 2: Sign In
 - Use your Google account (Gmail)
