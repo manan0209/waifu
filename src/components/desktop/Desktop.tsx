@@ -9,6 +9,7 @@ import DesktopMascot from '../mascot/DesktopMascot';
 import WaifuChat from '../apps/WaifuChat';
 import ContextMenu from './ContextMenu';
 import VirusChaos from '../system/VirusChaos';
+import SusApp from '../system/SusApp';
 import WebApp from '../../applications/WebApp';
 import { useSystemSounds } from '../../hooks/useSystemSounds';
 import { useBackgroundMusic } from '../../hooks/useBackgroundMusic';
@@ -243,7 +244,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
     }
 
     // Open the sus app in a maximized window only if not already open
-    const susApp = <WebApp title="System Security Check" url="https://sus.3kh0.net/" />;
+    const susApp = <SusApp title="System Security Check" />;
     const newWindow = {
       id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       appId: 'sus-app',
