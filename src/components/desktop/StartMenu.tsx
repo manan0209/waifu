@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import WaifuChat from '../apps/WaifuChat';
+import WebApp from '../../applications/WebApp';
 import Notepad from '../../applications/Notepad';
 import Calculator from '../../applications/Calculator';
 import FileExplorer from '../../applications/FileExplorer';
@@ -8,7 +9,6 @@ import Settings from '../apps/Settings';
 import TetrisGame from '../games/TetrisGame';
 import VideoPlayer from '../apps/VideoPlayer';
 import WaifuPics from '../apps/WaifuPics';
-import ProjectViewer from '../apps/ProjectViewer';
 import Solitaire from '../games/Solitaire';
 import MediaPlayer from '../apps/MediaPlayer';
 import { Icons } from '../ui/Icons';
@@ -63,14 +63,14 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
     {
       id: 'gitroaster',
       title: 'GitRoaster',
-      icon: <Icons.Project size={16} color="#E74C3C" />,
+      icon: <img src="/roast.svg" alt="GitRoaster" style={{ width: 16, height: 16 }} />,
       appId: 'gitroaster',
       category: 'programs'
     },
     {
       id: 'snippix',
       title: 'Snippix',
-      icon: <Icons.Project size={16} color="#3498DB" />,
+      icon: <img src="/snippix 512.png" alt="Snippix" style={{ width: 16, height: 16 }} />,
       appId: 'snippix',
       category: 'programs'
     },
@@ -138,24 +138,16 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
       case 'video-player':
         component = <VideoPlayer />;
         break;
+      case 'gitroaster':
+        component = <WebApp title="GitRoaster - AI-powered code review and analysis tool" url="https://gitroaster.vercel.app" />;
+        break;
+      case 'snippix':
+        component = <WebApp title="Snippix - Smart code snippet manager and organizer" url="https://snippix.vercel.app" />;
+        break;
       // Temporarily disabled
       // case 'waifu-browser':
       //   component = <WaifuPics onClose={() => {}} />;
       //   break;
-      case 'gitroaster':
-        component = <ProjectViewer 
-          projectUrl="https://gitroaster.vercel.app" 
-          projectName="GitRoaster"
-          projectDescription="AI-powered code review and analysis tool"
-        />;
-        break;
-      case 'snippix':
-        component = <ProjectViewer 
-          projectUrl="https://snippixbymnn.vercel.app" 
-          projectName="Snippix"
-          projectDescription="Smart code snippet manager and organizer"
-        />;
-        break;
       case 'notepad':
         component = <Notepad />;
         break;

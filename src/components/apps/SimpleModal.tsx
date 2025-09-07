@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 interface SimpleModalProps {
   title: string;
@@ -9,36 +9,60 @@ interface SimpleModalProps {
 export default function SimpleModal({ title, url, onClose }: SimpleModalProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [position, setPosition] = useState({ x: 100, y: 100 });
+  const [position, setPosition] = useState({ x: 50, y: 50 });
   const modalRef = useRef<HTMLDivElement>(null);
 
+  // Handle drag start
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (modalRef.current) {
+    if (modalRef.current && e.target instanceof HTMLElement && 
+        e.target.closest('.simple-modal-header') && 
+        !e.target.closest('.simple-modal-close')) {
+      
       setIsDragging(true);
       const rect = modalRef.current.getBoundingClientRect();
       setDragOffset({
         x: e.clientX - rect.left,
         y: e.clientY - rect.top
       });
+      e.preventDefault();
     }
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  // Handle global mouse events
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        const newX = e.clientX - dragOffset.x;
+        const newY = e.clientY - dragOffset.y;
+        
+        // Constrain to viewport with some padding
+        const maxX = window.innerWidth - 800;
+        const maxY = window.innerHeight - 600;
+        const constrainedX = Math.max(0, Math.min(maxX, newX));
+        const constrainedY = Math.max(0, Math.min(maxY, newY));
+        
+        setPosition({ x: constrainedX, y: constrainedY });
+      }
+    };
+
+    const handleGlobalMouseUp = () => {
+      setIsDragging(false);
+    };
+
     if (isDragging) {
-      const newX = e.clientX - dragOffset.x;
-      const newY = e.clientY - dragOffset.y;
-      
-      // Constrain to viewport
-      const constrainedX = Math.max(0, Math.min(window.innerWidth - 600, newX));
-      const constrainedY = Math.max(0, Math.min(window.innerHeight - 400, newY));
-      
-      setPosition({ x: constrainedX, y: constrainedY });
+      document.addEventListener('mousemove', handleGlobalMouseMove);
+      document.addEventListener('mouseup', handleGlobalMouseUp);
+      document.body.style.userSelect = 'none';
+      document.body.style.cursor = 'grabbing';
     }
-  };
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+      document.body.style.userSelect = '';
+      document.body.style.cursor = '';
+    };
+  }, [isDragging, dragOffset]);
 
   const handleCloseClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -46,12 +70,16 @@ export default function SimpleModal({ title, url, onClose }: SimpleModalProps) {
     onClose();
   };
 
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
     <div 
       className="simple-modal-overlay"
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
+      onClick={handleOverlayClick}
     >
       <div 
         ref={modalRef}
@@ -59,7 +87,7 @@ export default function SimpleModal({ title, url, onClose }: SimpleModalProps) {
         style={{
           left: position.x,
           top: position.y,
-          cursor: isDragging ? 'grabbing' : 'default'
+          position: 'fixed'
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -67,13 +95,18 @@ export default function SimpleModal({ title, url, onClose }: SimpleModalProps) {
         <div 
           className="simple-modal-header"
           onMouseDown={handleMouseDown}
-          style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+          style={{ 
+            cursor: isDragging ? 'grabbing' : 'grab',
+            userSelect: 'none'
+          }}
         >
           <span className="simple-modal-title">{title}</span>
           <button 
             className="simple-modal-close" 
             onClick={handleCloseClick}
-            onMouseDown={(e) => e.stopPropagation()} // Prevent drag when clicking close
+            onMouseDown={(e) => e.stopPropagation()}
+            type="button"
+            aria-label="Close"
           >
             ×
           </button>

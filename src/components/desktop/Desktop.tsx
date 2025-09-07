@@ -98,10 +98,30 @@ export default function Desktop({ onShutdown }: DesktopProps) {
   const handleStartClick = () => {
     playButtonClick();
     setShowStartMenu(!showStartMenu);
-    startMusicAfterInteraction(); // Start music on user interaction
+    startMusicAfterInteraction(); 
   };
 
   const openWindow = (appId: string, title: string, component: React.ReactNode) => {
+    // Determine window size based on app type
+    let windowWidth = 600;
+    let windowHeight = 400;
+    
+    // Larger windows for web apps
+    if (appId === 'gitroaster' || appId === 'snippix') {
+      windowWidth = 1200;
+      windowHeight = 800;
+    }
+    // Medium size for media apps
+    else if (appId === 'video-player' || appId === 'media-player') {
+      windowWidth = 800;
+      windowHeight = 600;
+    }
+    // Smaller size for utility apps
+    else if (appId === 'calculator' || appId === 'notepad') {
+      windowWidth = 400;
+      windowHeight = 500;
+    }
+
     const newWindow = {
       id: Date.now().toString(),
       appId,
@@ -109,8 +129,8 @@ export default function Desktop({ onShutdown }: DesktopProps) {
       component,
       x: 100 + (windows.length * 30),
       y: 100 + (windows.length * 30),
-      width: 600,
-      height: 400,
+      width: windowWidth,
+      height: windowHeight,
       isMinimized: false,
       isMaximized: false,
       zIndex: windows.length + 1

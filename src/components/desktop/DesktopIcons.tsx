@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import WaifuChat from '../apps/WaifuChat';
+import WebApp from '../../applications/WebApp';
 import Notepad from '../../applications/Notepad';
 import Calculator from '../../applications/Calculator';
 import FileExplorer from '../../applications/FileExplorer';
@@ -9,8 +10,6 @@ import Solitaire from '../games/Solitaire';
 import MediaPlayer from '../apps/MediaPlayer';
 import WaifuTube from '../apps/VideoPlayer';
 import WaifuPics from '../apps/WaifuPics';
-import ProjectViewer from '../apps/ProjectViewer';
-import SimpleModal from '../apps/SimpleModal';
 import Settings from '../apps/Settings';
 import { Icons } from '../ui/Icons';
 
@@ -112,7 +111,7 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
     {
       id: 'gitroaster',
       title: 'GitRoaster',
-      icon: <Icons.GitRoaster size={32} />,
+      icon: <img src="/roast.svg" alt="GitRoaster" style={{ width: 32, height: 32 }} />,
       x: 450,
       y: 50,
       appId: 'gitroaster'
@@ -120,7 +119,7 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
     {
       id: 'snippix',
       title: 'Snippix',
-      icon: <Icons.Snippix size={32} />,
+      icon: <img src="/snippix 512.png" alt="Snippix" style={{ width: 32, height: 32 }} />,
       x: 550,
       y: 50,
       appId: 'snippix'
@@ -244,8 +243,8 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
       'tetris': <TetrisGame />,
       'video-player': <WaifuTube />,
       // 'waifu-pics': <WaifuPics onClose={() => {}} />, // Temporarily disabled
-      'gitroaster': <SimpleModal title="GitRoaster" url="https://gitroaster.vercel.app" onClose={() => {}} />,
-      'snippix': <SimpleModal title="Snippix" url="https://snippix.vercel.app" onClose={() => {}} />,
+      'gitroaster': <WebApp title="GitRoaster - AI-powered code review and analysis tool" url="https://gitroaster.vercel.app" />,
+      'snippix': <WebApp title="Snippix - Smart code snippet manager and organizer" url="https://snippix.vercel.app" />,
       'notepad': <Notepad />,
       'calculator': <Calculator />,
       'file-explorer': <FileExplorer />,
@@ -307,6 +306,7 @@ export default function DesktopIcons({ onOpenWindow, onUserInteraction }: Deskto
           </div>
         );
       })}
+      
     </div>
   );
 }
