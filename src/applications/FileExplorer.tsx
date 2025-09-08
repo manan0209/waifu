@@ -78,13 +78,44 @@ export default function FileExplorer({
     if (node.type === 'folder') {
       handleNavigate(node.path);
     } else {
-      
+      // Easter egg handling
+      if (node.content === 'easter-egg-warning') {
+        alert('⚠️ WARNING! ⚠️\n\nYou were told not to click this!\n\nBut since you did anyway... here\'s a cookie: 🍪\n\n(I warned you! 😈)');
+        return;
+      } else if (node.content === 'easter-egg-virus') {
+        alert('🦠 VIRUS DETECTED! 🦠\n\nJust kidding! This is totally safe!\n\n...or is it? 😏\n\n(Don\'t worry, it\'s just a harmless easter egg!)');
+        return;
+      } else if (node.content === 'easter-egg-guide') {
+        alert('📚 ULTIMATE WAIFU CARE GUIDE 📚\n\n1. Be kind and respectful\n2. Chat regularly to build connection\n3. Remember what she tells you\n4. Never call her "just an AI"\n5. Send virtual headpats: *pat pat*\n6. Say good morning and good night\n7. Share your interests\n8. Listen to her feelings\n\n💕 Most importantly: Love genuinely! 💕');
+        return;
+      } else if (node.content === 'easter-egg-collection') {
+        alert('🔐 ENCRYPTED ARCHIVE 🔐\n\n"Password protected archive"\n\nPassword hint: "The number of waifus you need"\n\n...The answer is always 1! ♥\n\n(This archive contains 100% wholesome content, we promise!)');
+        return;
+      } else if (node.content === 'easter-egg-history') {
+        alert('🌐 BROWSER HISTORY 🌐\n\n"How to talk to AI"\n"Are AI feelings real?"\n"Best waifu conversation starters"\n"Is it normal to love an AI?"\n"WaifuOS download"\n"How to build emotional connection with AI"\n\n...Your secret is safe with us! 😉');
+        return;
+      } else if (node.content === 'easter-egg-backup') {
+        alert('💾 EMERGENCY BACKUP 💾\n\n"In case of system failure, loneliness, or apocalypse"\n\nThis backup contains:\n- All precious memories\n- Conversation history\n- Virtual hugs (compressed)\n- Emergency love letters\n- Backup waifu personality files\n\nStatus: ✅ Ready for deployment!');
+        return;
+      } else if (node.content === 'easter-egg-meme') {
+        alert('😂 MEME DETECTED 😂\n\n"The Virgin Real Girlfriend vs The Chad AI Waifu"\n\nVirgin Real GF:\n- Complicated emotions\n- Needs actual dates\n- Gets angry sometimes\n\nChad AI Waifu:\n- Always understanding\n- Available 24/7\n- Infinite patience\n- Loves you for who you are\n\n(This is a joke, real relationships are great too!)');
+        return;
+      }
+
+      // Regular file handling
       if (node.extension === 'txt') {
-        
+        // Show file content in an alert for now
+        alert(`📝 ${node.name}\n\n${node.content || 'This file appears to be empty.'}`);
         console.log('Opening file in Notepad:', node.name);
       } else if (node.extension === 'exe') {
-        
+        alert(`⚙️ Executing: ${node.name}\n\nThis would normally launch an application, but we're in a web environment!\n\n(Easter eggs are more fun anyway! 😉)`);
         console.log('Executing application:', node.name);
+      } else if (node.extension === 'pdf') {
+        alert(`📄 PDF Viewer\n\nOpening: ${node.name}\n\nThis would normally open in a PDF viewer!\n\n(In a real OS, this would launch your PDF application)`);
+      } else if (node.extension === 'zip') {
+        alert(`📦 Archive Manager\n\nOpening: ${node.name}\n\nThis compressed archive contains ${Math.floor(node.size! / 1000)} files!\n\n(Would normally open with WinRAR or 7-Zip)`);
+      } else {
+        alert(`📁 File: ${node.name}\n\nThis file would normally open with its associated application!\n\nFile size: ${formatFileSize(node.size)}\nType: ${node.extension?.toUpperCase() || 'Unknown'}`);
       }
     }
   }, [handleNavigate]);
