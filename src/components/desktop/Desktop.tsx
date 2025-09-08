@@ -120,7 +120,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
       windowHeight = 800;
     }
     // Medium size for games
-    else if (appId === 'minesweeper') {
+    else if (appId === 'minesweeper' || appId === 'solitaire') {
       windowWidth = 800;
       windowHeight = 600;
     }

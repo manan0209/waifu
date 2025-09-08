@@ -192,7 +192,7 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
         <div className="start-menu-header">
           <div className="user-avatar">👤</div>
           <div className="user-info">
-            <div className="username">User</div>
+            <div className="username">Senpai</div>
             <div className="computer-name">WAIFU-PC</div>
           </div>
         </div>
