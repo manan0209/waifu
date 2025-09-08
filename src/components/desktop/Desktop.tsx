@@ -203,7 +203,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
     localStorage.removeItem('desktop-icon-positions');
     
     // Show notification
-    addNotification('Desktop', 'Icon positions reset to default', 'success');
+    addNotification('Desktop', 'Refreshed', 'success');
     
     // Close context menu
     setContextMenu(null);
