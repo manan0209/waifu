@@ -34,7 +34,7 @@ export default function Desktop({ onShutdown }: DesktopProps) {
   
   
   const bgMusic = useBackgroundMusic('/bgmusic.mp3', {
-    volume: 0.8,
+    volume: 0.5,
     loop: true,
     autoPlay: false 
   });

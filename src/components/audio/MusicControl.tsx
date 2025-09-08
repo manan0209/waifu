@@ -9,7 +9,7 @@ interface MusicControlProps {
 export default function MusicControl({ className = '', bgMusic: externalBgMusic }: MusicControlProps) {
   
   const fallbackBgMusic = useBackgroundMusic('/bgmusic.mp3', {
-    volume: 0.8,
+    volume: 0.5,
     loop: true,
     autoPlay: false
   });
