@@ -41,25 +41,25 @@ const DesktopIcons = forwardRef<DesktopIconsRef, DesktopIconsProps>(
 
   // Improved default positions with better spacing
   const getDefaultPositions = () => {
-    const spacing = 120;
-    const startX = 30;
-    const startY = 30;
-    const iconsPerRow = 6;
+    const spacingX = 140;
+    const spacingY = 130;
+    const startX = 40;
+    const startY = 40;
     
     return {
-      'waifu-chat': { x: startX, y: startY },
-      'tetris': { x: startX + spacing, y: startY },
-      'video-player': { x: startX + spacing * 2, y: startY },
-      'waifu-pics': { x: startX + spacing * 3, y: startY },
-      'gitroaster': { x: startX + spacing * 4, y: startY },
-      'snippix': { x: startX + spacing * 5, y: startY },
-      'notepad': { x: startX, y: startY + spacing },
-      'calculator': { x: startX + spacing, y: startY + spacing },
-      'file-explorer': { x: startX + spacing * 2, y: startY + spacing },
-      'minesweeper': { x: startX + spacing * 3, y: startY + spacing },
-      'solitaire': { x: startX + spacing * 4, y: startY + spacing },
-      'recycle-bin': { x: startX, y: startY + spacing * 2 },
-      'settings': { x: startX + spacing, y: startY + spacing * 2 }
+      
+      'tetris': { x: 180, y: 40 },
+      'video-player': { x: 320, y: 40 },
+      'gitroaster': { x: 460, y: 40 },
+      'snippix': { x: 600, y: 40 },
+      'notepad': { x: 40, y: 170 },
+      'calculator': { x: 180, y: 170 },
+      'file-explorer': { x: 320, y: 170 },
+      'minesweeper': { x: 460, y: 170 },
+      'solitaire': { x: 600, y: 170 },
+      'recycle-bin': { x: 40, y: 300 },
+      'waifu-chat': { x: 180, y: 300 } 
+      
     };
   };
 
@@ -96,24 +96,24 @@ const DesktopIcons = forwardRef<DesktopIconsRef, DesktopIconsProps>(
       id: 'waifu-chat',
       title: 'Waifu Chat',
       icon: <Icons.Chat size={32} />,
-      x: 50,
-      y: 50,
+      x: 180,
+      y: 300,
       appId: 'waifu-chat'
     },
     {
       id: 'tetris',
       title: 'Tetris',
       icon: <Icons.Tetris size={32} />,
-      x: 150,
-      y: 50,
+      x: 180,
+      y: 40,
       appId: 'tetris'
     },
     {
       id: 'video-player',
       title: 'WaifuTube',
       icon: <Icons.VideoPlayer size={32} />,
-      x: 250,
-      y: 50,
+      x: 320,
+      y: 40,
       appId: 'video-player'
     },
     // Temporarily disabled Waifu Browser - keeping code for future fixes
@@ -129,74 +129,75 @@ const DesktopIcons = forwardRef<DesktopIconsRef, DesktopIconsProps>(
       id: 'gitroaster',
       title: 'GitRoaster',
       icon: <img src="/roast.svg" alt="GitRoaster" style={{ width: 32, height: 32 }} />,
-      x: 450,
-      y: 50,
+      x: 460,
+      y: 40,
       appId: 'gitroaster'
     },
     {
       id: 'snippix',
       title: 'Snippix',
       icon: <img src="/snippix 512.png" alt="Snippix" style={{ width: 32, height: 32 }} />,
-      x: 550,
-      y: 50,
+      x: 600,
+      y: 40,
       appId: 'snippix'
     },
     {
       id: 'notepad',
       title: 'Notepad',
       icon: <Icons.Notepad size={32} />,
-      x: 50,
-      y: 150,
+      x: 40,
+      y: 170,
       appId: 'notepad'
     },
     {
       id: 'calculator',
       title: 'Calculator',
       icon: <Icons.Calculator size={32} />,
-      x: 150,
-      y: 150,
+      x: 180,
+      y: 170,
       appId: 'calculator'
     },
     {
       id: 'file-explorer',
       title: 'My Computer',
       icon: <Icons.Computer size={32} />,
-      x: 50,
-      y: 250,
+      x: 320,
+      y: 170,
       appId: 'file-explorer'
     },
     {
       id: 'minesweeper',
       title: 'Minesweeper',
       icon: <Icons.Minesweeper size={32} />,
-      x: 150,
-      y: 250,
+      x: 460,
+      y: 170,
       appId: 'minesweeper'
-    },
-    {
-      id: 'recycle-bin',
-      title: 'Recycle Bin',
-      icon: <Icons.RecycleBin size={32} />,
-      x: 50,
-      y: 350,
-      appId: 'recycle-bin'
-    },
-    {
-      id: 'settings',
-      title: 'Settings',
-      icon: <Icons.Settings size={32} />,
-      x: 150,
-      y: 350,
-      appId: 'settings'
     },
     {
       id: 'solitaire',
       title: 'Solitaire',
       icon: <Icons.Solitaire size={32} />,
-      x: 250,
-      y: 350,
+      x: 600,
+      y: 170,
       appId: 'solitaire'
+    },
+    {
+      id: 'recycle-bin',
+      title: 'Recycle Bin',
+      icon: <Icons.RecycleBin size={32} />,
+      x: 40,
+      y: 300,
+      appId: 'recycle-bin'
     }
+    // Settings app removed from desktop - keeping code commented for future use
+    // {
+    //   id: 'settings',
+    //   title: 'Settings',
+    //   icon: <Icons.Settings size={32} />,
+    //   x: 320,
+    //   y: 300,
+    //   appId: 'settings'
+    // }
   ];
 
   // Handle mouse down for drag start
@@ -251,7 +252,6 @@ const DesktopIcons = forwardRef<DesktopIconsRef, DesktopIconsProps>(
       'waifu-chat': <WaifuChat />,
       'tetris': <TetrisGame />,
       'video-player': <WaifuTube />,
-      // 'waifu-pics': <WaifuPics onClose={() => {}} />, // Temporarily disabled
       'gitroaster': <WebApp title="GitRoaster - AI-powered code review and analysis tool" url="https://gitroaster.vercel.app" />,
       'snippix': <WebApp title="Snippix - Smart code snippet manager and organizer" url="https://snippixbymnn.vercel.app" />,
       'notepad': <Notepad />,
@@ -259,7 +259,7 @@ const DesktopIcons = forwardRef<DesktopIconsRef, DesktopIconsProps>(
       'file-explorer': <FileExplorer />,
       'minesweeper': <Minesweeper />,
       'solitaire': <Solitaire />,
-      'settings': <Settings />,
+      // 'settings': <Settings />, // Settings app removed from desktop access
       'recycle-bin': <RecycleBin onVirusActivation={onVirusActivation} />
     };
 

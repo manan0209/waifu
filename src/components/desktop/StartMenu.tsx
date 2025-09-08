@@ -115,14 +115,15 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
       icon: <Icons.Computer size={16} />,
       appId: 'file-explorer',
       category: 'system'
-    },
-    {
-      id: 'settings',
-      title: 'Control Panel',
-      icon: <Icons.Settings size={16} />,
-      appId: 'settings',
-      category: 'system'
     }
+    // Settings app removed from start menu - keeping code commented for future use
+    // {
+    //   id: 'settings',
+    //   title: 'Control Panel',
+    //   icon: <Icons.Settings size={16} />,
+    //   appId: 'settings',
+    //   category: 'system'
+    // }
   ];
 
   const handleMenuItemClick = (item: MenuItem) => {
@@ -166,9 +167,9 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
       case 'media-player':
         component = <MediaPlayer />;
         break;
-      case 'settings':
-        component = <Settings />;
-        break;
+      // case 'settings':
+      //   component = <Settings />;
+      //   break;
       default:
         return;
     }
