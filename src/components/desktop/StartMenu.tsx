@@ -236,26 +236,9 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
           </div>
         </div>
 
-        {/* Footer */}
+        
         <div className="start-menu-footer">
-          <div className="footer-buttons">
-            <button className="footer-btn help-btn" title="Help">
-              <span className="btn-icon">❓</span>
-              <span className="btn-text">Help</span>
-            </button>
-            <button className="footer-btn run-btn" title="Run">
-              <span className="btn-icon">🏃</span>
-              <span className="btn-text">Run...</span>
-            </button>
-            <button 
-              className="footer-btn shutdown-btn" 
-              title="Shut Down"
-              onClick={onShutdown}
-            >
-              <span className="btn-icon">⏻</span>
-              <span className="btn-text">Shut Down</span>
-            </button>
-          </div>
+         
         </div>
       </div>
     </>
