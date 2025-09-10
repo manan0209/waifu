@@ -103,13 +103,6 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
       category: 'programs'
     },
     {
-      id: 'media-player',
-      title: 'Media Player',
-      icon: <Icons.MediaPlayer size={16} />,
-      appId: 'media-player',
-      category: 'programs'
-    },
-    {
       id: 'file-explorer',
       title: 'My Computer',
       icon: <Icons.Computer size={16} />,
@@ -163,9 +156,6 @@ export default function StartMenu({ onClose, onOpenWindow, onShutdown }: StartMe
         break;
       case 'solitaire':
         component = <Solitaire />;
-        break;
-      case 'media-player':
-        component = <MediaPlayer />;
         break;
       // case 'settings':
       //   component = <Settings />;
